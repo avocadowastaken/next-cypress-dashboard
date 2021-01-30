@@ -1,7 +1,8 @@
 import { RunCommit } from "@prisma/client";
 import { prisma } from "api/db";
+import { CYPRESS_RECORD_KEY } from "api/env";
 import { createAPIRequestHandler } from "api/http/APIRequestHandler";
-import { ResourceNotFoundError } from "api/http/HTTPError";
+import { ForbiddenError, ResourceNotFoundError } from "api/http/HTTPError";
 import cuid from "cuid";
 
 interface CreateRunInput {
@@ -67,17 +68,20 @@ export default createAPIRequestHandler({
     return {};
   },
 
-  async post(req, _): Promise<CreateRunResponse> {
+  async post(req): Promise<CreateRunResponse> {
     const {
       group,
       specs,
       commit,
-      platform: { osName, osVersion, browserName, browserVersion },
+      recordKey,
       ciBuildId,
       projectId,
+      platform: { osName, osVersion, browserName, browserVersion },
     } = req.body as CreateRunInput;
 
-    console.log({ body: req.body, headers: req.headers });
+    if (recordKey !== CYPRESS_RECORD_KEY) {
+      throw new ForbiddenError();
+    }
 
     const groupId = group || ciBuildId;
 

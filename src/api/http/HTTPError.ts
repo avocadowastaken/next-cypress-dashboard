@@ -1,3 +1,4 @@
+import { APP_ENV, NODE_ENV } from "api/env";
 import { NextApiRequest } from "next";
 
 function defineErrorProperties(
@@ -40,30 +41,19 @@ export class HTTPError<
   }
 }
 
-export class MethodNotAllowedError extends HTTPError {
-  constructor(method?: string) {
-    super(405, "Method Not Allowed", { method });
+//
+// 403
+//
+
+export class ForbiddenError extends HTTPError {
+  constructor() {
+    super(403, "Forbidden", {});
   }
 }
 
-export interface InternalServerErrorContext extends HTTPErrorContext {
-  cause?: Error;
-}
-
-export class InternalServerError extends HTTPError<InternalServerErrorContext> {
-  constructor(cause: unknown) {
-    const context: InternalServerErrorContext = {};
-
-    if (process.env.NODE_ENV !== "production") {
-      context.cause =
-        cause instanceof Error ? cause : new Error("Unknown cause");
-
-      defineErrorProperties(context.cause);
-    }
-
-    super(500, "Internal Server Error", context);
-  }
-}
+//
+// 404
+//
 
 export class RouteNotFoundError extends HTTPError<
   Pick<NextApiRequest, "url" | "method">
@@ -76,5 +66,38 @@ export class RouteNotFoundError extends HTTPError<
 export class ResourceNotFoundError extends HTTPError {
   constructor(message: string, context: HTTPErrorContext) {
     super(404, message, context);
+  }
+}
+
+//
+// 405
+//
+
+export class MethodNotAllowedError extends HTTPError {
+  constructor(method?: string) {
+    super(405, "Method Not Allowed", { method });
+  }
+}
+
+//
+// 500
+//
+
+export interface InternalServerErrorContext extends HTTPErrorContext {
+  cause?: Error;
+}
+
+export class InternalServerError extends HTTPError<InternalServerErrorContext> {
+  constructor(cause: unknown) {
+    const context: InternalServerErrorContext = {};
+
+    if (NODE_ENV !== "production" || APP_ENV === "preview") {
+      context.cause =
+        cause instanceof Error ? cause : new Error("Unknown cause");
+
+      defineErrorProperties(context.cause);
+    }
+
+    super(500, "Internal Server Error", context);
   }
 }
