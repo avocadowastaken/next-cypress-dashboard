@@ -40,11 +40,47 @@ export class HTTPError<
   }
 }
 
+//
+// 403
+//
+
+export class ForbiddenError extends HTTPError {
+  constructor() {
+    super(403, "Forbidden", {});
+  }
+}
+
+//
+// 404
+//
+
+export class RouteNotFoundError extends HTTPError<
+  Pick<NextApiRequest, "url" | "method">
+> {
+  constructor({ url, method }: NextApiRequest) {
+    super(404, "Not Found", { url, method });
+  }
+}
+
+export class ResourceNotFoundError extends HTTPError {
+  constructor(message: string, context: HTTPErrorContext) {
+    super(404, message, context);
+  }
+}
+
+//
+// 405
+//
+
 export class MethodNotAllowedError extends HTTPError {
   constructor(method?: string) {
     super(405, "Method Not Allowed", { method });
   }
 }
+
+//
+// 500
+//
 
 export interface InternalServerErrorContext extends HTTPErrorContext {
   cause?: Error;
@@ -62,19 +98,5 @@ export class InternalServerError extends HTTPError<InternalServerErrorContext> {
     }
 
     super(500, "Internal Server Error", context);
-  }
-}
-
-export class RouteNotFoundError extends HTTPError<
-  Pick<NextApiRequest, "url" | "method">
-> {
-  constructor({ url, method }: NextApiRequest) {
-    super(404, "Not Found", { url, method });
-  }
-}
-
-export class ResourceNotFoundError extends HTTPError {
-  constructor(message: string, context: HTTPErrorContext) {
-    super(404, message, context);
   }
 }
