@@ -3,7 +3,7 @@ name: e2e
 on: deployment_status
 
 jobs:
-  e2e:
+  unit:
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
@@ -13,3 +13,27 @@ jobs:
       - run: yarn test
         env:
           DEPLOY_TARGET_URL: ${{ github.event.deployment_status.target_url }}
+
+      - uses: ./actions/patch-cypress-config
+        with:
+          api_url: ${{ github.event.deployment_status.target_url }}
+
+  e2e:
+    needs: unit
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [A, B, C]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - run: yarn install
+
+      - uses: ./actions/patch-cypress-config
+        with:
+          api_url: ${{ github.event.deployment_status.target_url }}
+
+      - run: yarn cypress run --record --parallel --key=${{ secrets.CYPRESS_KEY }} --ci-build-id=e2e-${{ github.event.deployment_status.id }}

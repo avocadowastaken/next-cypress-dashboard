@@ -28,7 +28,7 @@ async function resolveCachePath(): Promise<string> {
 }
 
 export interface PatchCypressConfigOptions {
-  app_url: string;
+  api_url: string;
 }
 
 export async function patchCypressConfig(
@@ -43,8 +43,8 @@ export async function patchCypressConfig(
       production: { api_url: string };
     };
 
-    if (config.production.api_url !== overrides.app_url) {
-      config.production.api_url = overrides.app_url;
+    if (config.production.api_url !== overrides.api_url) {
+      config.production.api_url = overrides.api_url;
 
       await fs.writeFile(configPath, toYaml(config), "utf-8");
     }

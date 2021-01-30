@@ -2,7 +2,7 @@ import { exec } from "@actions/exec";
 import { patchCypressConfig } from "./patch-cypress-config";
 
 async function main() {
-  await patchCypressConfig({ app_url: "http://localhost:3000/" });
+  await patchCypressConfig({ api_url: "http://localhost:3000/" });
 
   await exec(
     "cypress",
