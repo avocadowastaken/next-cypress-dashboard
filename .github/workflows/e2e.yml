@@ -3,23 +3,7 @@ name: e2e
 on: [push, deployment, deployment_status]
 
 jobs:
-  unit:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-
-      - run: yarn install --force --frozen-lockfile
-      - run: yarn test
-        env:
-          DEPLOY_TARGET_URL: ${{ github.event.deployment_status.target_url }}
-
-      - uses: ./actions/patch-cypress-config
-        with:
-          api_url: ${{ github.event.deployment_status.target_url }}
-
   e2e:
-    needs: unit
     runs-on: ubuntu-latest
 
     strategy:
