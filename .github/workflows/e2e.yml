@@ -3,7 +3,7 @@ name: e2e
 on: deployment_status
 
 jobs:
-  checks_pending:
+  waiting:
     if: github.event.deployment_status.state != 'success'
     runs-on: ubuntu-latest
     steps:
