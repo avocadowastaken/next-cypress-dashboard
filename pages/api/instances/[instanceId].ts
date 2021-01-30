@@ -31,7 +31,7 @@ export interface UpdateInstanceResponse {
 }
 
 export default createAPIRequestHandler({
-  async put(req, _): Promise<UpdateInstanceResponse> {
+  async put(req): Promise<UpdateInstanceResponse> {
     const instanceId = req.query.instanceId as string;
 
     await prisma.runInstance.update({
