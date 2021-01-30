@@ -28,8 +28,7 @@ jobs:
       - if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --force --frozen-lockfile
 
-      - run: yarn tsc
-      - run: yarn lint --quiet
+      - run: yarn check
 
   build:
     runs-on: ubuntu-latest
@@ -49,4 +48,4 @@ jobs:
       - if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --force --frozen-lockfile
 
-      - run: yarn build ${{ matrix.app }} --target preview
+      - run: yarn build
