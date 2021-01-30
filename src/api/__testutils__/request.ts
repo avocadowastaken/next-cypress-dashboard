@@ -14,6 +14,10 @@ export async function requestJSON(
 ): Promise<unknown> {
   const headers = new Headers(headersOption);
 
+  if (!headers.has("accept")) {
+    headers.set("accept", "application/json");
+  }
+
   if (!headers.has("content-type")) {
     headers.set("content-type", "application/json");
   }

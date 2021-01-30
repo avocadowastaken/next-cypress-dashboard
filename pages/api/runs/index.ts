@@ -76,6 +76,9 @@ export default createAPIRequestHandler({
       ciBuildId,
       projectId,
     } = req.body as CreateRunInput;
+
+    console.log({ body: req.body, headers: req.headers });
+
     const groupId = group || ciBuildId;
 
     const updatedAt = new Date();
