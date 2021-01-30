@@ -8,7 +8,10 @@
     "dev:next": "next dev",
     "dev:prisma": "prisma generate --watch",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "check": "run-p check:*",
+    "check:types": "tsc",
+    "check:format": "prettier "
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
