@@ -1,0 +1,11 @@
+name: "Patch Cypress Config"
+description: "Updates Cypress config with provided values"
+author: "umidbekkarimov"
+inputs:
+  api_url:
+    required: true
+    description: "next cypress dashboard url"
+
+runs:
+  using: "node12"
+  main: "dist/index.js"
