@@ -1,0 +1,40 @@
+name: e2e
+
+on: deployment_status
+
+jobs:
+  e2e:
+    if: github.event.deployment_status.state == 'success'
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [A, B, C]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - run: yarn install
+
+      - uses: ./actions/patch-cypress-config
+        with:
+          api_url: ${{ github.event.deployment_status.target_url }}
+
+      - run: npx cypress run --record --parallel --ci-build-id=e2e-${{ github.event.deployment_status.id }}
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
+
+      - uses: LouisBrunner/checks-action@v1.1.1
+        if: ${{ always() }}
+        with:
+          name: ${{ github.workflow }}
+          conclusion: ${{ job.status }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-${{ matrix.container }}
+          path: cypress/videos
