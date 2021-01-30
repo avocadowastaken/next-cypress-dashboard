@@ -1,3 +1,4 @@
+import { APP_ENV, NODE_ENV } from "api/env";
 import { NextApiRequest } from "next";
 
 function defineErrorProperties(
@@ -90,7 +91,7 @@ export class InternalServerError extends HTTPError<InternalServerErrorContext> {
   constructor(cause: unknown) {
     const context: InternalServerErrorContext = {};
 
-    if (process.env.NODE_ENV !== "production") {
+    if (NODE_ENV !== "production" || APP_ENV === "preview") {
       context.cause =
         cause instanceof Error ? cause : new Error("Unknown cause");
 
