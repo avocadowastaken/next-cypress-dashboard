@@ -1,4 +1,4 @@
-import { request, requestJSON } from "@/api/__testutils__/request";
+import { request, requestJSON } from "api/__testutils__/request";
 
 test("basic", async () => {
   const json = await requestJSON("/api/health", { method: "DELETE" });

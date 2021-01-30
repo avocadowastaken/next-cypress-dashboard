@@ -1,11 +1,12 @@
-import { createRequestHandler } from "@/api/http/RequestHandler";
+import { prisma } from "api/db";
+import { createRequestHandler } from "api/http/RequestHandler";
 
-export default createRequestHandler(async (req, res, { db }) => {
+export default createRequestHandler(async (req, res) => {
   res.json({
     request: { method: req.method },
     projects: {
-      count: await db.prisma.project.count(),
-      last: await db.prisma.project.findFirst({
+      count: await prisma.project.count(),
+      last: await prisma.project.findFirst({
         orderBy: { createdAt: "desc" },
       }),
     },

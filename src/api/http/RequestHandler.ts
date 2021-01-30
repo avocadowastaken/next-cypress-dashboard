@@ -1,5 +1,5 @@
-import { ServerRequestContext } from "@/api/ctx/ServerRequestContext";
-import { HTTPError, InternalServerError } from "@/api/http/HTTPError";
+import { ServerRequestContext } from "api/ctx/ServerRequestContext";
+import { HTTPError, InternalServerError } from "api/http/HTTPError";
 import { NextApiHandler } from "next";
 import {
   NextApiRequest,
@@ -43,8 +43,6 @@ export function createRequestHandler<T>(
       }
 
       res.status(httpError.status).json(httpError);
-    } finally {
-      await ctx.db.prisma.$disconnect();
     }
   };
 }

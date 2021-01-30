@@ -1,6 +1,6 @@
-import { ServerRequestContext } from "@/api/ctx/ServerRequestContext";
-import { MethodNotAllowedError } from "@/api/http/HTTPError";
-import { createRequestHandler } from "@/api/http/RequestHandler";
+import { ServerRequestContext } from "api/ctx/ServerRequestContext";
+import { MethodNotAllowedError } from "api/http/HTTPError";
+import { createRequestHandler } from "api/http/RequestHandler";
 import { NextApiHandler, NextApiRequest } from "next";
 import { NextApiResponse } from "next/dist/next-server/lib/utils";
 

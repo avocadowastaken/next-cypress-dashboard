@@ -1,5 +1,7 @@
-import { createAPIRequestHandler } from "@/api/http/APIRequestHandler";
 import { RunCommit } from "@prisma/client";
+import { prisma } from "api/db";
+import { createAPIRequestHandler } from "api/http/APIRequestHandler";
+import { ResourceNotFoundError } from "api/http/HTTPError";
 import cuid from "cuid";
 
 interface CreateRunInput {
@@ -28,7 +30,44 @@ interface CreateRunResponse {
 }
 
 export default createAPIRequestHandler({
-  async post(req, _, { db }): Promise<CreateRunResponse> {
+  async get(req) {
+    const runId = req.query.runId as string;
+
+    const run = await prisma.run.findUnique({
+      where: { id: runId },
+      include: { project: true },
+    });
+
+    if (!run) {
+      throw new ResourceNotFoundError("Run not found", { runId });
+    }
+
+    return run;
+  },
+
+  async delete(req) {
+    const runId = req.query.runId as string;
+
+    await prisma.runInstance.deleteMany({
+      where: { runId },
+    });
+
+    const { commitId, platformId } = await prisma.run.delete({
+      where: { id: runId },
+    });
+
+    await prisma.runCommit.delete({
+      where: { id: commitId },
+    });
+
+    await prisma.runPlatform.delete({
+      where: { id: platformId },
+    });
+
+    return {};
+  },
+
+  async post(req, _): Promise<CreateRunResponse> {
     const {
       group,
       specs,
@@ -40,7 +79,12 @@ export default createAPIRequestHandler({
     const groupId = group || ciBuildId;
 
     const updatedAt = new Date();
-    const run = await db.prisma.run.upsert({
+
+    try {
+      await prisma.project.create({ data: { id: projectId } });
+    } catch (e) {}
+
+    const run = await prisma.run.upsert({
       select: { id: true, updatedAt: true },
       where: { ciBuildId_projectId: { ciBuildId, projectId } },
       update: { updatedAt },
@@ -51,15 +95,8 @@ export default createAPIRequestHandler({
         platform: {
           create: { osName, osVersion, browserName, browserVersion },
         },
-        instances: {
-          create: specs.map((spec) => ({ spec, groupId })),
-        },
-        project: {
-          connectOrCreate: {
-            create: { id: projectId },
-            where: { id: projectId },
-          },
-        },
+        instances: { create: specs.map((spec) => ({ spec, groupId })) },
+        project: { connect: { id: projectId } },
       },
     });
 

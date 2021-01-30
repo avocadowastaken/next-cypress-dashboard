@@ -1,4 +1,4 @@
-import fetch, { RequestInit, Response } from "node-fetch";
+import fetch, { Headers, RequestInit, Response } from "node-fetch";
 export async function request(
   url: string,
   init?: RequestInit
@@ -10,9 +10,15 @@ export async function request(
 
 export async function requestJSON(
   url: string,
-  init?: RequestInit
+  { headers: headersOption, ...options }: RequestInit = {}
 ): Promise<unknown> {
-  const response = await request(url, init);
+  const headers = new Headers(headersOption);
+
+  if (!headers.has("content-type")) {
+    headers.set("content-type", "application/json");
+  }
+
+  const response = await request(url, { ...options, headers });
 
   return response.json();
 }

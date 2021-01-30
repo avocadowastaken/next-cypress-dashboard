@@ -22,7 +22,7 @@
       "^.+\\.tsx?$": "esbuild-jest"
     },
     "moduleNameMapper": {
-      "@/(.*)": "<rootDir>/$1"
+      "api/(.*)": "<rootDir>/api/$1"
     },
     "setupFilesAfterEnv": [
       "<rootDir>/setupTests.ts"

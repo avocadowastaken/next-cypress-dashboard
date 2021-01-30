@@ -1,8 +1,7 @@
-import { RootContainer } from "@/api/ctx/RootContainer";
-import { DependencyContainer } from "@/api/utils/DI";
+import { DependencyContainer, Injectable } from "api/utils/DI";
 import { NextApiRequest } from "next";
 
-export class ServerRequestContext extends RootContainer {
+export class ServerRequestContext extends Injectable {
   protected static cache = new WeakMap<
     NextApiRequest,
     Promise<ServerRequestContext>

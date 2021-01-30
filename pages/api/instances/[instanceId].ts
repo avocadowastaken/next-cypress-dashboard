@@ -1,4 +1,5 @@
-import { createAPIRequestHandler } from "@/api/http/APIRequestHandler";
+import { prisma } from "api/db";
+import { createAPIRequestHandler } from "api/http/APIRequestHandler";
 
 interface UpdateInstanceInput {
   stats: {
@@ -30,10 +31,10 @@ export interface UpdateInstanceResponse {
 }
 
 export default createAPIRequestHandler({
-  async put(req, _, { db }): Promise<UpdateInstanceResponse> {
+  async put(req, _): Promise<UpdateInstanceResponse> {
     const instanceId = req.query.instanceId as string;
 
-    await db.prisma.runInstance.update({
+    await prisma.runInstance.update({
       where: { id: instanceId },
       data: { result: req.body },
     });
