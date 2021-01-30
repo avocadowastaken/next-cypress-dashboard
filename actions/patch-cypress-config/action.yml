@@ -1,0 +1,21 @@
+name: "Patch Cypress Config"
+description: "Updates Cypress config with provided values"
+author: "umidbekkarimov"
+inputs:
+  token:
+    required: true
+    default: "${{ github.token }}"
+    description: "github token"
+
+  pattern:
+    required: false
+    default: ".*"
+    description: "reg-exp pattern string to match an artifact name"
+
+  skip-recent:
+    required: false
+    description: "keep specified number of artifacts even if they are matching provided pattern"
+
+runs:
+  using: "node12"
+  main: "dist/index.js"

@@ -7,7 +7,9 @@
     "dev": "run-p dev:*",
     "dev:next": "next dev",
     "dev:prisma": "prisma generate --watch",
-    "build": "next build",
+    "build": "run-p build:*",
+    "build:next": "next build",
+    "build:actions": "ts-node scripts/build-actions.ts",
     "start": "next start",
     "tdd": "jest --watch",
     "test": "jest",
@@ -49,6 +51,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@actions/core": "^1.2.6",
     "@actions/exec": "^1.0.4",
     "@actions/glob": "^0.1.1",
     "@actions/io": "^1.0.2",

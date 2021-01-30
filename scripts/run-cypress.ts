@@ -1,8 +1,8 @@
 import { exec } from "@actions/exec";
-import { patchCypressAPIUrl } from "./patch-cypress-api-url";
+import { patchCypressConfig } from "./patch-cypress-config";
 
 async function main() {
-  await patchCypressAPIUrl("http://localhost:3000/");
+  await patchCypressConfig({ app_url: "http://localhost:3000/" });
 
   await exec(
     "cypress",
