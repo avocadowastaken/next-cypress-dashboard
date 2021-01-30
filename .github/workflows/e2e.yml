@@ -4,7 +4,7 @@ on: deployment_status
 
 jobs:
   e2e:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    if: github.event.deployment_status.state == 'success'
 
     runs-on: ubuntu-latest
 
@@ -34,3 +34,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ github.workflow }} (${{ github.event_name }})
           conclusion: ${{ job.status }}
+
+      - if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-${{ matrix.container }}
+          path: cypress/videos
