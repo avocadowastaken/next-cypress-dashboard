@@ -8737,8 +8737,8 @@ async function patchCypressConfig(overrides) {
   for await (let configPath of glob.globGenerator()) {
     let configYaml = await import_fs.promises.readFile(configPath, "utf-8"),
       config = import_yaml.parse(configYaml);
-    config.production.api_url !== overrides.app_url &&
-      ((config.production.api_url = overrides.app_url),
+    config.production.api_url !== overrides.api_url &&
+      ((config.production.api_url = overrides.api_url),
       await import_fs.promises.writeFile(
         configPath,
         import_yaml.stringify(config),
@@ -8750,7 +8750,7 @@ async function patchCypressConfig(overrides) {
 // actions/patch-cypress-config/index.ts
 async function main() {
   await patchCypressConfig({
-    app_url: import_core.getInput("api_url", { required: !0 }),
+    api_url: import_core.getInput("api_url", { required: !0 }),
   });
 }
 main().catch(import_core.setFailed);

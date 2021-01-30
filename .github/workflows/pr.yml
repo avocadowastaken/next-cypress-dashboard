@@ -49,3 +49,7 @@ jobs:
         run: yarn install --force --frozen-lockfile
 
       - run: yarn build
+
+      - run: |
+          git add .
+          git diff --quiet || exit 1
