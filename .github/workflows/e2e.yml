@@ -26,13 +26,6 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
 
-      - uses: LouisBrunner/checks-action@v1.1.1
-        if: ${{ always() }}
-        with:
-          name: ${{ github.workflow }}
-          conclusion: ${{ job.status }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
       - if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
