@@ -14,6 +14,10 @@ jobs:
         container: [A, B, C]
 
     steps:
+      - uses: styfle/cancel-workflow-action@0.4.0
+        with:
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v1
 
       - run: yarn install
