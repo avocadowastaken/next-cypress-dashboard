@@ -21,6 +21,9 @@
     "transform": {
       "^.+\\.tsx?$": "esbuild-jest"
     },
+    "moduleNameMapper": {
+      "@/(.*)": "<rootDir>/$1"
+    },
     "setupFilesAfterEnv": [
       "<rootDir>/setupTests.ts"
     ]
