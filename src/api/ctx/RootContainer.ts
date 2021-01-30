@@ -1,5 +1,5 @@
-import { DBContainer } from "@s/ctx/DBContainer";
-import { DependencyContainer, Injectable } from "@s/utils/DI";
+import { DBContainer } from "@/api/ctx/DBContainer";
+import { DependencyContainer, Injectable } from "@/api/utils/DI";
 
 export class RootContainer extends Injectable {
   static async create(): Promise<RootContainer> {

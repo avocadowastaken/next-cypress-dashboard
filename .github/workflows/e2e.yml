@@ -1,0 +1,14 @@
+name: e2e
+
+on: deployment_status
+
+jobs:
+  e2e:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+#      - name: Run Cypress 🌲
+#        uses: cypress-io/github-action@v2
+#        env:
+#          CYPRESS_BASE_URL: ${{ github.event.deployment_status.target_url }}

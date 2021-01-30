@@ -1,5 +1,5 @@
-import { RootContainer } from "@s/ctx/RootContainer";
-import { DependencyContainer } from "@s/utils/DI";
+import { RootContainer } from "@/api/ctx/RootContainer";
+import { DependencyContainer } from "@/api/utils/DI";
 import { NextApiRequest } from "next";
 
 export class ServerRequestContext extends RootContainer {

@@ -1,5 +1,5 @@
-import { ServerRequestContext } from "@s/ctx/ServerRequestContext";
-import { HTTPError, InternalServerError } from "@s/http/HTTPError";
+import { ServerRequestContext } from "@/api/ctx/ServerRequestContext";
+import { HTTPError, InternalServerError } from "@/api/http/HTTPError";
 import { NextApiHandler } from "next";
 import {
   NextApiRequest,
