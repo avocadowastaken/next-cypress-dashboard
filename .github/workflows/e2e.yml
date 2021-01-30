@@ -26,7 +26,9 @@ jobs:
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
 
-      - run: yarn cypress run --record --parallel --key=${{ secrets.CYPRESS_KEY }} --ci-build-id=e2e-${{ github.event.deployment_status.id }}
+      - run: yarn cypress run --record --parallel --ci-build-id=e2e-${{ github.event.deployment_status.id }}
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
 
       - uses: LouisBrunner/checks-action@v1.1.1
         if: ${{ always() }}
