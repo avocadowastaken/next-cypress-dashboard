@@ -1,10 +1,10 @@
 name: e2e
 
-on: deployment_status
+on: [push, deployment, deployment_status]
 
 jobs:
   unit:
-    if: github.event.deployment_status.state == 'success'
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
