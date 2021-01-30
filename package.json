@@ -9,9 +9,21 @@
     "dev:prisma": "prisma generate --watch",
     "build": "next build",
     "start": "next start",
+    "tdd": "jest --watch",
+    "test": "jest",
     "check": "run-p check:*",
     "check:types": "tsc",
     "check:format": "prettier . --check"
+  },
+  "jest": {
+    "rootDir": "src",
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "esbuild-jest"
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTests.ts"
+    ]
   },
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
@@ -28,7 +40,6 @@
     "cuid": "^2.1.8",
     "http-errors": "^1.8.0",
     "lodash": "^4.17.20",
-    "mongodb": "^3.6.3",
     "next": "10.0.5",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -41,13 +52,17 @@
     "@prisma/cli": "^2.15.0",
     "@prisma/sdk": "^2.15.0",
     "@types/http-errors": "^1.8.0",
+    "@types/jest": "^26.0.20",
     "@types/lodash": "^4.14.168",
-    "@types/mongodb": "^3.6.3",
     "@types/node": "^14.14.22",
+    "@types/node-fetch": "^2.5.8",
     "@types/react": "^17.0.0",
     "@types/uuid": "^8.3.0",
     "cypress": "^6.3.0",
+    "esbuild": "^0.8.36",
+    "esbuild-jest": "^0.3.0",
     "husky": "^4.3.8",
+    "jest": "^26.6.3",
     "lint-staged": "^10.5.3",
     "next-prisma-plugin": "^0.1.1",
     "npm-run-all": "^4.1.5",

@@ -1,5 +1,8 @@
 {
+  "include": ["src", "pages", "scripts"],
+  "exclude": ["node_modules"],
   "ts-node": {
+    "transpileOnly": true,
     "compilerOptions": {
       "module": "CommonJS"
     }
@@ -23,7 +26,5 @@
     "paths": {
       "@/*": ["src/*"]
     }
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  }
 }

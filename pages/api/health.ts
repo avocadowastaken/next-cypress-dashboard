@@ -2,9 +2,7 @@ import { createRequestHandler } from "@/api/http/RequestHandler";
 
 export default createRequestHandler(async (req, res, { db }) => {
   res.json({
-    request: {
-      method: req.method,
-    },
+    request: { method: req.method },
     projects: {
       count: await db.prisma.project.count(),
       last: await db.prisma.project.findFirst({
