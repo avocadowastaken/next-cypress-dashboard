@@ -3,15 +3,6 @@ name: e2e
 on: deployment_status
 
 jobs:
-  waiting:
-    if: github.event.deployment_status.state != 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: LouisBrunner/checks-action@v1.1.1
-        with:
-          name: ${{ github.workflow }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
   e2e:
     if: github.event.deployment_status.state == 'success'
 
