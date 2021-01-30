@@ -1,11 +1,4 @@
-import { InstanceResult } from "@s/db/models/Instance";
 import { createAPIRequestHandler } from "@s/http/APIRequestHandler";
-
-export interface Instance {
-  runId: string;
-  instanceId: string;
-  results?: InstanceResult;
-}
 
 interface CreateInstanceInput {
   groupId: string;

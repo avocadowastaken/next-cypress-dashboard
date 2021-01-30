@@ -1,5 +1,4 @@
 import { DBContainer } from "@s/ctx/DBContainer";
-import { ServicesContainer } from "@s/ctx/ServicesContainer";
 import { DependencyContainer, Injectable } from "@s/utils/DI";
 
 export class RootContainer extends Injectable {
@@ -10,5 +9,4 @@ export class RootContainer extends Injectable {
   }
 
   readonly db = this.container.resolve(DBContainer);
-  readonly services = this.container.resolve(ServicesContainer);
 }
