@@ -8,7 +8,7 @@ async function resolveCachePath(): Promise<string> {
   let version = "";
   let cachePath = "";
 
-  await exec("cypress", ["cache", "path"], {
+  await exec("npx", ["cypress", "cache", "path"], {
     listeners: {
       stdout: (data) => {
         cachePath += data.toString("utf8");
@@ -16,7 +16,7 @@ async function resolveCachePath(): Promise<string> {
     },
   });
 
-  await exec("cypress", ["version", "--component", "binary"], {
+  await exec("npx", ["cypress", "version", "--component", "binary"], {
     listeners: {
       stdout: (data) => {
         version += data.toString("utf8");
@@ -49,4 +49,8 @@ export async function patchCypressConfig(
       await fs.writeFile(configPath, toYaml(config), "utf-8");
     }
   }
+}
+
+if (require.main === module) {
+  patchCypressConfig({ api_url: "http://localhost:3000" }).catch(console.error);
 }
