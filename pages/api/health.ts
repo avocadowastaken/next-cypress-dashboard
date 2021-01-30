@@ -1,4 +1,4 @@
-import { createRequestHandler } from "@s/http/RequestHandler";
+import { createRequestHandler } from "@/api/http/RequestHandler";
 
 export default createRequestHandler(async (req, res, { db }) => {
   res.json({

@@ -1,5 +1,5 @@
+import { createAPIRequestHandler } from "@/api/http/APIRequestHandler";
 import { RunCommit } from "@prisma/client";
-import { createAPIRequestHandler } from "@s/http/APIRequestHandler";
 import cuid from "cuid";
 
 interface CreateRunInput {
