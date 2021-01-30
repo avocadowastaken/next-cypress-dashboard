@@ -31,9 +31,9 @@ jobs:
       - uses: LouisBrunner/checks-action@v1.1.1
         if: ${{ always() }}
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          name: ${{ github.workflow }} (${{ github.event_name }})
+          name: ${{ github.workflow }}
           conclusion: ${{ job.status }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - if: ${{ failure() }}
         uses: actions/upload-artifact@v2
