@@ -1,16 +1,9 @@
 import { prisma } from "/api/db";
 import { createAPIRequestHandler } from "/api/http/APIRequestHandler";
-
-interface CreateInstanceInput {
-  groupId: string;
-}
-
-interface CreateInstanceResponse {
-  spec: null | string;
-  instanceId: null | string;
-  totalInstances: number;
-  claimedInstances: number;
-}
+import {
+  CreateInstanceInput,
+  CreateInstanceResponse,
+} from "/shared/cypress-types";
 
 async function tryClaim(
   runId: string,
