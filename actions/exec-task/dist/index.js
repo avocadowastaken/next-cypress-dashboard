@@ -212,11 +212,11 @@ var require_core = __commonJS((exports2) => {
   }
   __name(warning2, "warning");
   exports2.warning = warning2;
-  function info(message) {
+  function info2(message) {
     process.stdout.write(message + os.EOL);
   }
-  __name(info, "info");
-  exports2.info = info;
+  __name(info2, "info");
+  exports2.info = info2;
   function startGroup(name) {
     command_1.issue("group", name);
   }
@@ -602,16 +602,16 @@ var require_http_client = __commonJS((exports2) => {
     async request(verb, requestUrl, data, headers) {
       if (this._disposed)
         throw new Error("Client has already been disposed.");
-      let parsedUrl = new URL(requestUrl), info = this._prepareRequest(verb, parsedUrl, headers), maxTries = this._allowRetries && RetryableHttpVerbs.indexOf(verb) != -1 ? this._maxRetries + 1 : 1, numTries = 0, response;
+      let parsedUrl = new URL(requestUrl), info2 = this._prepareRequest(verb, parsedUrl, headers), maxTries = this._allowRetries && RetryableHttpVerbs.indexOf(verb) != -1 ? this._maxRetries + 1 : 1, numTries = 0, response;
       for (; numTries < maxTries; ) {
-        if (response = await this.requestRaw(info, data), response && response.message && response.message.statusCode === HttpCodes.Unauthorized) {
+        if (response = await this.requestRaw(info2, data), response && response.message && response.message.statusCode === HttpCodes.Unauthorized) {
           let authenticationHandler;
           for (let i = 0; i < this.handlers.length; i++)
             if (this.handlers[i].canHandleAuthentication(response)) {
               authenticationHandler = this.handlers[i];
               break;
             }
-          return authenticationHandler ? authenticationHandler.handleAuthentication(this, info, data) : response;
+          return authenticationHandler ? authenticationHandler.handleAuthentication(this, info2, data) : response;
         }
         let redirectsRemaining = this._maxRedirects;
         for (; HttpRedirectCodes.indexOf(response.message.statusCode) != -1 && this._allowRedirects && redirectsRemaining > 0; ) {
@@ -624,7 +624,7 @@ var require_http_client = __commonJS((exports2) => {
           if (await response.readBody(), parsedRedirectUrl.hostname !== parsedUrl.hostname)
             for (let header in headers)
               header.toLowerCase() === "authorization" && delete headers[header];
-          info = this._prepareRequest(verb, parsedRedirectUrl, headers), response = await this.requestRaw(info, data), redirectsRemaining--;
+          info2 = this._prepareRequest(verb, parsedRedirectUrl, headers), response = await this.requestRaw(info2, data), redirectsRemaining--;
         }
         if (HttpResponseRetryCodes.indexOf(response.message.statusCode) == -1)
           return response;
@@ -635,27 +635,27 @@ var require_http_client = __commonJS((exports2) => {
     dispose() {
       this._agent && this._agent.destroy(), this._disposed = !0;
     }
-    requestRaw(info, data) {
+    requestRaw(info2, data) {
       return new Promise((resolve, reject) => {
         let callbackForResult = /* @__PURE__ */ __name(function(err, res) {
           err && reject(err), resolve(res);
         }, "callbackForResult");
-        this.requestRawWithCallback(info, data, callbackForResult);
+        this.requestRawWithCallback(info2, data, callbackForResult);
       });
     }
-    requestRawWithCallback(info, data, onResult) {
+    requestRawWithCallback(info2, data, onResult) {
       let socket;
-      typeof data == "string" && (info.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8"));
+      typeof data == "string" && (info2.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8"));
       let callbackCalled = !1, handleResult = /* @__PURE__ */ __name((err, res) => {
         callbackCalled || (callbackCalled = !0, onResult(err, res));
-      }, "handleResult"), req = info.httpModule.request(info.options, (msg) => {
+      }, "handleResult"), req = info2.httpModule.request(info2.options, (msg) => {
         let res = new HttpClientResponse(msg);
         handleResult(null, res);
       });
       req.on("socket", (sock) => {
         socket = sock;
       }), req.setTimeout(this._socketTimeout || 3 * 6e4, () => {
-        socket && socket.end(), handleResult(new Error("Request timeout: " + info.options.path), null);
+        socket && socket.end(), handleResult(new Error("Request timeout: " + info2.options.path), null);
       }), req.on("error", function(err) {
         handleResult(err, null);
       }), data && typeof data == "string" && req.write(data, "utf8"), data && typeof data != "string" ? (data.on("close", function() {
@@ -667,14 +667,14 @@ var require_http_client = __commonJS((exports2) => {
       return this._getAgent(parsedUrl);
     }
     _prepareRequest(method, requestUrl, headers) {
-      let info = {};
-      info.parsedUrl = requestUrl;
-      let usingSsl = info.parsedUrl.protocol === "https:";
-      info.httpModule = usingSsl ? https2 : http2;
+      let info2 = {};
+      info2.parsedUrl = requestUrl;
+      let usingSsl = info2.parsedUrl.protocol === "https:";
+      info2.httpModule = usingSsl ? https2 : http2;
       let defaultPort = usingSsl ? 443 : 80;
-      return info.options = {}, info.options.host = info.parsedUrl.hostname, info.options.port = info.parsedUrl.port ? parseInt(info.parsedUrl.port) : defaultPort, info.options.path = (info.parsedUrl.pathname || "") + (info.parsedUrl.search || ""), info.options.method = method, info.options.headers = this._mergeHeaders(headers), this.userAgent != null && (info.options.headers["user-agent"] = this.userAgent), info.options.agent = this._getAgent(info.parsedUrl), this.handlers && this.handlers.forEach((handler) => {
-        handler.prepareRequest(info.options);
-      }), info;
+      return info2.options = {}, info2.options.host = info2.parsedUrl.hostname, info2.options.port = info2.parsedUrl.port ? parseInt(info2.parsedUrl.port) : defaultPort, info2.options.path = (info2.parsedUrl.pathname || "") + (info2.parsedUrl.search || ""), info2.options.method = method, info2.options.headers = this._mergeHeaders(headers), this.userAgent != null && (info2.options.headers["user-agent"] = this.userAgent), info2.options.agent = this._getAgent(info2.parsedUrl), this.handlers && this.handlers.forEach((handler) => {
+        handler.prepareRequest(info2.options);
+      }), info2;
     }
     _mergeHeaders(headers) {
       let lowercaseKeys2 = /* @__PURE__ */ __name((obj) => Object.keys(obj).reduce((c, k) => (c[k.toLowerCase()] = obj[k], c), {}), "lowercaseKeys");
@@ -2487,7 +2487,7 @@ var require_github = __commonJS((exports2) => {
   exports2.getOctokit = getOctokit2;
 });
 
-// actions/execute-task/index.ts
+// actions/exec-task/index.ts
 var import_core = __toModule(require_core());
 
 // node_modules/universal-user-agent/dist-web/index.js
@@ -3577,7 +3577,7 @@ var createTokenAuth = /* @__PURE__ */ __name(function(token2) {
   });
 }, "createTokenAuth");
 
-// actions/execute-task/index.ts
+// actions/exec-task/index.ts
 var import_github = __toModule(require_github());
 var {CYPRESS_RECORD_KEY} = process.env, token = import_core.getInput("token", {required: !0}), payload = import_core.getInput("payload", {required: !0}), environment = import_core.getInput("environment", {required: !0}), octokit = import_github.getOctokit(token);
 async function findDeploymentURL() {
@@ -3600,23 +3600,23 @@ __name(findDeploymentURL, "findDeploymentURL");
 async function main() {
   let deploymentURL = await findDeploymentURL();
   if (!deploymentURL)
-    return import_core.warning(`There are no deployments for the environment "${environment}"`);
+    return import_core.warning(`There are no deployments for the environment '${environment}'`);
   let headers = new Headers({
     Accept: "application/json",
     "Content-Type": "application/json"
   });
-  CYPRESS_RECORD_KEY && headers.set("Authorization", `Token ${CYPRESS_RECORD_KEY}`);
+  CYPRESS_RECORD_KEY && headers.set("Authorization", `Token ${CYPRESS_RECORD_KEY}`), import_core.info(`Making request to: '${deploymentURL}' with '${payload}\u2026'`);
   let response = await lib_default(`${deploymentURL}/api/tasks`, {
     headers,
     body: payload,
     method: "POST"
-  });
-  if (!response.ok) {
-    let responseText = await response.text().catch(() => null);
+  }), responseText = await response.text().catch(() => null);
+  if (response.ok)
+    responseText && import_core.info(responseText);
+  else
     throw new Error(`Failed to execute task.
 ${response.statusText}
 ${responseText}`);
-  }
 }
 __name(main, "main");
 main().catch(import_core.setFailed);
