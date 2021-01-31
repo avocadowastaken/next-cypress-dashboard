@@ -56,6 +56,8 @@ model RunInstance {
   result Json?
 
   @@unique([spec, runId, groupId])
+  @@index([id, claimed])
+  @@index([runId, groupId, claimed])
 }
 
 model Run {
