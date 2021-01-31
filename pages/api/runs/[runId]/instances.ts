@@ -5,40 +5,50 @@ import {
   CreateInstanceResponse,
 } from "@/shared/cypress-types";
 
-async function tryClaim(
+async function claimInstance(
   runId: string,
   groupId: string
 ): Promise<CreateInstanceResponse> {
-  const specs = await prisma.runInstance.findMany({
-    where: { runId, groupId },
-  });
+  const [
+    firstUnclaimed,
+    totalInstances,
+    claimedInstances,
+  ] = await prisma.$transaction([
+    prisma.runInstance.findFirst({
+      where: { runId, groupId, claimed: false },
+    }),
+
+    prisma.runInstance.count({
+      where: { runId, groupId },
+    }),
+
+    prisma.runInstance.count({
+      where: { runId, groupId, claimed: true },
+    }),
+  ]);
 
   const response: CreateInstanceResponse = {
     spec: null,
     instanceId: null,
-    claimedInstances: 0,
-    totalInstances: specs.length,
+
+    totalInstances,
+    claimedInstances,
   };
 
-  for (const spec of specs) {
-    if (spec.claimed) {
-      response.claimedInstances += 1;
-    } else {
-      response.spec = spec.spec;
-      response.instanceId = spec.id;
-    }
-  }
-
-  if (response.instanceId) {
+  if (firstUnclaimed) {
     const { count } = await prisma.runInstance.updateMany({
       data: { claimed: true },
-      where: { id: response.instanceId, claimed: false },
+      where: { id: firstUnclaimed.id, claimed: false },
     });
 
-    // Race condition, start over;
+    // Another process claimed this instance, retry…
     if (count === 0) {
-      return tryClaim(runId, groupId);
+      return claimInstance(runId, groupId);
     }
+
+    response.claimedInstances += 1;
+    response.spec = firstUnclaimed.spec;
+    response.instanceId = firstUnclaimed.id;
   }
 
   return response;
@@ -49,6 +59,6 @@ export default createAPIRequestHandler({
     const runId = req.query.runId as string;
     const { groupId } = req.body as CreateInstanceInput;
 
-    return tryClaim(runId, groupId);
+    return claimInstance(runId, groupId);
   },
 });

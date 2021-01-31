@@ -10,14 +10,13 @@ async function main() {
       "run",
       "--record",
       "--parallel",
-      "--key",
-      "e2e-key",
       "--ci-build-id",
-      `e2e-ci-build-id-${new Date().toISOString().slice(0, 10)}`,
+      `ci-build-id-1-${new Date().toISOString().slice(0, 10)}`,
     ],
     {
       env: {
         ...process.env,
+        CYPRESS_RECORD_KEY: "123",
         DEBUG: "cypress:server:record,cypress:server:api",
       },
     }
