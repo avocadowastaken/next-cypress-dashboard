@@ -1,34 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next Cypress Dashboard 🏄
 
-## Getting Started
+## Motivation
 
-First, run the development server:
+This project was inspired by the [Sorry Cypress](https://github.com/sorry-cypress/sorry-cypress),
+which is absolutely great and production ready alternative to Cypress dashboard
+with the single flaw – it's complex infrastructure.
 
-```bash
-npm run dev
-# or
-yarn dev
+So my personal goal was to make more minimalistic approach that focused on:
+
+1. Test parallelisation
+2. Easy installation
+
+Differences with the [Sorry Cypress](https://github.com/sorry-cypress/sorry-cypress)
+
+- Main functionality of [services](https://sorry-cypress.dev/terminology)
+  were replaced by [NextJS](https://nextjs.org)
+- Mongo and In Memory [execution drivers](https://sorry-cypress.dev/director/execution)
+  were replaced by [Prisma](https://www.prisma.io/), which only works with
+  [SQL databases](https://www.prisma.io/docs/reference/database-reference/supported-databases)
+- No plans to support [storage driver](https://sorry-cypress.dev/director/storage)
+  since videos and snapshots could be stored as CI artifacts.
+
+## Usage
+
+### Deployment
+
+Check [NextJS](https://nextjs.org/docs/deployment) and
+[Prisma](https://www.prisma.io/docs/concepts/components/prisma-client/deployment)
+deployment guides.
+
+### CI
+
+#### GitHub Actions
+
+```yaml
+strategy:
+  fail-fast: false
+  matrix:
+    container: [A, B, C, D, E, F]
+
+steps:
+  - uses: actions/checkout@v1
+
+  - run: npm ci
+
+  - uses: umidbekkarimov/next-cypress-dashboard/actions/patch-cypress-config@main
+    with:
+      api_url: ${{ secrets.NEXT_CYPRESS_DASHBOARD_URL }}
+
+  - run: npx cypress run --record --parallel --ci-build-id=e2e-${{ github.sha }}
+
+  - if: failure()
+    uses: actions/upload-artifact@v2
+    with:
+      name: cypress-${{ matrix.container }}
+      path: cypress/videos
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Other CI
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+You can use any CI, but you have to reconfigure Cypress agent to use Next
+Cypress Dashboard first. You can check [Sorry Cypress documentation](https://sorry-cypress.dev/quickstart#reconfigure-cypress-agent) for that.
