@@ -1,0 +1,26 @@
+name: cron
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */1 * * *"
+
+jobs:
+  cleanup-runs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: ./actions/execute-task
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
+        with:
+          environment: Preview
+          payload: '{ "name": "cleanup-runs" }'
+
+      - uses: ./actions/execute-task
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
+        with:
+          environment: Production
+          payload: '{ "name": "cleanup-runs" }'
