@@ -1,5 +1,5 @@
-import { DependencyContainer, Injectable } from "api/utils/DI";
 import { NextApiRequest } from "next";
+import { DependencyContainer, Injectable } from "/api/utils/DI";
 
 export class ServerRequestContext extends Injectable {
   protected static cache = new WeakMap<

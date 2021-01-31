@@ -1,5 +1,5 @@
-import { prisma } from "api/db";
-import { createAPIRequestHandler } from "api/http/APIRequestHandler";
+import { prisma } from "/api/db";
+import { createAPIRequestHandler } from "/api/http/APIRequestHandler";
 
 interface CreateInstanceInput {
   groupId: string;

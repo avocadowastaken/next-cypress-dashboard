@@ -1,8 +1,8 @@
-import { ServerRequestContext } from "api/ctx/ServerRequestContext";
-import { MethodNotAllowedError } from "api/http/HTTPError";
-import { createRequestHandler } from "api/http/RequestHandler";
 import { NextApiHandler, NextApiRequest } from "next";
 import { NextApiResponse } from "next/dist/next-server/lib/utils";
+import { ServerRequestContext } from "/api/ctx/ServerRequestContext";
+import { MethodNotAllowedError } from "/api/http/HTTPError";
+import { createRequestHandler } from "/api/http/RequestHandler";
 
 function handleNotAllowedMethod(req: NextApiRequest): void {
   throw new MethodNotAllowedError(req.method);

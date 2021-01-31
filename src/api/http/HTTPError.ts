@@ -1,5 +1,5 @@
-import { APP_ENV, NODE_ENV } from "api/env";
 import { NextApiRequest } from "next";
+import { APP_ENV, NODE_ENV } from "/api/env";
 
 function defineErrorProperties(
   error: Error,
