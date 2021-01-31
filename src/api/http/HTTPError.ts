@@ -41,6 +41,16 @@ export class HTTPError<
 }
 
 //
+// 400
+//
+
+export class BadRequestError extends HTTPError {
+  constructor(ctx: Record<string, unknown>) {
+    super(400, "Bad Request", ctx);
+  }
+}
+
+//
 // 403
 //
 

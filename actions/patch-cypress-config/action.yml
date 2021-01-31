@@ -1,10 +1,10 @@
 name: "Patch Cypress Config"
 description: "Updates Cypress config with provided values"
-author: "umidbekkarimov"
+author: "umidbekk"
 inputs:
   api_url:
     required: true
-    description: "next cypress dashboard url"
+    description: "Url to Next Cypress Dashboard"
 
 runs:
   using: "node12"

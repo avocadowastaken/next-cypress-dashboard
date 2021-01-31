@@ -1,5 +1,5 @@
 var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0});
+var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
 var __commonJS = (callback, module2) => () => (module2 || (module2 = {exports: {}}, callback(module2.exports, module2)), module2.exports), __export = (target, all) => {
   __markAsModule(target);
   for (var name in all)
@@ -18,6 +18,7 @@ var require_utils = __commonJS((exports2) => {
   function toCommandValue(input) {
     return input == null ? "" : typeof input == "string" || input instanceof String ? input : JSON.stringify(input);
   }
+  __name(toCommandValue, "toCommandValue");
   exports2.toCommandValue = toCommandValue;
 });
 
@@ -39,10 +40,12 @@ var require_command = __commonJS((exports2) => {
     let cmd = new Command(command, properties, message);
     process.stdout.write(cmd.toString() + os.EOL);
   }
+  __name(issueCommand, "issueCommand");
   exports2.issueCommand = issueCommand;
   function issue(name, message = "") {
     issueCommand(name, {}, message);
   }
+  __name(issue, "issue");
   exports2.issue = issue;
   var CMD_STRING = "::", Command = class {
     constructor(command, properties, message) {
@@ -62,12 +65,15 @@ var require_command = __commonJS((exports2) => {
       return cmdStr += `${CMD_STRING}${escapeData(this.message)}`, cmdStr;
     }
   };
+  __name(Command, "Command");
   function escapeData(s) {
     return utils_1.toCommandValue(s).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
   }
+  __name(escapeData, "escapeData");
   function escapeProperty(s) {
     return utils_1.toCommandValue(s).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A").replace(/:/g, "%3A").replace(/,/g, "%2C");
   }
+  __name(escapeProperty, "escapeProperty");
 });
 
 // node_modules/@actions/core/lib/file-command.js
@@ -94,6 +100,7 @@ var require_file_command = __commonJS((exports2) => {
       encoding: "utf8"
     });
   }
+  __name(issueCommand, "issueCommand");
   exports2.issueCommand = issueCommand;
 });
 
@@ -106,7 +113,7 @@ var require_core = __commonJS((exports2) => {
         resolve(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return __name(adopt, "adopt"), new (P || (P = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -114,6 +121,7 @@ var require_core = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(fulfilled, "fulfilled");
       function rejected(value) {
         try {
           step(generator.throw(value));
@@ -121,10 +129,11 @@ var require_core = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(rejected, "rejected");
       function step(result) {
         result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
+      __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   }, __importStar = exports2 && exports2.__importStar || function(mod) {
     if (mod && mod.__esModule)
@@ -148,14 +157,17 @@ var require_core = __commonJS((exports2) => {
     } else
       command_1.issueCommand("set-env", {name}, convertedVal);
   }
+  __name(exportVariable, "exportVariable");
   exports2.exportVariable = exportVariable;
   function setSecret(secret) {
     command_1.issueCommand("add-mask", {}, secret);
   }
+  __name(setSecret, "setSecret");
   exports2.setSecret = setSecret;
   function addPath(inputPath) {
     process.env.GITHUB_PATH || "" ? file_command_1.issueCommand("PATH", inputPath) : command_1.issueCommand("add-path", {}, inputPath), process.env.PATH = `${inputPath}${path.delimiter}${process.env.PATH}`;
   }
+  __name(addPath, "addPath");
   exports2.addPath = addPath;
   function getInput2(name, options) {
     let val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
@@ -163,46 +175,57 @@ var require_core = __commonJS((exports2) => {
       throw new Error(`Input required and not supplied: ${name}`);
     return val.trim();
   }
+  __name(getInput2, "getInput");
   exports2.getInput = getInput2;
   function setOutput(name, value) {
     command_1.issueCommand("set-output", {name}, value);
   }
+  __name(setOutput, "setOutput");
   exports2.setOutput = setOutput;
   function setCommandEcho(enabled) {
     command_1.issue("echo", enabled ? "on" : "off");
   }
+  __name(setCommandEcho, "setCommandEcho");
   exports2.setCommandEcho = setCommandEcho;
   function setFailed2(message) {
     process.exitCode = ExitCode.Failure, error(message);
   }
+  __name(setFailed2, "setFailed");
   exports2.setFailed = setFailed2;
   function isDebug() {
     return process.env.RUNNER_DEBUG === "1";
   }
+  __name(isDebug, "isDebug");
   exports2.isDebug = isDebug;
   function debug(message) {
     command_1.issueCommand("debug", {}, message);
   }
+  __name(debug, "debug");
   exports2.debug = debug;
   function error(message) {
     command_1.issue("error", message instanceof Error ? message.toString() : message);
   }
+  __name(error, "error");
   exports2.error = error;
   function warning(message) {
     command_1.issue("warning", message instanceof Error ? message.toString() : message);
   }
+  __name(warning, "warning");
   exports2.warning = warning;
   function info(message) {
     process.stdout.write(message + os.EOL);
   }
+  __name(info, "info");
   exports2.info = info;
   function startGroup(name) {
     command_1.issue("group", name);
   }
+  __name(startGroup, "startGroup");
   exports2.startGroup = startGroup;
   function endGroup() {
     command_1.issue("endgroup");
   }
+  __name(endGroup, "endGroup");
   exports2.endGroup = endGroup;
   function group(name, fn) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -216,14 +239,17 @@ var require_core = __commonJS((exports2) => {
       return result;
     });
   }
+  __name(group, "group");
   exports2.group = group;
   function saveState(name, value) {
     command_1.issueCommand("save-state", {name}, value);
   }
+  __name(saveState, "saveState");
   exports2.saveState = saveState;
   function getState(name) {
     return process.env[`STATE_${name}`] || "";
   }
+  __name(getState, "getState");
   exports2.getState = getState;
 });
 
@@ -236,7 +262,7 @@ var require_io_util = __commonJS((exports2) => {
         resolve(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return __name(adopt, "adopt"), new (P || (P = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -244,6 +270,7 @@ var require_io_util = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(fulfilled, "fulfilled");
       function rejected(value) {
         try {
           step(generator.throw(value));
@@ -251,10 +278,11 @@ var require_io_util = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(rejected, "rejected");
       function step(result) {
         result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
+      __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   }, _a;
   Object.defineProperty(exports2, "__esModule", {value: !0});
@@ -273,18 +301,21 @@ var require_io_util = __commonJS((exports2) => {
       return !0;
     });
   }
+  __name(exists, "exists");
   exports2.exists = exists;
   function isDirectory(fsPath, useStat = !1) {
     return __awaiter(this, void 0, void 0, function* () {
       return (useStat ? yield exports2.stat(fsPath) : yield exports2.lstat(fsPath)).isDirectory();
     });
   }
+  __name(isDirectory, "isDirectory");
   exports2.isDirectory = isDirectory;
   function isRooted(p) {
     if (p = normalizeSeparators(p), !p)
       throw new Error('isRooted() parameter "p" cannot be empty');
     return exports2.IS_WINDOWS ? p.startsWith("\\") || /^[A-Z]:/i.test(p) : p.startsWith("/");
   }
+  __name(isRooted, "isRooted");
   exports2.isRooted = isRooted;
   function mkdirP(fsPath, maxDepth = 1e3, depth = 1) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -313,6 +344,7 @@ var require_io_util = __commonJS((exports2) => {
       }
     });
   }
+  __name(mkdirP, "mkdirP");
   exports2.mkdirP = mkdirP;
   function tryGetExecutablePath(filePath, extensions) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -358,13 +390,16 @@ var require_io_util = __commonJS((exports2) => {
       return "";
     });
   }
+  __name(tryGetExecutablePath, "tryGetExecutablePath");
   exports2.tryGetExecutablePath = tryGetExecutablePath;
   function normalizeSeparators(p) {
     return p = p || "", exports2.IS_WINDOWS ? (p = p.replace(/\//g, "\\"), p.replace(/\\\\+/g, "\\")) : p.replace(/\/\/+/g, "/");
   }
+  __name(normalizeSeparators, "normalizeSeparators");
   function isUnixExecutable(stats) {
     return (stats.mode & 1) > 0 || (stats.mode & 8) > 0 && stats.gid === process.getgid() || (stats.mode & 64) > 0 && stats.uid === process.getuid();
   }
+  __name(isUnixExecutable, "isUnixExecutable");
 });
 
 // node_modules/@actions/io/lib/io.js
@@ -376,7 +411,7 @@ var require_io = __commonJS((exports2) => {
         resolve(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return __name(adopt, "adopt"), new (P || (P = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -384,6 +419,7 @@ var require_io = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(fulfilled, "fulfilled");
       function rejected(value) {
         try {
           step(generator.throw(value));
@@ -391,10 +427,11 @@ var require_io = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(rejected, "rejected");
       function step(result) {
         result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
+      __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
@@ -419,6 +456,7 @@ var require_io = __commonJS((exports2) => {
       }
     });
   }
+  __name(cp, "cp");
   exports2.cp = cp;
   function mv(source, dest, options = {}) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -433,6 +471,7 @@ var require_io = __commonJS((exports2) => {
       yield mkdirP(path.dirname(dest)), yield ioUtil.rename(source, dest);
     });
   }
+  __name(mv, "mv");
   exports2.mv = mv;
   function rmRF(inputPath) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -462,12 +501,14 @@ var require_io = __commonJS((exports2) => {
       }
     });
   }
+  __name(rmRF, "rmRF");
   exports2.rmRF = rmRF;
   function mkdirP(fsPath) {
     return __awaiter(this, void 0, void 0, function* () {
       yield ioUtil.mkdirP(fsPath);
     });
   }
+  __name(mkdirP, "mkdirP");
   exports2.mkdirP = mkdirP;
   function which(tool, check) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -501,11 +542,13 @@ var require_io = __commonJS((exports2) => {
       }
     });
   }
+  __name(which, "which");
   exports2.which = which;
   function readCopyOptions(options) {
     let force = options.force == null ? !0 : options.force, recursive = Boolean(options.recursive);
     return {force, recursive};
   }
+  __name(readCopyOptions, "readCopyOptions");
   function cpDirRecursive(sourceDir, destDir, currentDepth, force) {
     return __awaiter(this, void 0, void 0, function* () {
       if (currentDepth >= 255)
@@ -519,6 +562,7 @@ var require_io = __commonJS((exports2) => {
       yield ioUtil.chmod(destDir, (yield ioUtil.stat(sourceDir)).mode);
     });
   }
+  __name(cpDirRecursive, "cpDirRecursive");
   function copyFile(srcFile, destFile, force) {
     return __awaiter(this, void 0, void 0, function* () {
       if ((yield ioUtil.lstat(srcFile)).isSymbolicLink()) {
@@ -533,6 +577,7 @@ var require_io = __commonJS((exports2) => {
         (!(yield ioUtil.exists(destFile)) || force) && (yield ioUtil.copyFile(srcFile, destFile));
     });
   }
+  __name(copyFile, "copyFile");
 });
 
 // node_modules/@actions/exec/lib/toolrunner.js
@@ -544,7 +589,7 @@ var require_toolrunner = __commonJS((exports2) => {
         resolve(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return __name(adopt, "adopt"), new (P || (P = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -552,6 +597,7 @@ var require_toolrunner = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(fulfilled, "fulfilled");
       function rejected(value) {
         try {
           step(generator.throw(value));
@@ -559,10 +605,11 @@ var require_toolrunner = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(rejected, "rejected");
       function step(result) {
         result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
+      __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   }, __importStar = exports2 && exports2.__importStar || function(mod) {
     if (mod && mod.__esModule)
@@ -749,12 +796,14 @@ var require_toolrunner = __commonJS((exports2) => {
       });
     }
   };
+  __name(ToolRunner, "ToolRunner");
   exports2.ToolRunner = ToolRunner;
   function argStringToArray(argString) {
     let args = [], inQuotes = !1, escaped = !1, arg = "";
     function append(c) {
       escaped && c !== '"' && (arg += "\\"), arg += c, escaped = !1;
     }
+    __name(append, "append");
     for (let i = 0; i < argString.length; i++) {
       let c = argString.charAt(i);
       if (c === '"') {
@@ -777,6 +826,7 @@ var require_toolrunner = __commonJS((exports2) => {
     }
     return arg.length > 0 && args.push(arg.trim()), args;
   }
+  __name(argStringToArray, "argStringToArray");
   exports2.argStringToArray = argStringToArray;
   var ExecState = class extends events.EventEmitter {
     constructor(options, toolPath) {
@@ -805,6 +855,7 @@ var require_toolrunner = __commonJS((exports2) => {
       }
     }
   };
+  __name(ExecState, "ExecState");
 });
 
 // node_modules/@actions/exec/lib/exec.js
@@ -816,7 +867,7 @@ var require_exec = __commonJS((exports2) => {
         resolve(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return __name(adopt, "adopt"), new (P || (P = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -824,6 +875,7 @@ var require_exec = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(fulfilled, "fulfilled");
       function rejected(value) {
         try {
           step(generator.throw(value));
@@ -831,10 +883,11 @@ var require_exec = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(rejected, "rejected");
       function step(result) {
         result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
+      __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   }, __importStar = exports2 && exports2.__importStar || function(mod) {
     if (mod && mod.__esModule)
@@ -856,6 +909,7 @@ var require_exec = __commonJS((exports2) => {
       return args = commandArgs.slice(1).concat(args || []), new tr.ToolRunner(toolPath, args, options).exec();
     });
   }
+  __name(exec, "exec");
   exports2.exec = exec;
 });
 
@@ -881,6 +935,7 @@ var require_internal_glob_options_helper = __commonJS((exports2) => {
     };
     return copy && (typeof copy.followSymbolicLinks == "boolean" && (result.followSymbolicLinks = copy.followSymbolicLinks, core.debug(`followSymbolicLinks '${result.followSymbolicLinks}'`)), typeof copy.implicitDescendants == "boolean" && (result.implicitDescendants = copy.implicitDescendants, core.debug(`implicitDescendants '${result.implicitDescendants}'`)), typeof copy.omitBrokenSymbolicLinks == "boolean" && (result.omitBrokenSymbolicLinks = copy.omitBrokenSymbolicLinks, core.debug(`omitBrokenSymbolicLinks '${result.omitBrokenSymbolicLinks}'`))), result;
   }
+  __name(getOptions, "getOptions");
   exports2.getOptions = getOptions;
 });
 
@@ -906,6 +961,7 @@ var require_internal_path_helper = __commonJS((exports2) => {
     let result = path.dirname(p);
     return IS_WINDOWS && /^\\\\[^\\]+\\[^\\]+\\$/.test(result) && (result = safeTrimTrailingSeparator(result)), result;
   }
+  __name(dirname, "dirname");
   exports2.dirname = dirname;
   function ensureAbsoluteRoot(root, itemPath) {
     if (assert_1.default(root, "ensureAbsoluteRoot parameter 'root' must not be empty"), assert_1.default(itemPath, "ensureAbsoluteRoot parameter 'itemPath' must not be empty"), hasAbsoluteRoot(itemPath))
@@ -921,22 +977,27 @@ var require_internal_path_helper = __commonJS((exports2) => {
     }
     return assert_1.default(hasAbsoluteRoot(root), "ensureAbsoluteRoot parameter 'root' must have an absolute root"), root.endsWith("/") || IS_WINDOWS && root.endsWith("\\") || (root += path.sep), root + itemPath;
   }
+  __name(ensureAbsoluteRoot, "ensureAbsoluteRoot");
   exports2.ensureAbsoluteRoot = ensureAbsoluteRoot;
   function hasAbsoluteRoot(itemPath) {
     return assert_1.default(itemPath, "hasAbsoluteRoot parameter 'itemPath' must not be empty"), itemPath = normalizeSeparators(itemPath), IS_WINDOWS ? itemPath.startsWith("\\\\") || /^[A-Z]:\\/i.test(itemPath) : itemPath.startsWith("/");
   }
+  __name(hasAbsoluteRoot, "hasAbsoluteRoot");
   exports2.hasAbsoluteRoot = hasAbsoluteRoot;
   function hasRoot(itemPath) {
     return assert_1.default(itemPath, "isRooted parameter 'itemPath' must not be empty"), itemPath = normalizeSeparators(itemPath), IS_WINDOWS ? itemPath.startsWith("\\") || /^[A-Z]:/i.test(itemPath) : itemPath.startsWith("/");
   }
+  __name(hasRoot, "hasRoot");
   exports2.hasRoot = hasRoot;
   function normalizeSeparators(p) {
     return p = p || "", IS_WINDOWS ? (p = p.replace(/\//g, "\\"), (/^\\\\+[^\\]/.test(p) ? "\\" : "") + p.replace(/\\\\+/g, "\\")) : p.replace(/\/\/+/g, "/");
   }
+  __name(normalizeSeparators, "normalizeSeparators");
   exports2.normalizeSeparators = normalizeSeparators;
   function safeTrimTrailingSeparator(p) {
     return p ? (p = normalizeSeparators(p), !p.endsWith(path.sep) || p === path.sep || IS_WINDOWS && /^[A-Z]:\\$/i.test(p) ? p : p.substr(0, p.length - 1)) : "";
   }
+  __name(safeTrimTrailingSeparator, "safeTrimTrailingSeparator");
   exports2.safeTrimTrailingSeparator = safeTrimTrailingSeparator;
 });
 
@@ -988,6 +1049,7 @@ var require_internal_pattern_helper = __commonJS((exports2) => {
     }
     return result;
   }
+  __name(getSearchPaths, "getSearchPaths");
   exports2.getSearchPaths = getSearchPaths;
   function match(patterns, itemPath) {
     let result = internal_match_kind_1.MatchKind.None;
@@ -995,10 +1057,12 @@ var require_internal_pattern_helper = __commonJS((exports2) => {
       pattern.negate ? result &= ~pattern.match(itemPath) : result |= pattern.match(itemPath);
     return result;
   }
+  __name(match, "match");
   exports2.match = match;
   function partialMatch(patterns, itemPath) {
     return patterns.some((x) => !x.negate && x.partialMatch(itemPath));
   }
+  __name(partialMatch, "partialMatch");
   exports2.partialMatch = partialMatch;
 });
 
@@ -1031,10 +1095,12 @@ var require_balanced_match = __commonJS((exports2, module2) => {
       post: str.slice(r[1] + b.length)
     };
   }
+  __name(balanced, "balanced");
   function maybeMatch(reg, str) {
     var m = str.match(reg);
     return m ? m[0] : null;
   }
+  __name(maybeMatch, "maybeMatch");
   balanced.range = range;
   function range(a, b, str) {
     var begs, beg, left, right, result, ai = str.indexOf(a), bi = str.indexOf(b, ai + 1), i = ai;
@@ -1045,6 +1111,7 @@ var require_balanced_match = __commonJS((exports2, module2) => {
     }
     return result;
   }
+  __name(range, "range");
 });
 
 // node_modules/brace-expansion/index.js
@@ -1055,12 +1122,15 @@ var require_brace_expansion = __commonJS((exports2, module2) => {
   function numeric(str) {
     return parseInt(str, 10) == str ? parseInt(str, 10) : str.charCodeAt(0);
   }
+  __name(numeric, "numeric");
   function escapeBraces(str) {
     return str.split("\\\\").join(escSlash).split("\\{").join(escOpen).split("\\}").join(escClose).split("\\,").join(escComma).split("\\.").join(escPeriod);
   }
+  __name(escapeBraces, "escapeBraces");
   function unescapeBraces(str) {
     return str.split(escSlash).join("\\").split(escOpen).join("{").split(escClose).join("}").split(escComma).join(",").split(escPeriod).join(".");
   }
+  __name(unescapeBraces, "unescapeBraces");
   function parseCommaParts(str) {
     if (!str)
       return [""];
@@ -1072,21 +1142,27 @@ var require_brace_expansion = __commonJS((exports2, module2) => {
     var postParts = parseCommaParts(post);
     return post.length && (p[p.length - 1] += postParts.shift(), p.push.apply(p, postParts)), parts.push.apply(parts, p), parts;
   }
+  __name(parseCommaParts, "parseCommaParts");
   function expandTop(str) {
     return str ? (str.substr(0, 2) === "{}" && (str = "\\{\\}" + str.substr(2)), expand(escapeBraces(str), !0).map(unescapeBraces)) : [];
   }
+  __name(expandTop, "expandTop");
   function embrace(str) {
     return "{" + str + "}";
   }
+  __name(embrace, "embrace");
   function isPadded(el) {
     return /^-?0\d/.test(el);
   }
+  __name(isPadded, "isPadded");
   function lte(i, y) {
     return i <= y;
   }
+  __name(lte, "lte");
   function gte(i, y) {
     return i >= y;
   }
+  __name(gte, "gte");
   function expand(str, isTop) {
     var expansions = [], m = balanced("{", "}", str);
     if (!m || /\$$/.test(m.pre))
@@ -1133,6 +1209,7 @@ var require_brace_expansion = __commonJS((exports2, module2) => {
       }
     return expansions;
   }
+  __name(expand, "expand");
 });
 
 // node_modules/minimatch/minimatch.js
@@ -1156,6 +1233,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
       return set[c] = !0, set;
     }, {});
   }
+  __name(charSet, "charSet");
   var slashSplit = /\/+/;
   minimatch.filter = filter;
   function filter(pattern, options) {
@@ -1163,6 +1241,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
       return minimatch(p, pattern, options);
     };
   }
+  __name(filter, "filter");
   function ext(a, b) {
     a = a || {}, b = b || {};
     var t = {};
@@ -1172,15 +1251,16 @@ var require_minimatch = __commonJS((exports2, module2) => {
       t[k] = a[k];
     }), t;
   }
+  __name(ext, "ext");
   minimatch.defaults = function(def) {
     if (!def || !Object.keys(def).length)
       return minimatch;
-    var orig = minimatch, m = function(p, pattern, options) {
+    var orig = minimatch, m = /* @__PURE__ */ __name(function(p, pattern, options) {
       return orig.minimatch(p, pattern, ext(def, options));
-    };
-    return m.Minimatch = function(pattern, options) {
+    }, "minimatch");
+    return m.Minimatch = /* @__PURE__ */ __name(function(pattern, options) {
       return new orig.Minimatch(pattern, ext(def, options));
-    }, m;
+    }, "Minimatch"), m;
   };
   Minimatch.defaults = function(def) {
     return !def || !Object.keys(def).length ? Minimatch : minimatch.defaults(def).Minimatch;
@@ -1190,6 +1270,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
       throw new TypeError("glob pattern string required");
     return options || (options = {}), !options.nocomment && pattern.charAt(0) === "#" ? !1 : pattern.trim() === "" ? p === "" : new Minimatch(pattern, options).match(p);
   }
+  __name(minimatch, "minimatch");
   function Minimatch(pattern, options) {
     if (!(this instanceof Minimatch))
       return new Minimatch(pattern, options);
@@ -1197,6 +1278,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
       throw new TypeError("glob pattern string required");
     options || (options = {}), pattern = pattern.trim(), path.sep !== "/" && (pattern = pattern.split(path.sep).join("/")), this.options = options, this.set = [], this.pattern = pattern, this.regexp = null, this.negate = !1, this.comment = !1, this.empty = !1, this.make();
   }
+  __name(Minimatch, "Minimatch");
   Minimatch.prototype.debug = function() {
   };
   Minimatch.prototype.make = make;
@@ -1222,6 +1304,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
       }), this.debug(this.pattern, set), this.set = set;
     }
   }
+  __name(make, "make");
   Minimatch.prototype.parseNegate = parseNegate;
   function parseNegate() {
     var pattern = this.pattern, negate = !1, options = this.options, negateOffset = 0;
@@ -1231,6 +1314,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
       negateOffset && (this.pattern = pattern.substr(negateOffset)), this.negate = negate;
     }
   }
+  __name(parseNegate, "parseNegate");
   minimatch.braceExpand = function(pattern, options) {
     return braceExpand(pattern, options);
   };
@@ -1240,6 +1324,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
       throw new TypeError("undefined pattern");
     return options.nobrace || !pattern.match(/\{.*\}/) ? [pattern] : expand(pattern);
   }
+  __name(braceExpand, "braceExpand");
   Minimatch.prototype.parse = parse;
   var SUBPARSE = {};
   function parse(pattern, isSub) {
@@ -1267,6 +1352,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
         self.debug("clearStateChar %j %j", stateChar, re), stateChar = !1;
       }
     }
+    __name(clearStateChar, "clearStateChar");
     for (var i = 0, len = pattern.length, c; i < len && (c = pattern.charAt(i)); i++) {
       if (this.debug("%s	%s %s %j", pattern, i, re, c), escaping && reSpecials[c]) {
         re += "\\" + c, escaping = !1;
@@ -1391,6 +1477,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
     }
     return regExp._glob = pattern, regExp._src = re, regExp;
   }
+  __name(parse, "parse");
   minimatch.makeRe = function(pattern, options) {
     return new Minimatch(pattern, options || {}).makeRe();
   };
@@ -1414,6 +1501,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
     }
     return this.regexp;
   }
+  __name(makeRe, "makeRe");
   minimatch.match = function(list, pattern, options) {
     options = options || {};
     var mm = new Minimatch(pattern, options);
@@ -1445,6 +1533,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
     }
     return options.flipNegate ? !1 : this.negate;
   }
+  __name(match, "match");
   Minimatch.prototype.matchOne = function(file, pattern, partial) {
     var options = this.options;
     this.debug("matchOne", {this: this, file, pattern}), this.debug("matchOne", file.length, pattern.length);
@@ -1493,9 +1582,11 @@ globstar while`, file, fr, pattern, pr, swallowee), this.matchOne(file.slice(fr)
   function globUnescape(s) {
     return s.replace(/\\(.)/g, "$1");
   }
+  __name(globUnescape, "globUnescape");
   function regExpEscape(s) {
     return s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
   }
+  __name(regExpEscape, "regExpEscape");
 });
 
 // node_modules/@actions/glob/lib/internal-path.js
@@ -1541,6 +1632,7 @@ var require_internal_path = __commonJS((exports2) => {
       return result;
     }
   };
+  __name(Path, "Path");
   exports2.Path = Path;
 });
 
@@ -1652,6 +1744,7 @@ var require_internal_pattern = __commonJS((exports2) => {
       return s.replace(/[[\\^$.|?*+()]/g, "\\$&");
     }
   };
+  __name(Pattern, "Pattern");
   exports2.Pattern = Pattern;
 });
 
@@ -1664,6 +1757,7 @@ var require_internal_search_state = __commonJS((exports2) => {
       this.path = path, this.level = level;
     }
   };
+  __name(SearchState, "SearchState");
   exports2.SearchState = SearchState;
 });
 
@@ -1676,7 +1770,7 @@ var require_internal_globber = __commonJS((exports2) => {
         resolve(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return __name(adopt, "adopt"), new (P || (P = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -1684,6 +1778,7 @@ var require_internal_globber = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(fulfilled, "fulfilled");
       function rejected(value) {
         try {
           step(generator.throw(value));
@@ -1691,10 +1786,11 @@ var require_internal_globber = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(rejected, "rejected");
       function step(result) {
         result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
+      __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   }, __asyncValues = exports2 && exports2.__asyncValues || function(o) {
     if (!Symbol.asyncIterator)
@@ -1790,7 +1886,7 @@ var require_internal_globber = __commonJS((exports2) => {
       });
     }
     globGenerator() {
-      return __asyncGenerator(this, arguments, function* () {
+      return __asyncGenerator(this, arguments, /* @__PURE__ */ __name(function* () {
         let options = globOptionsHelper.getOptions(this.options), patterns = [];
         for (let pattern of this.patterns)
           patterns.push(pattern), options.implicitDescendants && (pattern.trailingSeparator || pattern.segments[pattern.segments.length - 1] !== "**") && patterns.push(new internal_pattern_1.Pattern(pattern.negate, pattern.segments.concat("**")));
@@ -1823,7 +1919,7 @@ var require_internal_globber = __commonJS((exports2) => {
             } else
               match & internal_match_kind_1.MatchKind.File && (yield yield __await(item.path));
         }
-      });
+      }, "globGenerator_1"));
     }
     static create(patterns, options) {
       return __awaiter(this, void 0, void 0, function* () {
@@ -1870,6 +1966,7 @@ var require_internal_globber = __commonJS((exports2) => {
       });
     }
   };
+  __name(DefaultGlobber, "DefaultGlobber");
   exports2.DefaultGlobber = DefaultGlobber;
 });
 
@@ -1882,7 +1979,7 @@ var require_glob = __commonJS((exports2) => {
         resolve(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return __name(adopt, "adopt"), new (P || (P = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -1890,6 +1987,7 @@ var require_glob = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(fulfilled, "fulfilled");
       function rejected(value) {
         try {
           step(generator.throw(value));
@@ -1897,10 +1995,11 @@ var require_glob = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(rejected, "rejected");
       function step(result) {
         result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
+      __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
@@ -1910,6 +2009,7 @@ var require_glob = __commonJS((exports2) => {
       return yield internal_globber_1.DefaultGlobber.create(patterns, options);
     });
   }
+  __name(create, "create");
   exports2.create = create;
 });
 
@@ -1953,6 +2053,7 @@ var require_PlainValue_ec8e588e = __commonJS((exports2) => {
 `, offset);
     return ls;
   }
+  __name(findLineStarts, "findLineStarts");
   function getSrcInfo(cst) {
     let lineStarts, src;
     return typeof cst == "string" ? (lineStarts = findLineStarts(cst), src = cst) : (Array.isArray(cst) && (cst = cst[0]), cst && cst.context && (cst.lineStarts || (cst.lineStarts = findLineStarts(cst.context.src)), lineStarts = cst.lineStarts, src = cst.context.src)), {
@@ -1960,6 +2061,7 @@ var require_PlainValue_ec8e588e = __commonJS((exports2) => {
       src
     };
   }
+  __name(getSrcInfo, "getSrcInfo");
   function getLinePos(offset, cst) {
     if (typeof offset != "number" || offset < 0)
       return null;
@@ -1988,6 +2090,7 @@ var require_PlainValue_ec8e588e = __commonJS((exports2) => {
       col: offset - lineStarts[line - 1] + 1
     };
   }
+  __name(getLinePos, "getLinePos");
   function getLine(line, cst) {
     let {
       lineStarts,
@@ -2001,6 +2104,7 @@ var require_PlainValue_ec8e588e = __commonJS((exports2) => {
       --end;
     return src.slice(start, end);
   }
+  __name(getLine, "getLine");
   function getPrettyContext({
     start,
     end
@@ -2024,6 +2128,7 @@ var require_PlainValue_ec8e588e = __commonJS((exports2) => {
     return `${src}
 ${offset}${err}${errEnd}`;
   }
+  __name(getPrettyContext, "getPrettyContext");
   var Range = class {
     static copy(orig) {
       return new Range(orig.start, orig.end);
@@ -2050,7 +2155,9 @@ ${offset}${err}${errEnd}`;
         ++i;
       return this.origEnd = end + i, nextOffset;
     }
-  }, Node = class {
+  };
+  __name(Range, "Range");
+  var Node = class {
     static addStringTerminator(src, offset, str) {
       if (str[str.length - 1] === `
 `)
@@ -2319,7 +2426,9 @@ ${offset}${err}${errEnd}`;
       let str = src.slice(range.start, range.end);
       return Node.addStringTerminator(src, range.end, str);
     }
-  }, YAMLError = class extends Error {
+  };
+  __name(Node, "Node");
+  var YAMLError = class extends Error {
     constructor(name, source, message) {
       if (!message || !(source instanceof Node))
         throw new Error(`Invalid arguments for new ${name}`);
@@ -2361,23 +2470,32 @@ ${ctx}
       }
       delete this.source;
     }
-  }, YAMLReferenceError = class extends YAMLError {
+  };
+  __name(YAMLError, "YAMLError");
+  var YAMLReferenceError = class extends YAMLError {
     constructor(source, message) {
       super("YAMLReferenceError", source, message);
     }
-  }, YAMLSemanticError = class extends YAMLError {
+  };
+  __name(YAMLReferenceError, "YAMLReferenceError");
+  var YAMLSemanticError = class extends YAMLError {
     constructor(source, message) {
       super("YAMLSemanticError", source, message);
     }
-  }, YAMLSyntaxError = class extends YAMLError {
+  };
+  __name(YAMLSemanticError, "YAMLSemanticError");
+  var YAMLSyntaxError = class extends YAMLError {
     constructor(source, message) {
       super("YAMLSyntaxError", source, message);
     }
-  }, YAMLWarning = class extends YAMLError {
+  };
+  __name(YAMLSyntaxError, "YAMLSyntaxError");
+  var YAMLWarning = class extends YAMLError {
     constructor(source, message) {
       super("YAMLWarning", source, message);
     }
   };
+  __name(YAMLWarning, "YAMLWarning");
   function _defineProperty(obj, key, value) {
     return key in obj ? Object.defineProperty(obj, key, {
       value,
@@ -2386,6 +2504,7 @@ ${ctx}
       writable: !0
     }) : obj[key] = value, obj;
   }
+  __name(_defineProperty, "_defineProperty");
   var PlainValue = class extends Node {
     static endOfLine(src, start, inFlow) {
       let ch = src[start], offset = start;
@@ -2477,6 +2596,7 @@ ${ctx}
 ` && (offset = PlainValue.endOfLine(src, start, inFlow)), this.valueRange = new Range(start, offset), offset = Node.endOfWhiteSpace(src, offset), offset = this.parseComment(offset), (!this.hasComment || this.valueRange.isEmpty()) && (offset = this.parseBlockValue(offset)), offset;
     }
   };
+  __name(PlainValue, "PlainValue");
   exports2.Char = Char;
   exports2.Node = Node;
   exports2.PlainValue = PlainValue;
@@ -2505,7 +2625,9 @@ var require_parse_cst = __commonJS((exports2) => {
     parse(context, start) {
       return this.context = context, this.range = new PlainValue.Range(start, start + 1), start + 1;
     }
-  }, CollectionItem = class extends PlainValue.Node {
+  };
+  __name(BlankLine, "BlankLine");
+  var CollectionItem = class extends PlainValue.Node {
     constructor(type, props) {
       super(type, props);
       this.node = null;
@@ -2576,7 +2698,9 @@ var require_parse_cst = __commonJS((exports2) => {
       let str = node ? src.slice(range.start, node.range.start) + String(node) : src.slice(range.start, range.end);
       return PlainValue.Node.addStringTerminator(src, range.end, str);
     }
-  }, Comment = class extends PlainValue.Node {
+  };
+  __name(CollectionItem, "CollectionItem");
+  var Comment = class extends PlainValue.Node {
     constructor() {
       super(PlainValue.Type.COMMENT);
     }
@@ -2586,6 +2710,7 @@ var require_parse_cst = __commonJS((exports2) => {
       return this.range = new PlainValue.Range(start, offset), offset;
     }
   };
+  __name(Comment, "Comment");
   function grabCollectionEndComments(node) {
     let cnode = node;
     for (; cnode instanceof CollectionItem; )
@@ -2615,6 +2740,7 @@ var require_parse_cst = __commonJS((exports2) => {
       cnode = cnode.context.parent;
     return ca;
   }
+  __name(grabCollectionEndComments, "grabCollectionEndComments");
   var Collection = class extends PlainValue.Node {
     static nextContentHasIndent(src, offset, indent) {
       let lineStart = PlainValue.Node.endOfLine(src, offset) + 1;
@@ -2756,7 +2882,9 @@ var require_parse_cst = __commonJS((exports2) => {
       }
       return PlainValue.Node.addStringTerminator(src, range.end, str);
     }
-  }, Directive = class extends PlainValue.Node {
+  };
+  __name(Collection, "Collection");
+  var Directive = class extends PlainValue.Node {
     constructor() {
       super(PlainValue.Type.DIRECTIVE);
       this.name = null;
@@ -2788,7 +2916,9 @@ var require_parse_cst = __commonJS((exports2) => {
       let offset = this.parseName(start + 1);
       return offset = this.parseParameters(offset), offset = this.parseComment(offset), this.range = new PlainValue.Range(start, offset), offset;
     }
-  }, Document = class extends PlainValue.Node {
+  };
+  __name(Directive, "Directive");
+  var Document = class extends PlainValue.Node {
     static startCommentOrEndBlankLine(src, start) {
       let offset = PlainValue.Node.endOfWhiteSpace(src, start), ch = src[offset];
       return ch === "#" || ch === `
@@ -2935,7 +3065,9 @@ var require_parse_cst = __commonJS((exports2) => {
 ` && (str += `
 `), str;
     }
-  }, Alias = class extends PlainValue.Node {
+  };
+  __name(Document, "Document");
+  var Alias = class extends PlainValue.Node {
     parse(context, start) {
       this.context = context;
       let {
@@ -2943,7 +3075,9 @@ var require_parse_cst = __commonJS((exports2) => {
       } = context, offset = PlainValue.Node.endOfIdentifier(src, start + 1);
       return this.valueRange = new PlainValue.Range(start + 1, offset), offset = PlainValue.Node.endOfWhiteSpace(src, offset), offset = this.parseComment(offset), offset;
     }
-  }, Chomp = {
+  };
+  __name(Alias, "Alias");
+  var Chomp = {
     CLIP: "CLIP",
     KEEP: "KEEP",
     STRIP: "STRIP"
@@ -3080,7 +3214,9 @@ var require_parse_cst = __commonJS((exports2) => {
     setOrigRanges(cr, offset) {
       return offset = super.setOrigRanges(cr, offset), this.header ? this.header.setOrigRange(cr, offset) : offset;
     }
-  }, FlowCollection = class extends PlainValue.Node {
+  };
+  __name(BlockValue, "BlockValue");
+  var FlowCollection = class extends PlainValue.Node {
     constructor(type, props) {
       super(type, props);
       this.items = null;
@@ -3204,7 +3340,9 @@ var require_parse_cst = __commonJS((exports2) => {
 ` && (prevEnd += 1);
       }), str += src.slice(prevEnd, range.end), PlainValue.Node.addStringTerminator(src, range.end, str);
     }
-  }, QuoteDouble = class extends PlainValue.Node {
+  };
+  __name(FlowCollection, "FlowCollection");
+  var QuoteDouble = class extends PlainValue.Node {
     static endOfQuote(src, offset) {
       let ch = src[offset];
       for (; ch && ch !== '"'; )
@@ -3335,7 +3473,9 @@ var require_parse_cst = __commonJS((exports2) => {
       } = context, offset = QuoteDouble.endOfQuote(src, start + 1);
       return this.valueRange = new PlainValue.Range(start, offset), offset = PlainValue.Node.endOfWhiteSpace(src, offset), offset = this.parseComment(offset), offset;
     }
-  }, QuoteSingle = class extends PlainValue.Node {
+  };
+  __name(QuoteDouble, "QuoteDouble");
+  var QuoteSingle = class extends PlainValue.Node {
     static endOfQuote(src, offset) {
       let ch = src[offset];
       for (; ch; )
@@ -3394,6 +3534,7 @@ var require_parse_cst = __commonJS((exports2) => {
       return this.valueRange = new PlainValue.Range(start, offset), offset = PlainValue.Node.endOfWhiteSpace(src, offset), offset = this.parseComment(offset), offset;
     }
   };
+  __name(QuoteSingle, "QuoteSingle");
   function createNewNode(type, props) {
     switch (type) {
       case PlainValue.Type.ALIAS:
@@ -3419,6 +3560,7 @@ var require_parse_cst = __commonJS((exports2) => {
         return null;
     }
   }
+  __name(createNewNode, "createNewNode");
   var ParseContext = class {
     static parseType(src, offset, inFlow) {
       switch (src[offset]) {
@@ -3519,6 +3661,7 @@ var require_parse_cst = __commonJS((exports2) => {
       };
     }
   };
+  __name(ParseContext, "ParseContext");
   function parse(src) {
     let cr = [];
     src.indexOf("\r") !== -1 && (src = src.replace(/\r\n?/g, (match, offset2) => (match.length > 1 && cr.push(offset2), `
@@ -3542,6 +3685,7 @@ var require_parse_cst = __commonJS((exports2) => {
     }, documents.toString = () => documents.join(`...
 `), documents;
   }
+  __name(parse, "parse");
   exports2.parse = parse;
 });
 
@@ -3553,13 +3697,16 @@ var require_resolveSeq_4a68b39b = __commonJS((exports2) => {
     return comment ? `#${comment.replace(/[\s\S]^/gm, `$&${indent}#`)}
 ${indent}${str}` : str;
   }
+  __name(addCommentBefore, "addCommentBefore");
   function addComment(str, indent, comment) {
     return comment ? comment.indexOf(`
 `) === -1 ? `${str} #${comment}` : `${str}
 ` + comment.replace(/^/gm, `${indent || ""}#`) : str;
   }
+  __name(addComment, "addComment");
   var Node = class {
   };
+  __name(Node, "Node");
   function toJSON(value, arg, ctx) {
     if (Array.isArray(value))
       return value.map((v, i) => toJSON(v, String(i), ctx));
@@ -3573,6 +3720,7 @@ ${indent}${str}` : str;
     }
     return (!ctx || !ctx.keep) && typeof value == "bigint" ? Number(value) : value;
   }
+  __name(toJSON, "toJSON");
   var Scalar = class extends Node {
     constructor(value) {
       super();
@@ -3585,6 +3733,7 @@ ${indent}${str}` : str;
       return String(this.value);
     }
   };
+  __name(Scalar, "Scalar");
   function collectionFromPath(schema, path, value) {
     let v = value;
     for (let i = path.length - 1; i >= 0; --i) {
@@ -3593,7 +3742,8 @@ ${indent}${str}` : str;
     }
     return schema.createNode(v, !1);
   }
-  var isEmptyPath = (path) => path == null || typeof path == "object" && path[Symbol.iterator]().next().done, Collection = class extends Node {
+  __name(collectionFromPath, "collectionFromPath");
+  var isEmptyPath = /* @__PURE__ */ __name((path) => path == null || typeof path == "object" && path[Symbol.iterator]().next().done, "isEmptyPath"), Collection = class extends Node {
     constructor(schema) {
       super();
       PlainValue._defineProperty(this, "items", []), this.schema = schema;
@@ -3719,11 +3869,13 @@ ${indent}${s}` : `
 ` + this.comment.replace(/^/gm, `${indent}#`), onComment && onComment()) : chompKeep && onChompKeep && onChompKeep(), str;
     }
   };
+  __name(Collection, "Collection");
   PlainValue._defineProperty(Collection, "maxFlowStringSingleLineLength", 60);
   function asItemIndex(key) {
     let idx = key instanceof Scalar ? key.value : key;
     return idx && typeof idx == "string" && (idx = Number(idx)), Number.isInteger(idx) && idx >= 0 ? idx : null;
   }
+  __name(asItemIndex, "asItemIndex");
   var YAMLSeq = class extends Collection {
     add(value) {
       this.items.push(value);
@@ -3768,7 +3920,9 @@ ${indent}${s}` : `
         itemIndent: (ctx.indent || "") + "  "
       }, onComment, onChompKeep) : JSON.stringify(this);
     }
-  }, stringifyKey = (key, jsKey, ctx) => jsKey === null ? "" : typeof jsKey != "object" ? String(jsKey) : key instanceof Node && ctx && ctx.doc ? key.toString({
+  };
+  __name(YAMLSeq, "YAMLSeq");
+  var stringifyKey = /* @__PURE__ */ __name((key, jsKey, ctx) => jsKey === null ? "" : typeof jsKey != "object" ? String(jsKey) : key instanceof Node && ctx && ctx.doc ? key.toString({
     anchors: {},
     doc: ctx.doc,
     indent: "",
@@ -3776,7 +3930,7 @@ ${indent}${s}` : `
     inFlow: !0,
     inStringifyKey: !0,
     stringify: ctx.stringify
-  }) : JSON.stringify(jsKey), Pair = class extends Node {
+  }) : JSON.stringify(jsKey), "stringifyKey"), Pair = class extends Node {
     constructor(key, value = null) {
       super();
       this.key = key, this.value = value, this.type = Pair.Type.PAIR;
@@ -3854,11 +4008,12 @@ ${ctx.indent}` : !explicitKey && value instanceof Collection && (!(valueStr[0] =
 ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), addComment(str + ws + valueStr, ctx.indent, valueComment);
     }
   };
+  __name(Pair, "Pair");
   PlainValue._defineProperty(Pair, "Type", {
     PAIR: "PAIR",
     MERGE_PAIR: "MERGE_PAIR"
   });
-  var getAliasCount = (node, anchors) => {
+  var getAliasCount = /* @__PURE__ */ __name((node, anchors) => {
     if (node instanceof Alias) {
       let anchor = anchors.get(node.source);
       return anchor.count * anchor.aliasCount;
@@ -3874,7 +4029,7 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
       return Math.max(kc, vc);
     }
     return 1;
-  }, Alias = class extends Node {
+  }, "getAliasCount"), Alias = class extends Node {
     static stringify({
       range,
       source
@@ -3918,6 +4073,7 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
       return Alias.stringify(this, ctx);
     }
   };
+  __name(Alias, "Alias");
   PlainValue._defineProperty(Alias, "default", !0);
   function findPair(items, key) {
     let k = key instanceof Scalar ? key.value : key;
@@ -3925,6 +4081,7 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
       if (it instanceof Pair && (it.key === key || it.key === k || it.key && it.key.value === k))
         return it;
   }
+  __name(findPair, "findPair");
   var YAMLMap = class extends Collection {
     add(pair, overwrite) {
       pair ? pair instanceof Pair || (pair = new Pair(pair.key || pair, pair.value)) : pair = new Pair(pair);
@@ -3977,7 +4134,9 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
         itemIndent: ctx.indent || ""
       }, onComment, onChompKeep);
     }
-  }, MERGE_KEY = "<<", Merge = class extends Pair {
+  };
+  __name(YAMLMap, "YAMLMap");
+  var MERGE_KEY = "<<", Merge = class extends Pair {
     constructor(pair) {
       if (pair instanceof Pair) {
         let seq = pair.value;
@@ -4006,7 +4165,9 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
       let str = super.toString(ctx, onComment);
       return this.value = seq, str;
     }
-  }, binaryOptions = {
+  };
+  __name(Merge, "Merge");
+  var binaryOptions = {
     defaultType: PlainValue.Type.BLOCK_LITERAL,
     lineWidth: 76
   }, boolOptions = {
@@ -4042,7 +4203,8 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
       }
     return scalarFallback && (str = scalarFallback(str)), new Scalar(str);
   }
-  var FOLD_FLOW = "flow", FOLD_BLOCK = "block", FOLD_QUOTED = "quoted", consumeMoreIndentedLines = (text, i) => {
+  __name(resolveScalar, "resolveScalar");
+  var FOLD_FLOW = "flow", FOLD_BLOCK = "block", FOLD_QUOTED = "quoted", consumeMoreIndentedLines = /* @__PURE__ */ __name((text, i) => {
     let ch = text[i + 1];
     for (; ch === " " || ch === "	"; ) {
       do
@@ -4052,7 +4214,7 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
       ch = text[i + 1];
     }
     return i;
-  };
+  }, "consumeMoreIndentedLines");
   function foldFlowLines(text, indent, mode, {
     indentAtStart,
     lineWidth = 80,
@@ -4115,11 +4277,12 @@ ${indent}${text.slice(fold + 1, end2)}`;
     }
     return res;
   }
-  var getFoldOptions = ({
+  __name(foldFlowLines, "foldFlowLines");
+  var getFoldOptions = /* @__PURE__ */ __name(({
     indentAtStart
   }) => indentAtStart ? Object.assign({
     indentAtStart
-  }, strOptions.fold) : strOptions.fold, containsDocumentMarker = (str) => /^(%|---|\.\.\.)/m.test(str);
+  }, strOptions.fold) : strOptions.fold, "getFoldOptions"), containsDocumentMarker = /* @__PURE__ */ __name((str) => /^(%|---|\.\.\.)/m.test(str), "containsDocumentMarker");
   function lineLengthOverLimit(str, limit) {
     let strLen = str.length;
     if (strLen <= limit)
@@ -4134,6 +4297,7 @@ ${indent}${text.slice(fold + 1, end2)}`;
       }
     return !0;
   }
+  __name(lineLengthOverLimit, "lineLengthOverLimit");
   function doubleQuotedString(value, ctx) {
     let {
       implicitKey
@@ -4199,6 +4363,7 @@ ${indent}${text.slice(fold + 1, end2)}`;
         }
     return str = start ? str + json.slice(start) : json, implicitKey ? str : foldFlowLines(str, indent, FOLD_QUOTED, getFoldOptions(ctx));
   }
+  __name(doubleQuotedString, "doubleQuotedString");
   function singleQuotedString(value, ctx) {
     if (ctx.implicitKey) {
       if (/\n/.test(value))
@@ -4209,6 +4374,7 @@ ${indent}${text.slice(fold + 1, end2)}`;
 ${indent}`) + "'";
     return ctx.implicitKey ? res : foldFlowLines(res, indent, FOLD_FLOW, getFoldOptions(ctx));
   }
+  __name(singleQuotedString, "singleQuotedString");
   function blockString({
     comment,
     type,
@@ -4241,6 +4407,7 @@ $&`).replace(/(?:^|\n)([\t ].*)(?:([\n\t ]*)\n(?![\n\t ]))?/g, "$1$2").replace(/
     return `${header}
 ${indent}${body}`;
   }
+  __name(blockString, "blockString");
   function plainString(item, ctx, onComment, onChompKeep) {
     let {
       comment,
@@ -4276,6 +4443,7 @@ ${indent}`);
 `) !== -1 || comment.indexOf(`
 `) !== -1) ? (onComment && onComment(), addCommentBefore(body, indent, comment)) : body;
   }
+  __name(plainString, "plainString");
   function stringifyString(item, ctx, onComment, onChompKeep) {
     let {
       defaultType
@@ -4289,7 +4457,7 @@ ${indent}`);
     typeof value != "string" && (value = String(value), item = Object.assign({}, item, {
       value
     }));
-    let _stringify = (_type) => {
+    let _stringify = /* @__PURE__ */ __name((_type) => {
       switch (_type) {
         case PlainValue.Type.BLOCK_FOLDED:
         case PlainValue.Type.BLOCK_LITERAL:
@@ -4303,13 +4471,14 @@ ${indent}`);
         default:
           return null;
       }
-    };
+    }, "_stringify");
     (type !== PlainValue.Type.QUOTE_DOUBLE && /[\x00-\x08\x0b-\x1f\x7f-\x9f]/.test(value) || (implicitKey || inFlow) && (type === PlainValue.Type.BLOCK_FOLDED || type === PlainValue.Type.BLOCK_LITERAL)) && (type = PlainValue.Type.QUOTE_DOUBLE);
     let res = _stringify(type);
     if (res === null && (res = _stringify(defaultType), res === null))
       throw new Error(`Unsupported default string type ${defaultType}`);
     return res;
   }
+  __name(stringifyString, "stringifyString");
   function stringifyNumber({
     format,
     minFractionDigits,
@@ -4330,6 +4499,7 @@ ${indent}`);
     }
     return n;
   }
+  __name(stringifyNumber, "stringifyNumber");
   function checkFlowCollectionEnd(errors, cst) {
     let char, name;
     switch (cst.type) {
@@ -4356,6 +4526,7 @@ ${indent}`);
       typeof lastItem.offset == "number" ? (err = new PlainValue.YAMLSemanticError(cst, msg), err.offset = lastItem.offset + 1) : (err = new PlainValue.YAMLSemanticError(lastItem, msg), lastItem.range && lastItem.range.end && (err.offset = lastItem.range.end - lastItem.range.start)), errors.push(err);
     }
   }
+  __name(checkFlowCollectionEnd, "checkFlowCollectionEnd");
   function checkFlowCommentSpace(errors, comment) {
     let prev = comment.context.src[comment.range.start - 1];
     if (prev !== `
@@ -4364,10 +4535,12 @@ ${indent}`);
       errors.push(new PlainValue.YAMLSemanticError(comment, msg));
     }
   }
+  __name(checkFlowCommentSpace, "checkFlowCommentSpace");
   function getLongKeyError(source, key) {
     let sk = String(key), k = sk.substr(0, 8) + "..." + sk.substr(-8);
     return new PlainValue.YAMLSemanticError(source, `The "${k}" key is too long`);
   }
+  __name(getLongKeyError, "getLongKeyError");
   function resolveComments(collection, comments) {
     for (let {
       afterKey,
@@ -4380,12 +4553,14 @@ ${indent}`);
 ` + comment : collection.comment = comment);
     }
   }
+  __name(resolveComments, "resolveComments");
   function resolveString(doc, node) {
     let res = node.strValue;
     return res ? typeof res == "string" ? res : (res.errors.forEach((error) => {
       error.source || (error.source = node), doc.errors.push(error);
     }), res.str) : "";
   }
+  __name(resolveString, "resolveString");
   function resolveTagHandle(doc, node) {
     let {
       handle,
@@ -4408,6 +4583,7 @@ ${indent}`);
     }
     return prefix.prefix + decodeURIComponent(suffix);
   }
+  __name(resolveTagHandle, "resolveTagHandle");
   function resolveTagName(doc, node) {
     let {
       tag,
@@ -4451,6 +4627,7 @@ ${indent}`);
         return null;
     }
   }
+  __name(resolveTagName, "resolveTagName");
   function resolveByTagName(doc, node, tagName) {
     let {
       tags
@@ -4466,6 +4643,7 @@ ${indent}`);
     let str = resolveString(doc, node);
     return typeof str == "string" && matchWithTest.length > 0 ? resolveScalar(str, matchWithTest, tags.scalarFallback) : null;
   }
+  __name(resolveByTagName, "resolveByTagName");
   function getFallbackTagName({
     type
   }) {
@@ -4480,6 +4658,7 @@ ${indent}`);
         return PlainValue.defaultTags.STR;
     }
   }
+  __name(getFallbackTagName, "getFallbackTagName");
   function resolveTag(doc, node, tagName) {
     try {
       let res = resolveByTagName(doc, node, tagName);
@@ -4501,14 +4680,15 @@ ${indent}`);
       return refError.stack = error.stack, doc.errors.push(refError), null;
     }
   }
-  var isCollectionItem = (node) => {
+  __name(resolveTag, "resolveTag");
+  var isCollectionItem = /* @__PURE__ */ __name((node) => {
     if (!node)
       return !1;
     let {
       type
     } = node;
     return type === PlainValue.Type.MAP_KEY || type === PlainValue.Type.MAP_VALUE || type === PlainValue.Type.SEQ_ITEM;
-  };
+  }, "isCollectionItem");
   function resolveNodeProps(errors, node) {
     let comments = {
       before: [],
@@ -4552,6 +4732,7 @@ ${indent}`);
       hasTag
     };
   }
+  __name(resolveNodeProps, "resolveNodeProps");
   function resolveNodeValue(doc, node) {
     let {
       anchors,
@@ -4581,6 +4762,7 @@ ${indent}`);
       return error.source || (error.source = node), errors.push(error), null;
     }
   }
+  __name(resolveNodeValue, "resolveNodeValue");
   function resolveNode(doc, node) {
     if (!node)
       return null;
@@ -4614,6 +4796,7 @@ ${ca}` : ca);
     }
     return node.resolved = res;
   }
+  __name(resolveNode, "resolveNode");
   function resolveMap(doc, cst) {
     if (cst.type !== PlainValue.Type.MAP && cst.type !== PlainValue.Type.FLOW_MAP) {
       let msg = `A ${cst.type} node cannot be resolved as a mapping`;
@@ -4659,7 +4842,8 @@ ${ca}` : ca);
     }
     return cst.resolved = map, map;
   }
-  var valueHasPairComment = ({
+  __name(resolveMap, "resolveMap");
+  var valueHasPairComment = /* @__PURE__ */ __name(({
     context: {
       lineStart,
       node,
@@ -4679,7 +4863,7 @@ ${ca}` : ca);
 `)
         return !1;
     return !0;
-  };
+  }, "valueHasPairComment");
   function resolvePairComment(item, pair) {
     if (!valueHasPairComment(item))
       return;
@@ -4692,6 +4876,7 @@ ${ca}` : ca);
     }
     found && (pair.comment = comment);
   }
+  __name(resolvePairComment, "resolvePairComment");
   function resolveBlockMapItems(doc, cst) {
     let comments = [], items = [], key, keyStart = null;
     for (let i = 0; i < cst.items.length; ++i) {
@@ -4770,6 +4955,7 @@ ${ca}` : ca);
       items
     };
   }
+  __name(resolveBlockMapItems, "resolveBlockMapItems");
   function resolveFlowMapItems(doc, cst) {
     let comments = [], items = [], key, explicitKey = !1, next = "{";
     for (let i = 0; i < cst.items.length; ++i) {
@@ -4816,6 +5002,7 @@ ${ca}` : ca);
       items
     };
   }
+  __name(resolveFlowMapItems, "resolveFlowMapItems");
   function resolveSeq(doc, cst) {
     if (cst.type !== PlainValue.Type.SEQ && cst.type !== PlainValue.Type.FLOW_SEQ) {
       let msg = `A ${cst.type} node cannot be resolved as a sequence`;
@@ -4831,6 +5018,7 @@ ${ca}` : ca);
     }
     return cst.resolved = seq, seq;
   }
+  __name(resolveSeq, "resolveSeq");
   function resolveBlockSeqItems(doc, cst) {
     let comments = [], items = [];
     for (let i = 0; i < cst.items.length; ++i) {
@@ -4862,6 +5050,7 @@ ${ca}` : ca);
       items
     };
   }
+  __name(resolveBlockSeqItems, "resolveBlockSeqItems");
   function resolveFlowSeqItems(doc, cst) {
     let comments = [], items = [], explicitKey = !1, key, keyStart = null, next = "[", prevItem = null;
     for (let i = 0; i < cst.items.length; ++i) {
@@ -4925,6 +5114,7 @@ ${ca}` : ca);
       items
     };
   }
+  __name(resolveFlowSeqItems, "resolveFlowSeqItems");
   exports2.Alias = Alias;
   exports2.Collection = Collection;
   exports2.Merge = Merge;
@@ -5025,6 +5215,7 @@ ${pair.comment}` : item.comment), item = pair;
     }
     return seq;
   }
+  __name(parsePairs, "parsePairs");
   function createPairs(schema, iterable, ctx) {
     let pairs2 = new resolveSeq.YAMLSeq(schema);
     pairs2.tag = "tag:yaml.org,2002:pairs";
@@ -5048,6 +5239,7 @@ ${pair.comment}` : item.comment), item = pair;
     }
     return pairs2;
   }
+  __name(createPairs, "createPairs");
   var pairs = {
     default: !1,
     tag: "tag:yaml.org,2002:pairs",
@@ -5070,6 +5262,7 @@ ${pair.comment}` : item.comment), item = pair;
       return map;
     }
   };
+  __name(YAMLOMap, "YAMLOMap");
   PlainValue._defineProperty(YAMLOMap, "tag", "tag:yaml.org,2002:omap");
   function parseOMap(doc, cst) {
     let pairs2 = parsePairs(doc, cst), seenKeys = [];
@@ -5084,10 +5277,12 @@ ${pair.comment}` : item.comment), item = pair;
           seenKeys.push(key.value);
     return Object.assign(new YAMLOMap(), pairs2);
   }
+  __name(parseOMap, "parseOMap");
   function createOMap(schema, iterable, ctx) {
     let pairs2 = createPairs(schema, iterable, ctx), omap2 = new YAMLOMap();
     return omap2.items = pairs2.items, omap2;
   }
+  __name(createOMap, "createOMap");
   var omap = {
     identify: (value) => value instanceof Map,
     nodeClass: YAMLOMap,
@@ -5125,6 +5320,7 @@ ${pair.comment}` : item.comment), item = pair;
       throw new Error("Set items must all have null values");
     }
   };
+  __name(YAMLSet, "YAMLSet");
   PlainValue._defineProperty(YAMLSet, "tag", "tag:yaml.org,2002:set");
   function parseSet(doc, cst) {
     let map = resolveSeq.resolveMap(doc, cst);
@@ -5132,12 +5328,14 @@ ${pair.comment}` : item.comment), item = pair;
       throw new PlainValue.YAMLSemanticError(cst, "Set items must all have null values");
     return Object.assign(new YAMLSet(), map);
   }
+  __name(parseSet, "parseSet");
   function createSet(schema, iterable, ctx) {
     let set2 = new YAMLSet();
     for (let value of iterable)
       set2.items.push(schema.createPair(value, null, ctx));
     return set2;
   }
+  __name(createSet, "createSet");
   var set = {
     identify: (value) => value instanceof Set,
     nodeClass: YAMLSet,
@@ -5145,10 +5343,10 @@ ${pair.comment}` : item.comment), item = pair;
     tag: "tag:yaml.org,2002:set",
     resolve: parseSet,
     createNode: createSet
-  }, parseSexagesimal = (sign, parts) => {
+  }, parseSexagesimal = /* @__PURE__ */ __name((sign, parts) => {
     let n = parts.split(":").reduce((n2, p) => n2 * 60 + Number(p), 0);
     return sign === "-" ? -n : n;
-  }, stringifySexagesimal = ({
+  }, "parseSexagesimal"), stringifySexagesimal = /* @__PURE__ */ __name(({
     value
   }) => {
     if (isNaN(value) || !isFinite(value))
@@ -5157,7 +5355,7 @@ ${pair.comment}` : item.comment), item = pair;
     value < 0 && (sign = "-", value = Math.abs(value));
     let parts = [value % 60];
     return value < 60 ? parts.unshift(0) : (value = Math.round((value - parts[0]) / 60), parts.unshift(value % 60), value >= 60 && (value = Math.round((value - parts[0]) / 60), parts.unshift(value))), sign + parts.map((n) => n < 10 ? "0" + String(n) : String(n)).join(":").replace(/000000\d*$/, "");
-  }, intTime = {
+  }, "stringifySexagesimal"), intTime = {
     identify: (value) => typeof value == "number",
     default: !0,
     tag: "tag:yaml.org,2002:int",
@@ -5195,18 +5393,21 @@ ${pair.comment}` : item.comment), item = pair;
     let env = typeof process != "undefined" && process.env || {};
     return deprecation ? typeof YAML_SILENCE_DEPRECATION_WARNINGS != "undefined" ? !YAML_SILENCE_DEPRECATION_WARNINGS : !env.YAML_SILENCE_DEPRECATION_WARNINGS : typeof YAML_SILENCE_WARNINGS != "undefined" ? !YAML_SILENCE_WARNINGS : !env.YAML_SILENCE_WARNINGS;
   }
+  __name(shouldWarn, "shouldWarn");
   function warn(warning, type) {
     if (shouldWarn(!1)) {
       let emit = typeof process != "undefined" && process.emitWarning;
       emit ? emit(warning, type) : console.warn(type ? `${type}: ${warning}` : warning);
     }
   }
+  __name(warn, "warn");
   function warnFileDeprecation(filename) {
     if (shouldWarn(!0)) {
       let path = filename.replace(/.*yaml[/\\]/i, "").replace(/\.js$/, "").replace(/\\/g, "/");
       warn(`The endpoint 'yaml/${path}' will be removed in a future release.`, "DeprecationWarning");
     }
   }
+  __name(warnFileDeprecation, "warnFileDeprecation");
   var warned = {};
   function warnOptionDeprecation(name, alternative) {
     if (!warned[name] && shouldWarn(!0)) {
@@ -5215,6 +5416,7 @@ ${pair.comment}` : item.comment), item = pair;
       msg += alternative ? `, use '${alternative}' instead.` : ".", warn(msg, "DeprecationWarning");
     }
   }
+  __name(warnOptionDeprecation, "warnOptionDeprecation");
   exports2.binary = binary;
   exports2.floatTime = floatTime;
   exports2.intTime = intTime;
@@ -5241,6 +5443,7 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
         map2.items.push(schema.createPair(key, obj[key], ctx));
     return typeof schema.sortMapEntries == "function" && map2.items.sort(schema.sortMapEntries), map2;
   }
+  __name(createMap, "createMap");
   var map = {
     createNode: createMap,
     default: !0,
@@ -5257,6 +5460,7 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
       }
     return seq2;
   }
+  __name(createSeq, "createSeq");
   var seq = {
     createNode: createSeq,
     default: !0,
@@ -5274,13 +5478,14 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
       }, ctx), resolveSeq.stringifyString(item, ctx, onComment, onChompKeep);
     },
     options: resolveSeq.strOptions
-  }, failsafe = [map, seq, string], intIdentify = (value) => typeof value == "bigint" || Number.isInteger(value), intResolve = (src, part, radix) => resolveSeq.intOptions.asBigInt ? BigInt(src) : parseInt(part, radix);
+  }, failsafe = [map, seq, string], intIdentify = /* @__PURE__ */ __name((value) => typeof value == "bigint" || Number.isInteger(value), "intIdentify"), intResolve = /* @__PURE__ */ __name((src, part, radix) => resolveSeq.intOptions.asBigInt ? BigInt(src) : parseInt(part, radix), "intResolve");
   function intStringify(node, radix, prefix) {
     let {
       value
     } = node;
     return intIdentify(value) && value >= 0 ? prefix + value.toString(radix) : resolveSeq.stringifyNumber(node);
   }
+  __name(intStringify, "intStringify");
   var nullObj = {
     identify: (value) => value == null,
     createNode: (schema, value, ctx) => ctx.wrapScalars ? new resolveSeq.Scalar(null) : null,
@@ -5353,9 +5558,9 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
       return frac && frac[frac.length - 1] === "0" && (node.minFractionDigits = frac.length), node;
     },
     stringify: resolveSeq.stringifyNumber
-  }, core = failsafe.concat([nullObj, boolObj, octObj, intObj, hexObj, nanObj, expObj, floatObj]), intIdentify$1 = (value) => typeof value == "bigint" || Number.isInteger(value), stringifyJSON = ({
+  }, core = failsafe.concat([nullObj, boolObj, octObj, intObj, hexObj, nanObj, expObj, floatObj]), intIdentify$1 = /* @__PURE__ */ __name((value) => typeof value == "bigint" || Number.isInteger(value), "intIdentify$1"), stringifyJSON = /* @__PURE__ */ __name(({
     value
-  }) => JSON.stringify(value), json = [map, seq, {
+  }) => JSON.stringify(value), "stringifyJSON"), json = [map, seq, {
     identify: (value) => typeof value == "string",
     default: !0,
     tag: "tag:yaml.org,2002:str",
@@ -5396,9 +5601,9 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
   json.scalarFallback = (str) => {
     throw new SyntaxError(`Unresolved plain scalar ${JSON.stringify(str)}`);
   };
-  var boolStringify = ({
+  var boolStringify = /* @__PURE__ */ __name(({
     value
-  }) => value ? resolveSeq.boolOptions.trueStr : resolveSeq.boolOptions.falseStr, intIdentify$2 = (value) => typeof value == "bigint" || Number.isInteger(value);
+  }) => value ? resolveSeq.boolOptions.trueStr : resolveSeq.boolOptions.falseStr, "boolStringify"), intIdentify$2 = /* @__PURE__ */ __name((value) => typeof value == "bigint" || Number.isInteger(value), "intIdentify$2");
   function intResolve$1(sign, src, radix) {
     let str = src.replace(/_/g, "");
     if (resolveSeq.intOptions.asBigInt) {
@@ -5419,6 +5624,7 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
     let n = parseInt(str, radix);
     return sign === "-" ? -1 * n : n;
   }
+  __name(intResolve$1, "intResolve$1");
   function intStringify$1(node, radix, prefix) {
     let {
       value
@@ -5429,6 +5635,7 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
     }
     return resolveSeq.stringifyNumber(node);
   }
+  __name(intStringify$1, "intStringify$1");
   var yaml11 = failsafe.concat([{
     identify: (value) => value == null,
     createNode: (schema, value, ctx) => ctx.wrapScalars ? new resolveSeq.Scalar(null) : null,
@@ -5549,6 +5756,7 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
     }
     return tags2.find((t) => (t.identify && t.identify(value) || t.class && value instanceof t.class) && !t.format);
   }
+  __name(findTagObject, "findTagObject");
   function createNode(value, tagName, ctx) {
     if (value instanceof resolveSeq.Node)
       return value;
@@ -5578,6 +5786,7 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
     }
     return obj.node = tagObj.createNode ? tagObj.createNode(ctx.schema, value, ctx) : wrapScalars ? new resolveSeq.Scalar(value) : value, tagName && obj.node instanceof resolveSeq.Node && (obj.node.tag = tagName), obj.node;
   }
+  __name(createNode, "createNode");
   function getSchemaTags(schemas2, knownTags, customTags, schemaId) {
     let tags2 = schemas2[schemaId.replace(/\W/g, "")];
     if (!tags2) {
@@ -5602,7 +5811,8 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
     }
     return tags2;
   }
-  var sortMapEntriesByKey = (a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0, Schema = class {
+  __name(getSchemaTags, "getSchemaTags");
+  var sortMapEntriesByKey = /* @__PURE__ */ __name((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0, "sortMapEntriesByKey"), Schema = class {
     constructor({
       customTags,
       merge,
@@ -5628,6 +5838,7 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
       return new resolveSeq.Pair(k, v);
     }
   };
+  __name(Schema, "Schema");
   PlainValue._defineProperty(Schema, "defaultPrefix", PlainValue.defaultTagPrefix);
   PlainValue._defineProperty(Schema, "defaultTags", PlainValue.defaultTags);
   exports2.Schema = Schema;
@@ -5740,6 +5951,7 @@ var require_Document_2cf6b08c = __commonJS((exports2) => {
     })[ch]);
     return p.handle + suffix;
   }
+  __name(stringifyTag, "stringifyTag");
   function getTagObject(tags, item) {
     if (item instanceof resolveSeq.Alias)
       return resolveSeq.Alias;
@@ -5761,6 +5973,7 @@ var require_Document_2cf6b08c = __commonJS((exports2) => {
     }
     return tagObj;
   }
+  __name(getTagObject, "getTagObject");
   function stringifyProps(node, tagObj, {
     anchors,
     doc
@@ -5768,6 +5981,7 @@ var require_Document_2cf6b08c = __commonJS((exports2) => {
     let props = [], anchor = doc.anchors.getName(node);
     return anchor && (anchors[anchor] = node, props.push(`&${anchor}`)), node.tag ? props.push(stringifyTag(doc, node.tag)) : tagObj.default || props.push(stringifyTag(doc, tagObj.tag)), props.join(" ");
   }
+  __name(stringifyProps, "stringifyProps");
   function stringify(item, ctx, onComment, onChompKeep) {
     let {
       anchors,
@@ -5795,6 +6009,7 @@ var require_Document_2cf6b08c = __commonJS((exports2) => {
     return props ? item instanceof resolveSeq.Scalar || str[0] === "{" || str[0] === "[" ? `${props} ${str}` : `${props}
 ${ctx.indent}${str}` : str;
   }
+  __name(stringify, "stringify");
   var Anchors = class {
     static validAnchorNode(node) {
       return node instanceof resolveSeq.Scalar || node instanceof resolveSeq.YAMLSeq || node instanceof resolveSeq.YAMLMap;
@@ -5871,7 +6086,9 @@ ${ctx.indent}${str}` : str;
       }
       return name;
     }
-  }, visit = (node, tags) => {
+  };
+  __name(Anchors, "Anchors");
+  var visit = /* @__PURE__ */ __name((node, tags) => {
     if (node && typeof node == "object") {
       let {
         tag
@@ -5879,7 +6096,7 @@ ${ctx.indent}${str}` : str;
       node instanceof resolveSeq.Collection ? (tag && (tags[tag] = !0), node.items.forEach((n) => visit(n, tags))) : node instanceof resolveSeq.Pair ? (visit(node.key, tags), visit(node.value, tags)) : node instanceof resolveSeq.Scalar && tag && (tags[tag] = !0);
     }
     return tags;
-  }, listTagNames = (node) => Object.keys(visit(node, {}));
+  }, "visit"), listTagNames = /* @__PURE__ */ __name((node) => Object.keys(visit(node, {})), "listTagNames");
   function parseContents(doc, contents) {
     let comments = {
       before: [],
@@ -5912,6 +6129,7 @@ ${cbNode.commentBefore}` : cb;
 `) || null;
     }
   }
+  __name(parseContents, "parseContents");
   function resolveTagDirective({
     tagPrefixes
   }, directive) {
@@ -5929,6 +6147,7 @@ ${cbNode.commentBefore}` : cb;
       prefix
     };
   }
+  __name(resolveTagDirective, "resolveTagDirective");
   function resolveYamlDirective(doc, directive) {
     let [version] = directive.parameters;
     if (directive.name === "YAML:1.0" && (version = "1.0"), !version) {
@@ -5941,6 +6160,7 @@ ${cbNode.commentBefore}` : cb;
     }
     return version;
   }
+  __name(resolveYamlDirective, "resolveYamlDirective");
   function parseDirectives(doc, directives, prevDoc) {
     let directiveComments = [], hasDirectives = !1;
     for (let directive of directives) {
@@ -5979,23 +6199,25 @@ ${cbNode.commentBefore}` : cb;
       comment && directiveComments.push(comment);
     }
     if (prevDoc && !hasDirectives && (doc.version || prevDoc.version || doc.options.version) === "1.1") {
-      let copyTagPrefix = ({
+      let copyTagPrefix = /* @__PURE__ */ __name(({
         handle,
         prefix
       }) => ({
         handle,
         prefix
-      });
+      }), "copyTagPrefix");
       doc.tagPrefixes = prevDoc.tagPrefixes.map(copyTagPrefix), doc.version = prevDoc.version;
     }
     doc.commentBefore = directiveComments.join(`
 `) || null;
   }
+  __name(parseDirectives, "parseDirectives");
   function assertCollection(contents) {
     if (contents instanceof resolveSeq.Collection)
       return !0;
     throw new Error("Expected a YAML collection as document contents");
   }
+  __name(assertCollection, "assertCollection");
   var Document = class {
     constructor(options) {
       this.anchors = new Anchors(options.anchorPrefix), this.commentBefore = null, this.comment = null, this.contents = null, this.directivesEndMarker = null, this.errors = [], this.options = options, this.schema = null, this.tagPrefixes = [], this.version = null, this.warnings = [];
@@ -6138,6 +6360,7 @@ ${cbNode.commentBefore}` : cb;
 `;
     }
   };
+  __name(Document, "Document");
   PlainValue._defineProperty(Document, "defaults", documentOptions);
   exports2.Document = Document;
   exports2.defaultOptions = defaultOptions;
@@ -6155,11 +6378,13 @@ var require_dist = __commonJS((exports2) => {
     let options = Object.assign({}, Document$1.Document.defaults[Document$1.defaultOptions.version], Document$1.defaultOptions);
     return new Schema.Schema(options).createNode(value, wrapScalars, tag);
   }
+  __name(createNode, "createNode");
   var Document = class extends Document$1.Document {
     constructor(options) {
       super(Object.assign({}, Document$1.defaultOptions, options));
     }
   };
+  __name(Document, "Document");
   function parseAllDocuments(src, options) {
     let stream = [], prev;
     for (let cstDoc of parseCst.parse(src)) {
@@ -6168,6 +6393,7 @@ var require_dist = __commonJS((exports2) => {
     }
     return stream;
   }
+  __name(parseAllDocuments, "parseAllDocuments");
   function parseDocument(src, options) {
     let cst = parseCst.parse(src), doc = new Document(options).parse(cst[0]);
     if (cst.length > 1) {
@@ -6176,16 +6402,19 @@ var require_dist = __commonJS((exports2) => {
     }
     return doc;
   }
+  __name(parseDocument, "parseDocument");
   function parse(src, options) {
     let doc = parseDocument(src, options);
     if (doc.warnings.forEach((warning) => warnings.warn(warning)), doc.errors.length > 0)
       throw doc.errors[0];
     return doc.toJSON();
   }
+  __name(parse, "parse");
   function stringify(value, options) {
     let doc = new Document(options);
     return doc.contents = value, String(doc);
   }
+  __name(stringify, "stringify");
   var YAML = {
     createNode,
     defaultOptions: Document$1.defaultOptions,
@@ -6227,6 +6456,7 @@ var require_patch_cypress_config = __commonJS((exports2, module2) => {
       }
     }), import_path.join(cachePath.trim(), version.trim());
   }
+  __name(resolveCachePath, "resolveCachePath");
   async function patchCypressConfig2(overrides) {
     let cachePath = await resolveCachePath(), glob = await import_glob.create(`${cachePath}/**/app.yml`);
     for await (let configPath of glob.globGenerator()) {
@@ -6234,6 +6464,7 @@ var require_patch_cypress_config = __commonJS((exports2, module2) => {
       config.production.api_url !== overrides.api_url && (config.production.api_url = overrides.api_url, await import_fs.promises.writeFile(configPath, import_yaml.stringify(config), "utf-8"));
     }
   }
+  __name(patchCypressConfig2, "patchCypressConfig");
   require.main === module2 && patchCypressConfig2({api_url: "http://localhost:3000"}).catch(console.error);
 });
 
@@ -6244,4 +6475,5 @@ async function main() {
     api_url: import_core.getInput("api_url", {required: !0})
   });
 }
+__name(main, "main");
 main().catch(import_core.setFailed);

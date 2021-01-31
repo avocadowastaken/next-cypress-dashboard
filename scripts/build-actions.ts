@@ -11,11 +11,10 @@ async function main() {
   for await (const entry of glob.globGenerator()) {
     const outDir = joinPath(dirname(entry), "dist");
 
-    await exec("rm", ["-rf", outDir]);
-
     await exec("esbuild", [
       entry,
       "--bundle",
+      "--keep-names",
       "--minify-syntax",
       `--outdir=${outDir}`,
       "--target=node12",
