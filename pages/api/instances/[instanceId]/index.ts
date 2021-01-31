@@ -1,6 +1,6 @@
-import { prisma } from "/api/db";
-import { createAPIRequestHandler } from "/api/http/APIRequestHandler";
-import { UpdateInstanceResponse } from "/shared/cypress-types";
+import { prisma } from "@/api/db";
+import { createAPIRequestHandler } from "@/api/http/APIRequestHandler";
+import { UpdateInstanceResponse } from "@/shared/cypress-types";
 
 export default createAPIRequestHandler({
   async put(req): Promise<UpdateInstanceResponse> {

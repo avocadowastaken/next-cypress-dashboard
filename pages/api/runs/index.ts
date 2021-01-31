@@ -1,9 +1,9 @@
+import { prisma } from "@/api/db";
+import { CYPRESS_RECORD_KEY } from "@/api/env";
+import { createAPIRequestHandler } from "@/api/http/APIRequestHandler";
+import { ForbiddenError, ResourceNotFoundError } from "@/api/http/HTTPError";
+import { CreateRunInput, CreateRunResponse } from "@/shared/cypress-types";
 import cuid from "cuid";
-import { prisma } from "/api/db";
-import { CYPRESS_RECORD_KEY } from "/api/env";
-import { createAPIRequestHandler } from "/api/http/APIRequestHandler";
-import { ForbiddenError, ResourceNotFoundError } from "/api/http/HTTPError";
-import { CreateRunInput, CreateRunResponse } from "/shared/cypress-types";
 
 export default createAPIRequestHandler({
   async get(req) {
