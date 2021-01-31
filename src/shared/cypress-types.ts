@@ -1,3 +1,5 @@
+import { JsonObject, JsonValue } from "type-fest";
+
 export interface CreateRunInput {
   specs: string[];
   group?: string | null;
@@ -42,7 +44,11 @@ export interface CreateInstanceResponse {
   claimedInstances: number;
 }
 
-interface UpdateInstanceInput {
+export interface UpdateInstanceInput {
+  error: null | string;
+
+  hooks: Array<Record<string, unknown>>;
+
   stats: {
     suites: number;
     tests: number;
@@ -55,15 +61,20 @@ interface UpdateInstanceInput {
     wallClockDuration: number;
   };
 
-  tests: Array<Record<string, unknown>>;
+  tests: Array<{
+    body: string;
+    state: string;
+    title: string[];
+    testId: string;
+    attempts: JsonObject[];
+    displayError: JsonValue;
+  }>;
 
-  error: null | string;
   video: boolean;
   videoUrl?: string;
-
-  screenshots: Array<Record<string, unknown>>;
-  cypressConfig: Record<string, unknown>;
-  reporterStats: Record<string, unknown>;
+  screenshots: JsonObject[];
+  cypressConfig: JsonObject;
+  reporterStats: JsonObject;
 }
 
 export interface UpdateInstanceResponse {
