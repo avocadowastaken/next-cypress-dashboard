@@ -42,7 +42,6 @@
   "dependencies": {
     "@prisma/client": "^2.15.0",
     "create-di-container": "^0.1.0",
-    "cuid": "^2.1.8",
     "http-errors": "^1.8.0",
     "lodash": "^4.17.20",
     "next": "10.0.5",
