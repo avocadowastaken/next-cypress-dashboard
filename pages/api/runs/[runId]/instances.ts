@@ -1,9 +1,9 @@
-import { prisma } from "/api/db";
-import { createAPIRequestHandler } from "/api/http/APIRequestHandler";
+import { prisma } from "@/api/db";
+import { createAPIRequestHandler } from "@/api/http/APIRequestHandler";
 import {
   CreateInstanceInput,
   CreateInstanceResponse,
-} from "/shared/cypress-types";
+} from "@/shared/cypress-types";
 
 async function tryClaim(
   runId: string,
