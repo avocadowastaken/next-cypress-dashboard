@@ -12,6 +12,37 @@ export type RequestHandler<T> = (
   ctx: ServerRequestContext
 ) => void | Promise<void>;
 
+async function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+async function handleRequest<T>(
+  handler: RequestHandler<T>,
+  req: NextApiRequest,
+  res: NextApiResponse<T>,
+  ctx: ServerRequestContext
+): Promise<void> {
+  try {
+    await handler(req, res, ctx);
+  } catch (error: unknown) {
+    if (
+      error instanceof Error &&
+      // Heroku PostgreSQL connection limit error
+      error.message.includes("too many connections for role")
+    ) {
+      console.error(error);
+
+      await wait(300);
+
+      await handleRequest(handler, req, res, ctx);
+    } else {
+      throw error;
+    }
+  }
+}
+
 export function createRequestHandler<T>(
   handler: RequestHandler<T>
 ): NextApiHandler {
@@ -21,7 +52,7 @@ export function createRequestHandler<T>(
     console.info("%s %s", req.method, req.url);
 
     try {
-      await handler(req, res, ctx);
+      await handleRequest(handler, req, res, ctx);
     } catch (error: unknown) {
       const httpError = toHTTPError(error);
 
