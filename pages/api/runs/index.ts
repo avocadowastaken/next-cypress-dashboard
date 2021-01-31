@@ -63,7 +63,7 @@ export default createAPIRequestHandler({
       },
     } = req.body as CreateRunInput;
 
-    if (recordKey !== CYPRESS_RECORD_KEY) {
+    if (CYPRESS_RECORD_KEY != null && CYPRESS_RECORD_KEY !== recordKey) {
       throw new ForbiddenError();
     }
 
