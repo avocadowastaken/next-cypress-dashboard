@@ -15,7 +15,9 @@
     "test": "jest",
     "check": "run-p check:*",
     "check:types": "tsc",
-    "check:format": "prettier . --check"
+    "check:format": "prettier . --check",
+    "db:push": "prisma db push --preview-feature",
+    "db:syncall": "ts-node scripts/sync-databases.ts"
   },
   "jest": {
     "rootDir": "src",

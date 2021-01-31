@@ -3,30 +3,20 @@ import { parse } from "dotenv";
 import { existsSync, readFileSync } from "fs";
 import { join as joinPath } from "path";
 
-const ROOT_DIR = joinPath(__dirname, "..");
-const LOCAL_ENV = joinPath(ROOT_DIR, ".env.local");
-const PRISMA_ENV = joinPath(ROOT_DIR, "prisma", ".env");
+const LOCAL_ENV = joinPath(__dirname, "..", ".env");
 
 function getDatabaseURL(): URL {
-  const { DATABASE_URL } = process.env;
+  let { DATABASE_URL } = process.env;
 
-  if (DATABASE_URL) {
-    return new URL(DATABASE_URL);
+  if (!DATABASE_URL && existsSync(LOCAL_ENV)) {
+    ({ DATABASE_URL } = parse(readFileSync(LOCAL_ENV, "utf8")));
   }
 
-  for (const pathToEnv of [PRISMA_ENV, LOCAL_ENV]) {
-    if (existsSync(pathToEnv)) {
-      const content = readFileSync(pathToEnv, "utf8");
-
-      const { DATABASE_URL: url } = parse(content);
-
-      if (url) {
-        return new URL(url);
-      }
-    }
+  if (!DATABASE_URL) {
+    throw new Error("'DATABASE_URL' not defined.");
   }
 
-  throw new Error("DATABASE_URL not defined.");
+  return new URL(DATABASE_URL);
 }
 
 export function syncDatabases() {
