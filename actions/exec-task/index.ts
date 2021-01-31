@@ -1,4 +1,4 @@
-import { getInput, setFailed, warning } from "@actions/core";
+import { getInput, info, setFailed, warning } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 import fetch, { Headers } from "node-fetch";
 
@@ -40,7 +40,7 @@ async function main(): Promise<void> {
 
   if (!deploymentURL) {
     return warning(
-      `There are no deployments for the environment "${environment}"`
+      `There are no deployments for the environment '${environment}'`
     );
   }
 
@@ -53,18 +53,21 @@ async function main(): Promise<void> {
     headers.set("Authorization", `Token ${CYPRESS_RECORD_KEY}`);
   }
 
+  info(`Making request to: '${deploymentURL}' with '${payload}…'`);
+
   const response = await fetch(`${deploymentURL}/api/tasks`, {
     headers,
     body: payload,
     method: "POST",
   });
 
+  const responseText = await response.text().catch(() => null);
   if (!response.ok) {
-    const responseText = await response.text().catch(() => null);
-
     throw new Error(
       `Failed to execute task.\n${response.statusText}\n${responseText}`
     );
+  } else if (responseText) {
+    info(responseText);
   }
 }
 

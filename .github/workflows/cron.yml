@@ -11,14 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - uses: ./actions/execute-task
+      - uses: ./actions/exec-task
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
         with:
           environment: Preview
           payload: '{ "name": "cleanup-runs" }'
 
-      - uses: ./actions/execute-task
+      - uses: ./actions/exec-task
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
         with:
