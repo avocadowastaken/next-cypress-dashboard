@@ -14,16 +14,8 @@ export default createAPIRequestHandler({
       recordKey,
       ciBuildId,
       projectId,
-      platform: { osName, osVersion, browserName, browserVersion },
-      commit: {
-        sha,
-        branch,
-        message,
-        authorName,
-        authorEmail,
-        remoteOrigin,
-        defaultBranch,
-      },
+      commit: { defaultBranch, ...commit },
+      platform: { osCpus, osMemory, ...platform },
     } = req.body as CreateRunInput;
 
     if (CYPRESS_RECORD_KEY != null && CYPRESS_RECORD_KEY !== recordKey) {
@@ -48,30 +40,9 @@ export default createAPIRequestHandler({
         data: {
           groupId,
           ciBuildId,
-          project: {
-            connect: {
-              id: projectId,
-            },
-          },
-          commit: {
-            create: {
-              sha,
-              branch,
-              message,
-              authorName,
-              authorEmail,
-              remoteOrigin,
-              defaultBranch,
-            },
-          },
-          platform: {
-            create: {
-              osName,
-              osVersion,
-              browserName,
-              browserVersion,
-            },
-          },
+          project: { connect: { id: projectId } },
+          commit: { create: { ...commit } },
+          platform: { create: { ...platform } },
           instances: {
             create: specs.map((spec) => ({ spec, groupId })),
           },

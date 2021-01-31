@@ -7,18 +7,13 @@ async function cleanupRuns(): Promise<void> {
   const twoHours = 2 * 60 * 60 * 1000;
   const twoHoursAgo = new Date(Date.now() - twoHours);
 
-  for (const { id, commitId, platformId } of await prisma.run.findMany({
+  for (const { id } of await prisma.run.findMany({
     take: 100,
     orderBy: { createdAt: "asc" },
     where: { createdAt: { lte: twoHoursAgo } },
-    select: { id: true, commitId: true, platformId: true },
   })) {
     await prisma.runInstance.deleteMany({ where: { runId: id } });
     await prisma.run.deleteMany({ where: { id } });
-    await Promise.all([
-      prisma.runCommit.delete({ where: { id: commitId } }),
-      prisma.runPlatform.delete({ where: { id: platformId } }),
-    ]);
   }
 }
 
