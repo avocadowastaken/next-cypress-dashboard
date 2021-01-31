@@ -10,36 +10,8 @@ datasource db {
 model Project {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  runs      Run[]
-}
 
-model RunCommit {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  sha           String
-  branch        String?
-  authorName    String?
-  authorEmail   String?
-  message       String?
-  remoteOrigin  String?
-  defaultBranch String?
-
-  run Run?
-
-  @@index(fields: [sha], name: "sha")
-}
-
-model RunPlatform {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  osName         String?
-  osVersion      String?
-  browserName    String?
-  browserVersion String?
-
-  run Run?
+  runs Run[]
 }
 
 model RunInstance {
@@ -48,12 +20,12 @@ model RunInstance {
 
   spec    String
   groupId String
+  result  Json?
   claimed Boolean @default(false)
 
   runId String
   run   Run    @relation(fields: [runId], references: [id])
 
-  result Json?
 
   @@unique([spec, runId, groupId])
   @@index([id, claimed])
@@ -64,18 +36,14 @@ model Run {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
+  commit    Json
+  platform  Json
   groupId   String
   ciBuildId String
   machineId String @default(cuid())
 
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
-
-  platformId String
-  platform   RunPlatform @relation(fields: [platformId], references: [id])
-
-  commitId String
-  commit   RunCommit @relation(fields: [commitId], references: [id])
 
   instances RunInstance[]
 

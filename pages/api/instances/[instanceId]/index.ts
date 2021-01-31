@@ -16,7 +16,6 @@ export default createAPIRequestHandler({
         result: {
           error,
           stats,
-
           tests: tests.map(({ state, title, displayError }) => ({
             state,
             title,

@@ -8,18 +8,18 @@ export interface CreateRunInput {
   recordKey?: string | null;
   commit: {
     sha: string;
-    branch?: string | null;
-    authorName?: string | null;
-    authorEmail?: string | null;
-    message?: string | null;
-    remoteOrigin?: string | null;
-    defaultBranch?: string | null;
+    branch: string;
+    authorName: string;
+    authorEmail: string;
+    message: string;
+    remoteOrigin: string;
+    defaultBranch: null | string;
   };
   platform: {
     osName: string;
     osVersion: string;
-    osCpus?: unknown[];
-    osMemory?: unknown;
+    osCpus: JsonObject[];
+    osMemory: JsonObject;
     browserName: string;
     browserVersion: string;
   };
