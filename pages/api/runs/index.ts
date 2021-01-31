@@ -1,9 +1,9 @@
 import { RunCommit } from "@prisma/client";
-import { prisma } from "api/db";
-import { CYPRESS_RECORD_KEY } from "api/env";
-import { createAPIRequestHandler } from "api/http/APIRequestHandler";
-import { ForbiddenError, ResourceNotFoundError } from "api/http/HTTPError";
 import cuid from "cuid";
+import { prisma } from "/api/db";
+import { CYPRESS_RECORD_KEY } from "/api/env";
+import { createAPIRequestHandler } from "/api/http/APIRequestHandler";
+import { ForbiddenError, ResourceNotFoundError } from "/api/http/HTTPError";
 
 interface CreateRunInput {
   specs: string[];

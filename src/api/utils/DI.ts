@@ -18,18 +18,6 @@ export class DependencyContainer {
   protected resolveStack?: Set<DependencyConstructor>;
   protected injected = new Map<DependencyConstructor, Injectable>();
 
-  inject<T extends Injectable>(key: DependencyConstructor<T>, value: T): this {
-    this.injected.set(key, value);
-
-    return this;
-  }
-
-  eject<T extends Injectable>(key: DependencyConstructor<T>): this {
-    this.injected.delete(key);
-
-    return this;
-  }
-
   resolve<T extends Injectable>(Class: DependencyConstructor<T>): T {
     let cls = this.injected.get(Class) as undefined | T;
 
