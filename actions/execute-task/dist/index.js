@@ -1,5 +1,5 @@
 var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0});
+var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
 var __commonJS = (callback, module2) => () => (module2 || (module2 = {exports: {}}, callback(module2.exports, module2)), module2.exports), __export = (target, all) => {
   __markAsModule(target);
   for (var name in all)
@@ -18,6 +18,7 @@ var require_utils = __commonJS((exports2) => {
   function toCommandValue(input) {
     return input == null ? "" : typeof input == "string" || input instanceof String ? input : JSON.stringify(input);
   }
+  __name(toCommandValue, "toCommandValue");
   exports2.toCommandValue = toCommandValue;
 });
 
@@ -39,10 +40,12 @@ var require_command = __commonJS((exports2) => {
     let cmd = new Command(command, properties, message);
     process.stdout.write(cmd.toString() + os.EOL);
   }
+  __name(issueCommand, "issueCommand");
   exports2.issueCommand = issueCommand;
   function issue(name, message = "") {
     issueCommand(name, {}, message);
   }
+  __name(issue, "issue");
   exports2.issue = issue;
   var CMD_STRING = "::", Command = class {
     constructor(command, properties, message) {
@@ -62,12 +65,15 @@ var require_command = __commonJS((exports2) => {
       return cmdStr += `${CMD_STRING}${escapeData(this.message)}`, cmdStr;
     }
   };
+  __name(Command, "Command");
   function escapeData(s) {
     return utils_1.toCommandValue(s).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
   }
+  __name(escapeData, "escapeData");
   function escapeProperty(s) {
     return utils_1.toCommandValue(s).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A").replace(/:/g, "%3A").replace(/,/g, "%2C");
   }
+  __name(escapeProperty, "escapeProperty");
 });
 
 // node_modules/@actions/core/lib/file-command.js
@@ -94,6 +100,7 @@ var require_file_command = __commonJS((exports2) => {
       encoding: "utf8"
     });
   }
+  __name(issueCommand, "issueCommand");
   exports2.issueCommand = issueCommand;
 });
 
@@ -106,7 +113,7 @@ var require_core = __commonJS((exports2) => {
         resolve(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve, reject) {
+    return __name(adopt, "adopt"), new (P || (P = Promise))(function(resolve, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -114,6 +121,7 @@ var require_core = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(fulfilled, "fulfilled");
       function rejected(value) {
         try {
           step(generator.throw(value));
@@ -121,10 +129,11 @@ var require_core = __commonJS((exports2) => {
           reject(e);
         }
       }
+      __name(rejected, "rejected");
       function step(result) {
         result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
+      __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   }, __importStar = exports2 && exports2.__importStar || function(mod) {
     if (mod && mod.__esModule)
@@ -148,14 +157,17 @@ var require_core = __commonJS((exports2) => {
     } else
       command_1.issueCommand("set-env", {name}, convertedVal);
   }
+  __name(exportVariable, "exportVariable");
   exports2.exportVariable = exportVariable;
   function setSecret(secret) {
     command_1.issueCommand("add-mask", {}, secret);
   }
+  __name(setSecret, "setSecret");
   exports2.setSecret = setSecret;
   function addPath(inputPath) {
     process.env.GITHUB_PATH || "" ? file_command_1.issueCommand("PATH", inputPath) : command_1.issueCommand("add-path", {}, inputPath), process.env.PATH = `${inputPath}${path.delimiter}${process.env.PATH}`;
   }
+  __name(addPath, "addPath");
   exports2.addPath = addPath;
   function getInput2(name, options) {
     let val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
@@ -163,46 +175,57 @@ var require_core = __commonJS((exports2) => {
       throw new Error(`Input required and not supplied: ${name}`);
     return val.trim();
   }
+  __name(getInput2, "getInput");
   exports2.getInput = getInput2;
   function setOutput(name, value) {
     command_1.issueCommand("set-output", {name}, value);
   }
+  __name(setOutput, "setOutput");
   exports2.setOutput = setOutput;
   function setCommandEcho(enabled) {
     command_1.issue("echo", enabled ? "on" : "off");
   }
+  __name(setCommandEcho, "setCommandEcho");
   exports2.setCommandEcho = setCommandEcho;
   function setFailed2(message) {
     process.exitCode = ExitCode.Failure, error(message);
   }
+  __name(setFailed2, "setFailed");
   exports2.setFailed = setFailed2;
   function isDebug() {
     return process.env.RUNNER_DEBUG === "1";
   }
+  __name(isDebug, "isDebug");
   exports2.isDebug = isDebug;
   function debug(message) {
     command_1.issueCommand("debug", {}, message);
   }
+  __name(debug, "debug");
   exports2.debug = debug;
   function error(message) {
     command_1.issue("error", message instanceof Error ? message.toString() : message);
   }
+  __name(error, "error");
   exports2.error = error;
   function warning2(message) {
     command_1.issue("warning", message instanceof Error ? message.toString() : message);
   }
+  __name(warning2, "warning");
   exports2.warning = warning2;
   function info(message) {
     process.stdout.write(message + os.EOL);
   }
+  __name(info, "info");
   exports2.info = info;
   function startGroup(name) {
     command_1.issue("group", name);
   }
+  __name(startGroup, "startGroup");
   exports2.startGroup = startGroup;
   function endGroup() {
     command_1.issue("endgroup");
   }
+  __name(endGroup, "endGroup");
   exports2.endGroup = endGroup;
   function group(name, fn) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -216,14 +239,17 @@ var require_core = __commonJS((exports2) => {
       return result;
     });
   }
+  __name(group, "group");
   exports2.group = group;
   function saveState(name, value) {
     command_1.issueCommand("save-state", {name}, value);
   }
+  __name(saveState, "saveState");
   exports2.saveState = saveState;
   function getState(name) {
     return process.env[`STATE_${name}`] || "";
   }
+  __name(getState, "getState");
   exports2.getState = getState;
 });
 
@@ -260,6 +286,7 @@ var require_context = __commonJS((exports2) => {
       throw new Error("context.repo requires a GITHUB_REPOSITORY environment variable like 'owner/repo'");
     }
   };
+  __name(Context, "Context");
   exports2.Context = Context;
 });
 
@@ -274,6 +301,7 @@ var require_proxy = __commonJS((exports2) => {
     let proxyVar;
     return usingSsl ? proxyVar = process.env.https_proxy || process.env.HTTPS_PROXY : proxyVar = process.env.http_proxy || process.env.HTTP_PROXY, proxyVar && (proxyUrl = new URL(proxyVar)), proxyUrl;
   }
+  __name(getProxyUrl, "getProxyUrl");
   exports2.getProxyUrl = getProxyUrl;
   function checkBypass(reqUrl) {
     if (!reqUrl.hostname)
@@ -290,6 +318,7 @@ var require_proxy = __commonJS((exports2) => {
         return !0;
     return !1;
   }
+  __name(checkBypass, "checkBypass");
   exports2.checkBypass = checkBypass;
 });
 
@@ -305,21 +334,25 @@ var require_tunnel = __commonJS((exports2) => {
     var agent = new TunnelingAgent(options);
     return agent.request = http2.request, agent;
   }
+  __name(httpOverHttp, "httpOverHttp");
   function httpsOverHttp(options) {
     var agent = new TunnelingAgent(options);
     return agent.request = http2.request, agent.createSocket = createSecureSocket, agent.defaultPort = 443, agent;
   }
+  __name(httpsOverHttp, "httpsOverHttp");
   function httpOverHttps(options) {
     var agent = new TunnelingAgent(options);
     return agent.request = https2.request, agent;
   }
+  __name(httpOverHttps, "httpOverHttps");
   function httpsOverHttps(options) {
     var agent = new TunnelingAgent(options);
     return agent.request = https2.request, agent.createSocket = createSecureSocket, agent.defaultPort = 443, agent;
   }
+  __name(httpsOverHttps, "httpsOverHttps");
   function TunnelingAgent(options) {
     var self = this;
-    self.options = options || {}, self.proxyOptions = self.options.proxy || {}, self.maxSockets = self.options.maxSockets || http2.Agent.defaultMaxSockets, self.requests = [], self.sockets = [], self.on("free", function(socket, host, port, localAddress) {
+    self.options = options || {}, self.proxyOptions = self.options.proxy || {}, self.maxSockets = self.options.maxSockets || http2.Agent.defaultMaxSockets, self.requests = [], self.sockets = [], self.on("free", /* @__PURE__ */ __name(function(socket, host, port, localAddress) {
       for (var options2 = toOptions(host, port, localAddress), i = 0, len = self.requests.length; i < len; ++i) {
         var pending = self.requests[i];
         if (pending.host === options2.host && pending.port === options2.port) {
@@ -328,10 +361,11 @@ var require_tunnel = __commonJS((exports2) => {
         }
       }
       socket.destroy(), self.removeSocket(socket);
-    });
+    }, "onFree"));
   }
+  __name(TunnelingAgent, "TunnelingAgent");
   util.inherits(TunnelingAgent, events.EventEmitter);
-  TunnelingAgent.prototype.addRequest = function(req, host, port, localAddress) {
+  TunnelingAgent.prototype.addRequest = /* @__PURE__ */ __name(function(req, host, port, localAddress) {
     var self = this, options = mergeOptions({request: req}, self.options, toOptions(host, port, localAddress));
     if (self.sockets.length >= this.maxSockets) {
       self.requests.push(options);
@@ -342,12 +376,14 @@ var require_tunnel = __commonJS((exports2) => {
       function onFree() {
         self.emit("free", socket, options);
       }
+      __name(onFree, "onFree");
       function onCloseOrRemove(err) {
         self.removeSocket(socket), socket.removeListener("free", onFree), socket.removeListener("close", onCloseOrRemove), socket.removeListener("agentRemove", onCloseOrRemove);
       }
+      __name(onCloseOrRemove, "onCloseOrRemove");
     });
-  };
-  TunnelingAgent.prototype.createSocket = function(options, cb) {
+  }, "addRequest");
+  TunnelingAgent.prototype.createSocket = /* @__PURE__ */ __name(function(options, cb) {
     var self = this, placeholder = {};
     self.sockets.push(placeholder);
     var connectOptions = mergeOptions({}, self.proxyOptions, {
@@ -364,11 +400,13 @@ var require_tunnel = __commonJS((exports2) => {
     function onResponse(res) {
       res.upgrade = !0;
     }
+    __name(onResponse, "onResponse");
     function onUpgrade(res, socket, head) {
       process.nextTick(function() {
         onConnect(res, socket, head);
       });
     }
+    __name(onUpgrade, "onUpgrade");
     function onConnect(res, socket, head) {
       if (connectReq.removeAllListeners(), socket.removeAllListeners(), res.statusCode !== 200) {
         debug("tunneling socket could not be established, statusCode=%d", res.statusCode), socket.destroy();
@@ -384,14 +422,16 @@ var require_tunnel = __commonJS((exports2) => {
       }
       return debug("tunneling connection has established"), self.sockets[self.sockets.indexOf(placeholder)] = socket, cb(socket);
     }
+    __name(onConnect, "onConnect");
     function onError(cause) {
       connectReq.removeAllListeners(), debug(`tunneling socket could not be established, cause=%s
 `, cause.message, cause.stack);
       var error = new Error("tunneling socket could not be established, cause=" + cause.message);
       error.code = "ECONNRESET", options.request.emit("error", error), self.removeSocket(placeholder);
     }
-  };
-  TunnelingAgent.prototype.removeSocket = function(socket) {
+    __name(onError, "onError");
+  }, "createSocket");
+  TunnelingAgent.prototype.removeSocket = /* @__PURE__ */ __name(function(socket) {
     var pos = this.sockets.indexOf(socket);
     if (pos !== -1) {
       this.sockets.splice(pos, 1);
@@ -400,7 +440,7 @@ var require_tunnel = __commonJS((exports2) => {
         pending.request.onSocket(socket2);
       });
     }
-  };
+  }, "removeSocket");
   function createSecureSocket(options, cb) {
     var self = this;
     TunnelingAgent.prototype.createSocket.call(self, options, function(socket) {
@@ -411,6 +451,7 @@ var require_tunnel = __commonJS((exports2) => {
       self.sockets[self.sockets.indexOf(socket)] = secureSocket, cb(secureSocket);
     });
   }
+  __name(createSecureSocket, "createSecureSocket");
   function toOptions(host, port, localAddress) {
     return typeof host == "string" ? {
       host,
@@ -418,6 +459,7 @@ var require_tunnel = __commonJS((exports2) => {
       localAddress
     } : host;
   }
+  __name(toOptions, "toOptions");
   function mergeOptions(target) {
     for (var i = 1, len = arguments.length; i < len; ++i) {
       var overrides = arguments[i];
@@ -429,12 +471,13 @@ var require_tunnel = __commonJS((exports2) => {
     }
     return target;
   }
+  __name(mergeOptions, "mergeOptions");
   var debug;
-  process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG) ? debug = function() {
+  process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG) ? debug = /* @__PURE__ */ __name(function() {
     var args = Array.prototype.slice.call(arguments);
     typeof args[0] == "string" ? args[0] = "TUNNEL: " + args[0] : args.unshift("TUNNEL:"), console.error.apply(console, args);
-  } : debug = function() {
-  };
+  }, "debug") : debug = /* @__PURE__ */ __name(function() {
+  }, "debug");
   exports2.debug = debug;
 });
 
@@ -463,6 +506,7 @@ var require_http_client = __commonJS((exports2) => {
     let proxyUrl = pm.getProxyUrl(new URL(serverUrl));
     return proxyUrl ? proxyUrl.href : "";
   }
+  __name(getProxyUrl, "getProxyUrl");
   exports2.getProxyUrl = getProxyUrl;
   var HttpRedirectCodes = [
     HttpCodes.MovedPermanently,
@@ -480,6 +524,7 @@ var require_http_client = __commonJS((exports2) => {
       this.name = "HttpClientError", this.statusCode = statusCode, Object.setPrototypeOf(this, HttpClientError.prototype);
     }
   };
+  __name(HttpClientError, "HttpClientError");
   exports2.HttpClientError = HttpClientError;
   var HttpClientResponse = class {
     constructor(message) {
@@ -496,10 +541,12 @@ var require_http_client = __commonJS((exports2) => {
       });
     }
   };
+  __name(HttpClientResponse, "HttpClientResponse");
   exports2.HttpClientResponse = HttpClientResponse;
   function isHttps(requestUrl) {
     return new URL(requestUrl).protocol === "https:";
   }
+  __name(isHttps, "isHttps");
   exports2.isHttps = isHttps;
   var HttpClient = class {
     constructor(userAgent2, handlers, requestOptions) {
@@ -590,18 +637,18 @@ var require_http_client = __commonJS((exports2) => {
     }
     requestRaw(info, data) {
       return new Promise((resolve, reject) => {
-        let callbackForResult = function(err, res) {
+        let callbackForResult = /* @__PURE__ */ __name(function(err, res) {
           err && reject(err), resolve(res);
-        };
+        }, "callbackForResult");
         this.requestRawWithCallback(info, data, callbackForResult);
       });
     }
     requestRawWithCallback(info, data, onResult) {
       let socket;
       typeof data == "string" && (info.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8"));
-      let callbackCalled = !1, handleResult = (err, res) => {
+      let callbackCalled = !1, handleResult = /* @__PURE__ */ __name((err, res) => {
         callbackCalled || (callbackCalled = !0, onResult(err, res));
-      }, req = info.httpModule.request(info.options, (msg) => {
+      }, "handleResult"), req = info.httpModule.request(info.options, (msg) => {
         let res = new HttpClientResponse(msg);
         handleResult(null, res);
       });
@@ -630,11 +677,11 @@ var require_http_client = __commonJS((exports2) => {
       }), info;
     }
     _mergeHeaders(headers) {
-      let lowercaseKeys2 = (obj) => Object.keys(obj).reduce((c, k) => (c[k.toLowerCase()] = obj[k], c), {});
+      let lowercaseKeys2 = /* @__PURE__ */ __name((obj) => Object.keys(obj).reduce((c, k) => (c[k.toLowerCase()] = obj[k], c), {}), "lowercaseKeys");
       return this.requestOptions && this.requestOptions.headers ? Object.assign({}, lowercaseKeys2(this.requestOptions.headers), lowercaseKeys2(headers)) : lowercaseKeys2(headers || {});
     }
     _getExistingOrDefaultHeader(additionalHeaders, header, _default) {
-      let lowercaseKeys2 = (obj) => Object.keys(obj).reduce((c, k) => (c[k.toLowerCase()] = obj[k], c), {}), clientHeader;
+      let lowercaseKeys2 = /* @__PURE__ */ __name((obj) => Object.keys(obj).reduce((c, k) => (c[k.toLowerCase()] = obj[k], c), {}), "lowercaseKeys"), clientHeader;
       return this.requestOptions && this.requestOptions.headers && (clientHeader = lowercaseKeys2(this.requestOptions.headers)[header]), additionalHeaders[header] || clientHeader || _default;
     }
     _getAgent(parsedUrl) {
@@ -699,6 +746,7 @@ var require_http_client = __commonJS((exports2) => {
       });
     }
   };
+  __name(HttpClient, "HttpClient");
   exports2.HttpClient = HttpClient;
 });
 
@@ -734,14 +782,17 @@ var require_utils2 = __commonJS((exports2) => {
       throw new Error("Parameters token and opts.auth may not both be specified");
     return typeof options.auth == "string" ? options.auth : `token ${token2}`;
   }
+  __name(getAuthString, "getAuthString");
   exports2.getAuthString = getAuthString;
   function getProxyAgent(destinationUrl) {
     return new httpClient.HttpClient().getAgent(destinationUrl);
   }
+  __name(getProxyAgent, "getProxyAgent");
   exports2.getProxyAgent = getProxyAgent;
   function getApiBaseUrl() {
     return process.env.GITHUB_API_URL || "https://api.github.com";
   }
+  __name(getApiBaseUrl, "getApiBaseUrl");
   exports2.getApiBaseUrl = getApiBaseUrl;
 });
 
@@ -759,6 +810,7 @@ var require_register = __commonJS((exports2, module2) => {
       }, method)() : method(options);
     });
   }
+  __name(register, "register");
 });
 
 // node_modules/before-after-hook/lib/add.js
@@ -766,24 +818,25 @@ var require_add = __commonJS((exports2, module2) => {
   module2.exports = addHook;
   function addHook(state, kind, name, hook2) {
     var orig = hook2;
-    state.registry[name] || (state.registry[name] = []), kind === "before" && (hook2 = function(method, options) {
+    state.registry[name] || (state.registry[name] = []), kind === "before" && (hook2 = /* @__PURE__ */ __name(function(method, options) {
       return Promise.resolve().then(orig.bind(null, options)).then(method.bind(null, options));
-    }), kind === "after" && (hook2 = function(method, options) {
+    }, "hook")), kind === "after" && (hook2 = /* @__PURE__ */ __name(function(method, options) {
       var result;
       return Promise.resolve().then(method.bind(null, options)).then(function(result_) {
         return result = result_, orig(result, options);
       }).then(function() {
         return result;
       });
-    }), kind === "error" && (hook2 = function(method, options) {
+    }, "hook")), kind === "error" && (hook2 = /* @__PURE__ */ __name(function(method, options) {
       return Promise.resolve().then(method.bind(null, options)).catch(function(error) {
         return orig(error, options);
       });
-    }), state.registry[name].push({
+    }, "hook")), state.registry[name].push({
       hook: hook2,
       orig
     });
   }
+  __name(addHook, "addHook");
 });
 
 // node_modules/before-after-hook/lib/remove.js
@@ -797,6 +850,7 @@ var require_remove = __commonJS((exports2, module2) => {
       index !== -1 && state.registry[name].splice(index, 1);
     }
   }
+  __name(removeHook, "removeHook");
 });
 
 // node_modules/before-after-hook/index.js
@@ -809,22 +863,26 @@ var require_before_after_hook = __commonJS((exports2, module2) => {
       hook2[kind] = hook2.api[kind] = bindable(addHook, null).apply(null, args);
     });
   }
+  __name(bindApi, "bindApi");
   function HookSingular() {
     var singularHookName = "h", singularHookState = {
       registry: {}
     }, singularHook = register.bind(null, singularHookState, singularHookName);
     return bindApi(singularHook, singularHookState, singularHookName), singularHook;
   }
+  __name(HookSingular, "HookSingular");
   function HookCollection() {
     var state = {
       registry: {}
     }, hook2 = register.bind(null, state);
     return bindApi(hook2, state), hook2;
   }
+  __name(HookCollection, "HookCollection");
   var collectionHookDeprecationMessageDisplayed = !1;
   function Hook() {
     return collectionHookDeprecationMessageDisplayed || (console.warn('[before-after-hook]: "Hook()" repurposing warning, use "Hook.Collection()". Read more: https://git.io/upgrade-before-after-hook-to-1.4'), collectionHookDeprecationMessageDisplayed = !0), HookCollection();
   }
+  __name(Hook, "Hook");
   Hook.Singular = HookSingular.bind();
   Hook.Collection = HookCollection.bind();
   module2.exports = Hook;
@@ -852,7 +910,9 @@ var require_wrappy = __commonJS((exports2, module2) => {
         ret[k] = cb2[k];
       }), ret;
     }
+    __name(wrapper, "wrapper");
   }
+  __name(wrappy, "wrappy");
 });
 
 // node_modules/once/once.js
@@ -874,19 +934,21 @@ var require_once = __commonJS((exports2, module2) => {
     });
   });
   function once2(fn) {
-    var f = function() {
+    var f = /* @__PURE__ */ __name(function() {
       return f.called ? f.value : (f.called = !0, f.value = fn.apply(this, arguments));
-    };
+    }, "f");
     return f.called = !1, f;
   }
+  __name(once2, "once");
   function onceStrict(fn) {
-    var f = function() {
+    var f = /* @__PURE__ */ __name(function() {
       if (f.called)
         throw new Error(f.onceError);
       return f.called = !0, f.value = fn.apply(this, arguments);
-    }, name = fn.name || "Function wrapped with `once`";
+    }, "f"), name = fn.name || "Function wrapped with `once`";
     return f.onceError = name + " shouldn't be called more than once", f.called = !1, f;
   }
+  __name(onceStrict, "onceStrict");
 });
 
 // node_modules/@octokit/core/dist-web/index.js
@@ -938,7 +1000,7 @@ var require_dist_web = __commonJS((exports2) => {
       });
     }
     static defaults(defaults) {
-      return class extends this {
+      return /* @__PURE__ */ __name(class extends this {
         constructor(...args) {
           let options = args[0] || {};
           if (typeof defaults == "function") {
@@ -949,15 +1011,16 @@ var require_dist_web = __commonJS((exports2) => {
             userAgent: `${options.userAgent} ${defaults.userAgent}`
           } : null));
         }
-      };
+      }, "OctokitWithDefaults");
     }
     static plugin(...newPlugins) {
       var _a;
       let currentPlugins = this.plugins;
-      return _a = class extends this {
-      }, _a.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin))), _a;
+      return _a = /* @__PURE__ */ __name(class extends this {
+      }, "_a"), _a.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin))), _a;
     }
   };
+  __name(Octokit, "Octokit");
   Octokit.VERSION = VERSION4;
   Octokit.plugins = [];
 });
@@ -2258,6 +2321,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       }
     return newMethods;
   }
+  __name(endpointsToMethods, "endpointsToMethods");
   function decorate(octokit2, scope, methodName, defaults, decorations) {
     let requestWithDefaults = octokit2.request.defaults(defaults);
     function withDecorations(...args) {
@@ -2279,11 +2343,13 @@ var require_dist_web2 = __commonJS((exports2) => {
       }
       return requestWithDefaults(...args);
     }
-    return Object.assign(withDecorations, requestWithDefaults);
+    return __name(withDecorations, "withDecorations"), Object.assign(withDecorations, requestWithDefaults);
   }
+  __name(decorate, "decorate");
   function restEndpointMethods(octokit2) {
     return endpointsToMethods(octokit2, Endpoints);
   }
+  __name(restEndpointMethods, "restEndpointMethods");
   restEndpointMethods.VERSION = VERSION4;
 });
 
@@ -2302,6 +2368,7 @@ var require_dist_web3 = __commonJS((exports2) => {
     let namespaceKey = Object.keys(response.data)[0], data = response.data[namespaceKey];
     return response.data = data, typeof incompleteResults != "undefined" && (response.data.incomplete_results = incompleteResults), typeof repositorySelection != "undefined" && (response.data.repository_selection = repositorySelection), response.data.total_count = totalCount, response;
   }
+  __name(normalizePaginatedListResponse, "normalizePaginatedListResponse");
   function iterator(octokit2, route, parameters) {
     let options = typeof route == "function" ? route.endpoint(parameters) : octokit2.request.endpoint(route, parameters), requestMethod = typeof route == "function" ? route : octokit2.request, method = options.method, headers = options.headers, url = options.url;
     return {
@@ -2315,9 +2382,11 @@ var require_dist_web3 = __commonJS((exports2) => {
       })
     };
   }
+  __name(iterator, "iterator");
   function paginate(octokit2, route, parameters, mapFn) {
     return typeof parameters == "function" && (mapFn = parameters, parameters = void 0), gather(octokit2, [], iterator(octokit2, route, parameters)[Symbol.asyncIterator](), mapFn);
   }
+  __name(paginate, "paginate");
   function gather(octokit2, results, iterator2, mapFn) {
     return iterator2.next().then((result) => {
       if (result.done)
@@ -2326,9 +2395,10 @@ var require_dist_web3 = __commonJS((exports2) => {
       function done() {
         earlyExit = !0;
       }
-      return results = results.concat(mapFn ? mapFn(result.value, done) : result.value.data), earlyExit ? results : gather(octokit2, results, iterator2, mapFn);
+      return __name(done, "done"), results = results.concat(mapFn ? mapFn(result.value, done) : result.value.data), earlyExit ? results : gather(octokit2, results, iterator2, mapFn);
     });
   }
+  __name(gather, "gather");
   var composePaginateRest = Object.assign(paginate, {
     iterator
   });
@@ -2339,6 +2409,7 @@ var require_dist_web3 = __commonJS((exports2) => {
       })
     };
   }
+  __name(paginateRest, "paginateRest");
   paginateRest.VERSION = VERSION4;
 });
 
@@ -2379,6 +2450,7 @@ var require_utils3 = __commonJS((exports2) => {
     let opts = Object.assign({}, options || {}), auth2 = Utils.getAuthString(token2, opts);
     return auth2 && (opts.auth = auth2), opts;
   }
+  __name(getOctokitOptions, "getOctokitOptions");
   exports2.getOctokitOptions = getOctokitOptions;
 });
 
@@ -2411,6 +2483,7 @@ var require_github = __commonJS((exports2) => {
   function getOctokit2(token2, options) {
     return new utils_1.GitHub(utils_1.getOctokitOptions(token2, options));
   }
+  __name(getOctokit2, "getOctokit");
   exports2.getOctokit = getOctokit2;
 });
 
@@ -2421,6 +2494,7 @@ var import_core = __toModule(require_core());
 function getUserAgent() {
   return typeof navigator == "object" && "userAgent" in navigator ? navigator.userAgent : typeof process == "object" && "version" in process ? `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})` : "<environment undetectable>";
 }
+__name(getUserAgent, "getUserAgent");
 
 // node_modules/@octokit/endpoint/node_modules/is-plain-object/dist/is-plain-object.mjs
 /*!
@@ -2432,26 +2506,31 @@ function getUserAgent() {
 function isObject(o) {
   return Object.prototype.toString.call(o) === "[object Object]";
 }
+__name(isObject, "isObject");
 function isPlainObject(o) {
   var ctor, prot;
   return isObject(o) === !1 ? !1 : (ctor = o.constructor, ctor === void 0 ? !0 : (prot = ctor.prototype, !(isObject(prot) === !1 || prot.hasOwnProperty("isPrototypeOf") === !1)));
 }
+__name(isPlainObject, "isPlainObject");
 
 // node_modules/@octokit/endpoint/dist-web/index.js
 function lowercaseKeys(object) {
   return object ? Object.keys(object).reduce((newObj, key) => (newObj[key.toLowerCase()] = object[key], newObj), {}) : {};
 }
+__name(lowercaseKeys, "lowercaseKeys");
 function mergeDeep(defaults, options) {
   let result = Object.assign({}, defaults);
   return Object.keys(options).forEach((key) => {
     isPlainObject(options[key]) ? key in defaults ? result[key] = mergeDeep(defaults[key], options[key]) : Object.assign(result, {[key]: options[key]}) : Object.assign(result, {[key]: options[key]});
   }), result;
 }
+__name(mergeDeep, "mergeDeep");
 function removeUndefinedProperties(obj) {
   for (let key in obj)
     obj[key] === void 0 && delete obj[key];
   return obj;
 }
+__name(removeUndefinedProperties, "removeUndefinedProperties");
 function merge(defaults, route, options) {
   if (typeof route == "string") {
     let [method, url] = route.split(" ");
@@ -2462,40 +2541,50 @@ function merge(defaults, route, options) {
   let mergedOptions = mergeDeep(defaults || {}, options);
   return defaults && defaults.mediaType.previews.length && (mergedOptions.mediaType.previews = defaults.mediaType.previews.filter((preview) => !mergedOptions.mediaType.previews.includes(preview)).concat(mergedOptions.mediaType.previews)), mergedOptions.mediaType.previews = mergedOptions.mediaType.previews.map((preview) => preview.replace(/-preview/, "")), mergedOptions;
 }
+__name(merge, "merge");
 function addQueryParameters(url, parameters) {
   let separator = /\?/.test(url) ? "&" : "?", names = Object.keys(parameters);
   return names.length === 0 ? url : url + separator + names.map((name) => name === "q" ? "q=" + parameters.q.split("+").map(encodeURIComponent).join("+") : `${name}=${encodeURIComponent(parameters[name])}`).join("&");
 }
+__name(addQueryParameters, "addQueryParameters");
 var urlVariableRegex = /\{[^}]+\}/g;
 function removeNonChars(variableName) {
   return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
 }
+__name(removeNonChars, "removeNonChars");
 function extractUrlVariableNames(url) {
   let matches = url.match(urlVariableRegex);
   return matches ? matches.map(removeNonChars).reduce((a, b) => a.concat(b), []) : [];
 }
+__name(extractUrlVariableNames, "extractUrlVariableNames");
 function omit(object, keysToOmit) {
   return Object.keys(object).filter((option) => !keysToOmit.includes(option)).reduce((obj, key) => (obj[key] = object[key], obj), {});
 }
+__name(omit, "omit");
 function encodeReserved(str) {
   return str.split(/(%[0-9A-Fa-f]{2})/g).map(function(part) {
     return /%[0-9A-Fa-f]/.test(part) || (part = encodeURI(part).replace(/%5B/g, "[").replace(/%5D/g, "]")), part;
   }).join("");
 }
+__name(encodeReserved, "encodeReserved");
 function encodeUnreserved(str) {
   return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
     return "%" + c.charCodeAt(0).toString(16).toUpperCase();
   });
 }
+__name(encodeUnreserved, "encodeUnreserved");
 function encodeValue(operator, value, key) {
   return value = operator === "+" || operator === "#" ? encodeReserved(value) : encodeUnreserved(value), key ? encodeUnreserved(key) + "=" + value : value;
 }
+__name(encodeValue, "encodeValue");
 function isDefined(value) {
   return value != null;
 }
+__name(isDefined, "isDefined");
 function isKeyOperator(operator) {
   return operator === ";" || operator === "&" || operator === "?";
 }
+__name(isKeyOperator, "isKeyOperator");
 function getValues(context2, operator, key, modifier) {
   var value = context2[key], result = [];
   if (isDefined(value) && value !== "")
@@ -2519,11 +2608,13 @@ function getValues(context2, operator, key, modifier) {
     operator === ";" ? isDefined(value) && result.push(encodeUnreserved(key)) : value === "" && (operator === "&" || operator === "?") ? result.push(encodeUnreserved(key) + "=") : value === "" && result.push("");
   return result;
 }
+__name(getValues, "getValues");
 function parseUrl(template) {
   return {
     expand: expand.bind(null, template)
   };
 }
+__name(parseUrl, "parseUrl");
 function expand(template, context2) {
   var operators = ["+", "#", ".", "/", ";", "?", "&"];
   return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
@@ -2541,6 +2632,7 @@ function expand(template, context2) {
       return encodeReserved(literal);
   });
 }
+__name(expand, "expand");
 function parse(options) {
   let method = options.method.toUpperCase(), url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}"), headers = Object.assign({}, options.headers), body, parameters = omit(options, [
     "method",
@@ -2561,9 +2653,11 @@ function parse(options) {
   }
   return ["GET", "HEAD"].includes(method) ? url = addQueryParameters(url, remainingParameters) : "data" in remainingParameters ? body = remainingParameters.data : Object.keys(remainingParameters).length ? body = remainingParameters : headers["content-length"] = 0, !headers["content-type"] && typeof body != "undefined" && (headers["content-type"] = "application/json; charset=utf-8"), ["PATCH", "PUT"].includes(method) && typeof body == "undefined" && (body = ""), Object.assign({method, url, headers}, typeof body != "undefined" ? {body} : null, options.request ? {request: options.request} : null);
 }
+__name(parse, "parse");
 function endpointWithDefaults(defaults, route, options) {
   return parse(merge(defaults, route, options));
 }
+__name(endpointWithDefaults, "endpointWithDefaults");
 function withDefaults(oldDefaults, newDefaults) {
   let DEFAULTS2 = merge(oldDefaults, newDefaults), endpoint2 = endpointWithDefaults.bind(null, DEFAULTS2);
   return Object.assign(endpoint2, {
@@ -2573,6 +2667,7 @@ function withDefaults(oldDefaults, newDefaults) {
     parse
   });
 }
+__name(withDefaults, "withDefaults");
 var VERSION = "6.0.11", userAgent = `octokit-endpoint.js/${VERSION} ${getUserAgent()}`, DEFAULTS = {
   method: "GET",
   baseUrl: "https://api.github.com",
@@ -2596,10 +2691,12 @@ var VERSION = "6.0.11", userAgent = `octokit-endpoint.js/${VERSION} ${getUserAge
 function isObject2(o) {
   return Object.prototype.toString.call(o) === "[object Object]";
 }
+__name(isObject2, "isObject");
 function isPlainObject2(o) {
   var ctor, prot;
   return isObject2(o) === !1 ? !1 : (ctor = o.constructor, ctor === void 0 ? !0 : (prot = ctor.prototype, !(isObject2(prot) === !1 || prot.hasOwnProperty("isPrototypeOf") === !1)));
 }
+__name(isPlainObject2, "isPlainObject");
 
 // node_modules/node-fetch/lib/index.mjs
 var import_stream = __toModule(require("stream")), import_http = __toModule(require("http")), import_url = __toModule(require("url")), import_https = __toModule(require("https")), import_zlib = __toModule(require("zlib")), Readable = import_stream.default.Readable, BUFFER = Symbol("buffer"), TYPE = Symbol("type"), Blob = class {
@@ -2645,6 +2742,7 @@ var import_stream = __toModule(require("stream")), import_http = __toModule(requ
     return blob[BUFFER] = slicedBuffer, blob;
   }
 };
+__name(Blob, "Blob");
 Object.defineProperties(Blob.prototype, {
   size: {enumerable: !0},
   type: {enumerable: !0},
@@ -2659,6 +2757,7 @@ Object.defineProperty(Blob.prototype, Symbol.toStringTag, {
 function FetchError(message, type, systemError) {
   Error.call(this, message), this.message = message, this.type = type, systemError && (this.code = this.errno = systemError.code), Error.captureStackTrace(this, this.constructor);
 }
+__name(FetchError, "FetchError");
 FetchError.prototype = Object.create(Error.prototype);
 FetchError.prototype.constructor = FetchError;
 FetchError.prototype.name = "FetchError";
@@ -2682,6 +2781,7 @@ function Body(body) {
     _this[INTERNALS].error = error;
   });
 }
+__name(Body, "Body");
 Body.prototype = {
   get body() {
     return this[INTERNALS].body;
@@ -2784,51 +2884,62 @@ function consumeBody() {
     });
   });
 }
+__name(consumeBody, "consumeBody");
 function convertBody(buffer, headers) {
   if (typeof convert != "function")
     throw new Error("The package `encoding` must be installed to use the textConverted() function");
   let ct = headers.get("content-type"), charset = "utf-8", res, str;
   return ct && (res = /charset=([^;]*)/i.exec(ct)), str = buffer.slice(0, 1024).toString(), !res && str && (res = /<meta.+?charset=(['"])(.+?)\1/i.exec(str)), !res && str && (res = /<meta[\s]+?http-equiv=(['"])content-type\1[\s]+?content=(['"])(.+?)\2/i.exec(str), res || (res = /<meta[\s]+?content=(['"])(.+?)\1[\s]+?http-equiv=(['"])content-type\3/i.exec(str), res && res.pop()), res && (res = /charset=(.*)/i.exec(res.pop()))), !res && str && (res = /<\?xml.+?encoding=(['"])(.+?)\1/i.exec(str)), res && (charset = res.pop(), (charset === "gb2312" || charset === "gbk") && (charset = "gb18030")), convert(buffer, "UTF-8", charset).toString();
 }
+__name(convertBody, "convertBody");
 function isURLSearchParams(obj) {
   return typeof obj != "object" || typeof obj.append != "function" || typeof obj.delete != "function" || typeof obj.get != "function" || typeof obj.getAll != "function" || typeof obj.has != "function" || typeof obj.set != "function" ? !1 : obj.constructor.name === "URLSearchParams" || Object.prototype.toString.call(obj) === "[object URLSearchParams]" || typeof obj.sort == "function";
 }
+__name(isURLSearchParams, "isURLSearchParams");
 function isBlob(obj) {
   return typeof obj == "object" && typeof obj.arrayBuffer == "function" && typeof obj.type == "string" && typeof obj.stream == "function" && typeof obj.constructor == "function" && typeof obj.constructor.name == "string" && /^(Blob|File)$/.test(obj.constructor.name) && /^(Blob|File)$/.test(obj[Symbol.toStringTag]);
 }
+__name(isBlob, "isBlob");
 function clone(instance) {
   let p1, p2, body = instance.body;
   if (instance.bodyUsed)
     throw new Error("cannot clone body after it is used");
   return body instanceof import_stream.default && typeof body.getBoundary != "function" && (p1 = new PassThrough(), p2 = new PassThrough(), body.pipe(p1), body.pipe(p2), instance[INTERNALS].body = p1, body = p2), body;
 }
+__name(clone, "clone");
 function extractContentType(body) {
   return body === null ? null : typeof body == "string" ? "text/plain;charset=UTF-8" : isURLSearchParams(body) ? "application/x-www-form-urlencoded;charset=UTF-8" : isBlob(body) ? body.type || null : Buffer.isBuffer(body) || Object.prototype.toString.call(body) === "[object ArrayBuffer]" || ArrayBuffer.isView(body) ? null : typeof body.getBoundary == "function" ? `multipart/form-data;boundary=${body.getBoundary()}` : body instanceof import_stream.default ? null : "text/plain;charset=UTF-8";
 }
+__name(extractContentType, "extractContentType");
 function getTotalBytes(instance) {
   let body = instance.body;
   return body === null ? 0 : isBlob(body) ? body.size : Buffer.isBuffer(body) ? body.length : body && typeof body.getLengthSync == "function" && (body._lengthRetrievers && body._lengthRetrievers.length == 0 || body.hasKnownLength && body.hasKnownLength()) ? body.getLengthSync() : null;
 }
+__name(getTotalBytes, "getTotalBytes");
 function writeToStream(dest, instance) {
   let body = instance.body;
   body === null ? dest.end() : isBlob(body) ? body.stream().pipe(dest) : Buffer.isBuffer(body) ? (dest.write(body), dest.end()) : body.pipe(dest);
 }
+__name(writeToStream, "writeToStream");
 Body.Promise = global.Promise;
 var invalidTokenRegex = /[^\^_`a-zA-Z\-0-9!#$%&'*+.|~]/, invalidHeaderCharRegex = /[^\t\x20-\x7e\x80-\xff]/;
 function validateName(name) {
   if (name = `${name}`, invalidTokenRegex.test(name) || name === "")
     throw new TypeError(`${name} is not a legal HTTP header name`);
 }
+__name(validateName, "validateName");
 function validateValue(value) {
   if (value = `${value}`, invalidHeaderCharRegex.test(value))
     throw new TypeError(`${value} is not a legal HTTP header value`);
 }
+__name(validateValue, "validateValue");
 function find(map, name) {
   name = name.toLowerCase();
   for (let key in map)
     if (key.toLowerCase() === name)
       return key;
 }
+__name(find, "find");
 var MAP = Symbol("map"), Headers = class {
   constructor() {
     let init = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : void 0;
@@ -2908,6 +3019,7 @@ var MAP = Symbol("map"), Headers = class {
     return createHeadersIterator(this, "key+value");
   }
 };
+__name(Headers, "Headers");
 Headers.prototype.entries = Headers.prototype[Symbol.iterator];
 Object.defineProperty(Headers.prototype, Symbol.toStringTag, {
   value: "Headers",
@@ -2936,6 +3048,7 @@ function getHeaders(headers) {
     return [k.toLowerCase(), headers[MAP][k].join(", ")];
   });
 }
+__name(getHeaders, "getHeaders");
 var INTERNAL = Symbol("internal");
 function createHeadersIterator(target, kind) {
   let iterator = Object.create(HeadersIteratorPrototype);
@@ -2945,6 +3058,7 @@ function createHeadersIterator(target, kind) {
     index: 0
   }, iterator;
 }
+__name(createHeadersIterator, "createHeadersIterator");
 var HeadersIteratorPrototype = Object.setPrototypeOf({
   next() {
     if (!this || Object.getPrototypeOf(this) !== HeadersIteratorPrototype)
@@ -2970,6 +3084,7 @@ function exportNodeCompatibleHeaders(headers) {
   let obj = Object.assign({__proto__: null}, headers[MAP]), hostHeaderKey = find(headers[MAP], "Host");
   return hostHeaderKey !== void 0 && (obj[hostHeaderKey] = obj[hostHeaderKey][0]), obj;
 }
+__name(exportNodeCompatibleHeaders, "exportNodeCompatibleHeaders");
 function createHeadersLenient(obj) {
   let headers = new Headers();
   for (let name of Object.keys(obj))
@@ -2981,6 +3096,7 @@ function createHeadersLenient(obj) {
         invalidHeaderCharRegex.test(obj[name]) || (headers[MAP][name] = [obj[name]]);
   return headers;
 }
+__name(createHeadersLenient, "createHeadersLenient");
 var INTERNALS$1 = Symbol("Response internals"), STATUS_CODES = import_http.default.STATUS_CODES, Response = class {
   constructor() {
     let body = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : null, opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
@@ -3027,6 +3143,7 @@ var INTERNALS$1 = Symbol("Response internals"), STATUS_CODES = import_http.defau
     });
   }
 };
+__name(Response, "Response");
 Body.mixIn(Response.prototype);
 Object.defineProperties(Response.prototype, {
   url: {enumerable: !0},
@@ -3047,10 +3164,12 @@ var INTERNALS$2 = Symbol("Request internals"), parse_url = import_url.default.pa
 function isRequest(input) {
   return typeof input == "object" && typeof input[INTERNALS$2] == "object";
 }
+__name(isRequest, "isRequest");
 function isAbortSignal(signal) {
   let proto = signal && typeof signal == "object" && Object.getPrototypeOf(signal);
   return !!(proto && proto.constructor.name === "AbortSignal");
 }
+__name(isAbortSignal, "isAbortSignal");
 var Request = class {
   constructor(input) {
     let init = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, parsedURL;
@@ -3098,6 +3217,7 @@ var Request = class {
     return new Request(this);
   }
 };
+__name(Request, "Request");
 Body.mixIn(Request.prototype);
 Object.defineProperty(Request.prototype, Symbol.toStringTag, {
   value: "Request",
@@ -3134,9 +3254,11 @@ function getNodeRequestOptions(request2) {
     agent
   });
 }
+__name(getNodeRequestOptions, "getNodeRequestOptions");
 function AbortError(message) {
   Error.call(this, message), this.type = "aborted", this.message = message, Error.captureStackTrace(this, this.constructor);
 }
+__name(AbortError, "AbortError");
 AbortError.prototype = Object.create(Error.prototype);
 AbortError.prototype.constructor = AbortError;
 AbortError.prototype.name = "AbortError";
@@ -3145,22 +3267,22 @@ function fetch(url, opts) {
   if (!fetch.Promise)
     throw new Error("native promise missing, set fetch.Promise to your favorite alternative");
   return Body.Promise = fetch.Promise, new fetch.Promise(function(resolve, reject) {
-    let request2 = new Request(url, opts), options = getNodeRequestOptions(request2), send = (options.protocol === "https:" ? import_https.default : import_http.default).request, signal = request2.signal, response = null, abort = function() {
+    let request2 = new Request(url, opts), options = getNodeRequestOptions(request2), send = (options.protocol === "https:" ? import_https.default : import_http.default).request, signal = request2.signal, response = null, abort = /* @__PURE__ */ __name(function() {
       let error = new AbortError("The user aborted a request.");
       reject(error), request2.body && request2.body instanceof import_stream.default.Readable && request2.body.destroy(error), !(!response || !response.body) && response.body.emit("error", error);
-    };
+    }, "abort");
     if (signal && signal.aborted) {
       abort();
       return;
     }
-    let abortAndFinalize = function() {
+    let abortAndFinalize = /* @__PURE__ */ __name(function() {
       abort(), finalize();
-    }, req = send(options), reqTimeout;
+    }, "abortAndFinalize"), req = send(options), reqTimeout;
     signal && signal.addEventListener("abort", abortAndFinalize);
     function finalize() {
       req.abort(), signal && signal.removeEventListener("abort", abortAndFinalize), clearTimeout(reqTimeout);
     }
-    request2.timeout && req.once("socket", function(socket) {
+    __name(finalize, "finalize"), request2.timeout && req.once("socket", function(socket) {
       reqTimeout = setTimeout(function() {
         reject(new FetchError(`network timeout at: ${request2.url}`, "request-timeout")), finalize();
       }, request2.timeout);
@@ -3248,6 +3370,7 @@ function fetch(url, opts) {
     }), writeToStream(req, request2);
   });
 }
+__name(fetch, "fetch");
 fetch.isRedirect = function(code) {
   return code === 301 || code === 302 || code === 303 || code === 307 || code === 308;
 };
@@ -3261,6 +3384,7 @@ var Deprecation = class extends Error {
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor), this.name = "Deprecation";
   }
 };
+__name(Deprecation, "Deprecation");
 
 // node_modules/@octokit/request-error/dist-web/index.js
 var import_once = __toModule(require_once()), logOnce = import_once.default((deprecation) => console.warn(deprecation)), RequestError = class extends Error {
@@ -3277,12 +3401,14 @@ var import_once = __toModule(require_once()), logOnce = import_once.default((dep
     })), requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]"), this.request = requestCopy;
   }
 };
+__name(RequestError, "RequestError");
 
 // node_modules/@octokit/request/dist-web/index.js
 var VERSION2 = "5.4.13";
 function getBufferResponse(response) {
   return response.arrayBuffer();
 }
+__name(getBufferResponse, "getBufferResponse");
 function fetchWrapper(requestOptions) {
   (isPlainObject2(requestOptions.body) || Array.isArray(requestOptions.body)) && (requestOptions.body = JSON.stringify(requestOptions.body));
   let headers = {}, status, url;
@@ -3339,22 +3465,24 @@ function fetchWrapper(requestOptions) {
     });
   });
 }
+__name(fetchWrapper, "fetchWrapper");
 function withDefaults2(oldEndpoint, newDefaults) {
   let endpoint2 = oldEndpoint.defaults(newDefaults);
-  return Object.assign(function(route, parameters) {
+  return Object.assign(/* @__PURE__ */ __name(function(route, parameters) {
     let endpointOptions = endpoint2.merge(route, parameters);
     if (!endpointOptions.request || !endpointOptions.request.hook)
       return fetchWrapper(endpoint2.parse(endpointOptions));
-    let request2 = (route2, parameters2) => fetchWrapper(endpoint2.parse(endpoint2.merge(route2, parameters2)));
+    let request2 = /* @__PURE__ */ __name((route2, parameters2) => fetchWrapper(endpoint2.parse(endpoint2.merge(route2, parameters2))), "request");
     return Object.assign(request2, {
       endpoint: endpoint2,
       defaults: withDefaults2.bind(null, endpoint2)
     }), endpointOptions.request.hook(request2, endpointOptions);
-  }, {
+  }, "newApi"), {
     endpoint: endpoint2,
     defaults: withDefaults2.bind(null, endpoint2)
   });
 }
+__name(withDefaults2, "withDefaults");
 var request = withDefaults2(endpoint, {
   headers: {
     "user-agent": `octokit-request.js/${VERSION2} ${getUserAgent()}`
@@ -3368,7 +3496,9 @@ var VERSION3 = "4.5.9", GraphqlError = class extends Error {
     super(message);
     Object.assign(this, response.data), Object.assign(this, {headers: response.headers}), this.name = "GraphqlError", this.request = request2, Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
   }
-}, NON_VARIABLE_OPTIONS = [
+};
+__name(GraphqlError, "GraphqlError");
+var NON_VARIABLE_OPTIONS = [
   "method",
   "baseUrl",
   "url",
@@ -3394,13 +3524,15 @@ function graphql(request2, query, options) {
     return response.data.data;
   });
 }
+__name(graphql, "graphql");
 function withDefaults3(request$1, newDefaults) {
   let newRequest = request$1.defaults(newDefaults);
-  return Object.assign((query, options) => graphql(newRequest, query, options), {
+  return Object.assign(/* @__PURE__ */ __name((query, options) => graphql(newRequest, query, options), "newApi"), {
     defaults: withDefaults3.bind(null, newRequest),
     endpoint: request.endpoint
   });
 }
+__name(withDefaults3, "withDefaults");
 var graphql$1 = withDefaults3(request, {
   headers: {
     "user-agent": `octokit-graphql.js/${VERSION3} ${getUserAgent()}`
@@ -3414,6 +3546,7 @@ function withCustomRequest(customRequest) {
     url: "/graphql"
   });
 }
+__name(withCustomRequest, "withCustomRequest");
 
 // node_modules/@octokit/auth-token/dist-web/index.js
 async function auth(token2) {
@@ -3424,14 +3557,17 @@ async function auth(token2) {
     tokenType
   };
 }
+__name(auth, "auth");
 function withAuthorizationPrefix(token2) {
   return token2.split(/\./).length === 3 ? `bearer ${token2}` : `token ${token2}`;
 }
+__name(withAuthorizationPrefix, "withAuthorizationPrefix");
 async function hook(token2, request2, route, parameters) {
   let endpoint2 = request2.endpoint.merge(route, parameters);
   return endpoint2.headers.authorization = withAuthorizationPrefix(token2), request2(endpoint2);
 }
-var createTokenAuth = function(token2) {
+__name(hook, "hook");
+var createTokenAuth = /* @__PURE__ */ __name(function(token2) {
   if (!token2)
     throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
   if (typeof token2 != "string")
@@ -3439,7 +3575,7 @@ var createTokenAuth = function(token2) {
   return token2 = token2.replace(/^(token|bearer) +/i, ""), Object.assign(auth.bind(null, token2), {
     hook: hook.bind(null, token2)
   });
-};
+}, "createTokenAuth");
 
 // actions/execute-task/index.ts
 var import_github = __toModule(require_github());
@@ -3460,6 +3596,7 @@ async function findDeploymentURL() {
           return target_url;
     }
 }
+__name(findDeploymentURL, "findDeploymentURL");
 async function main() {
   let deploymentURL = await findDeploymentURL();
   if (!deploymentURL)
@@ -3481,4 +3618,5 @@ ${response.statusText}
 ${responseText}`);
   }
 }
+__name(main, "main");
 main().catch(import_core.setFailed);
