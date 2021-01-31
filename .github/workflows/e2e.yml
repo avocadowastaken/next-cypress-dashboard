@@ -22,6 +22,7 @@ jobs:
       - uses: actions/cache@v2
         env:
           # Trick action to think that it's a valid event.
+          GITHUB_EVENT_NAME: push
           GITHUB_REF: ${{ github.event.deployment.sha }}
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
