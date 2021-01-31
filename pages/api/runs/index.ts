@@ -1,34 +1,9 @@
-import { RunCommit } from "@prisma/client";
 import cuid from "cuid";
 import { prisma } from "/api/db";
 import { CYPRESS_RECORD_KEY } from "/api/env";
 import { createAPIRequestHandler } from "/api/http/APIRequestHandler";
 import { ForbiddenError, ResourceNotFoundError } from "/api/http/HTTPError";
-
-interface CreateRunInput {
-  specs: string[];
-  group?: string;
-  ciBuildId: string;
-  projectId: string;
-  recordKey: string;
-  commit: RunCommit;
-  platform: {
-    osCpus: unknown[];
-    osName: string;
-    osMemory: unknown;
-    osVersion: string;
-    browserName: string;
-    browserVersion: string;
-  };
-}
-
-interface CreateRunResponse {
-  groupId: string;
-  machineId: string;
-  runId: string;
-  runUrl: string;
-  isNewRun: boolean;
-}
+import { CreateRunInput, CreateRunResponse } from "/shared/cypress-types";
 
 export default createAPIRequestHandler({
   async get(req) {
