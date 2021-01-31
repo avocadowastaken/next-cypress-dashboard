@@ -1,6 +1,6 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { ServerRequestContext } from "/api/ctx/ServerRequestContext";
 import { HTTPError, InternalServerError } from "/api/http/HTTPError";
+import { ServerRequestContext } from "/api/http/ServerRequestContext";
 
 function toHTTPError(error: unknown): HTTPError {
   return error instanceof HTTPError ? error : new InternalServerError(error);
