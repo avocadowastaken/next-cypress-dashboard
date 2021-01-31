@@ -13,8 +13,8 @@ async function findDeploymentURL(): Promise<string | undefined> {
     "GET /repos/{owner}/{repo}/deployments",
     {
       ...context.repo,
-      per_page: 10,
       environment,
+      per_page: 10,
       task: "deploy",
     }
   )) {
