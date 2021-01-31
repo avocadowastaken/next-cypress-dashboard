@@ -63,10 +63,10 @@ model RunInstance {
 model Run {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
 
   groupId   String
   ciBuildId String
+  machineId String @default(cuid())
 
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
@@ -79,5 +79,5 @@ model Run {
 
   instances RunInstance[]
 
-  @@unique([ciBuildId, projectId])
+  @@unique([groupId, ciBuildId, projectId])
 }
