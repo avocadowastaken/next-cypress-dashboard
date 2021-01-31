@@ -1,4 +1,3 @@
-import { APP_ENV, NODE_ENV } from "@/api/env";
 import { NextApiRequest } from "next";
 
 function defineErrorProperties(
@@ -84,19 +83,16 @@ export class MethodNotAllowedError extends HTTPError {
 //
 
 export interface InternalServerErrorContext extends HTTPErrorContext {
-  cause?: Error;
+  cause: Error;
 }
 
 export class InternalServerError extends HTTPError<InternalServerErrorContext> {
   constructor(cause: unknown) {
-    const context: InternalServerErrorContext = {};
+    const context: InternalServerErrorContext = {
+      cause: cause instanceof Error ? cause : new Error("Unknown cause"),
+    };
 
-    if (NODE_ENV !== "production" || APP_ENV === "preview") {
-      context.cause =
-        cause instanceof Error ? cause : new Error("Unknown cause");
-
-      defineErrorProperties(context.cause);
-    }
+    defineErrorProperties(context.cause);
 
     super(500, "Internal Server Error", context);
   }
