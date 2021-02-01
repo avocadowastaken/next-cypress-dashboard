@@ -6,6 +6,8 @@ const { CYPRESS_RECORD_KEY } = process.env;
 const token = getInput("token", { required: true });
 const payload = getInput("payload", { required: true });
 const environment = getInput("environment", { required: true });
+const ignoreErrors = getInput("ignore_errors", { required: false }) === "true";
+
 const octokit = getOctokit(token);
 
 async function findDeploymentURL(): Promise<string | undefined> {
@@ -71,4 +73,10 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch(setFailed);
+main().catch((error) => {
+  if (ignoreErrors) {
+    warning(error);
+  } else {
+    setFailed(error);
+  }
+});
