@@ -1,6 +1,12 @@
-const withPrismaPlugin = require("next-prisma-plugin");
+const makeWithMDX = require("@next/mdx");
 
-module.exports = withPrismaPlugin({
+const withMDX = makeWithMDX({
+  extension: /\.mdx?$/,
+});
+
+module.exports = withMDX({
+  pageExtensions: ["tsx", "ts", "js", "mdx", "md"],
+
   async rewrites() {
     return [
       {
