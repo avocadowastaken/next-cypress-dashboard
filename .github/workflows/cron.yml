@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v1
 
       - uses: ./actions/exec-task
+        if: always()
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
         with:
@@ -19,6 +20,7 @@ jobs:
           payload: '{ "name": "cleanup-runs" }'
 
       - uses: ./actions/exec-task
+        if: always()
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
         with:
