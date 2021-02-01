@@ -15,6 +15,10 @@ inputs:
     required: true
     description: "Task payload"
 
+  ignore_errors:
+    required: false
+    description: "Threats errors as warnings"
+
 runs:
   using: "node12"
   main: "dist/index.js"

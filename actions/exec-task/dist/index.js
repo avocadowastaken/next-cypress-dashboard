@@ -3579,7 +3579,7 @@ var createTokenAuth = /* @__PURE__ */ __name(function(token2) {
 
 // actions/exec-task/index.ts
 var import_github = __toModule(require_github());
-var {CYPRESS_RECORD_KEY} = process.env, token = import_core.getInput("token", {required: !0}), payload = import_core.getInput("payload", {required: !0}), environment = import_core.getInput("environment", {required: !0}), octokit = import_github.getOctokit(token);
+var {CYPRESS_RECORD_KEY} = process.env, token = import_core.getInput("token", {required: !0}), payload = import_core.getInput("payload", {required: !0}), environment = import_core.getInput("environment", {required: !0}), ignoreErrors = import_core.getInput("ignore_errors", {required: !1}) === "true", octokit = import_github.getOctokit(token);
 async function findDeploymentURL() {
   for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", {
     ...import_github.context.repo,
@@ -3619,4 +3619,6 @@ ${response.statusText}
 ${responseText}`);
 }
 __name(main, "main");
-main().catch(import_core.setFailed);
+main().catch((error) => {
+  ignoreErrors ? import_core.warning(error) : import_core.setFailed(error);
+});
