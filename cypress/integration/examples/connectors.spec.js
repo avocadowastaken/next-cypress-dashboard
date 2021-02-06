@@ -27,7 +27,7 @@ context("Connectors", () => {
     // https://on.cypress.io/invoke
     cy.get(".connectors-div")
       .should("be.hidden")
-      // call the jquery method 'show' on the 'div.rootContainer'
+      // call the jquery method 'show' on the 'div.container'
       .invoke("show")
       .should("be.visible");
   });
