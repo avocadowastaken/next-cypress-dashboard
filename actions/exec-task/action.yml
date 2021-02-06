@@ -11,8 +11,12 @@ inputs:
     required: true
     description: "GitHub environment of the deployment"
 
-  payload:
+  name:
     required: true
+    description: "Task name"
+
+  payload:
+    required: false
     description: "Task payload"
 
   ignore_errors:
