@@ -1,5 +1,4 @@
 import { HTTPError, InternalServerError } from "@/api/http/HTTPError";
-import { ServerRequestContext } from "@/api/http/ServerRequestContext";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
 function toHTTPError(error: unknown): HTTPError {
@@ -8,8 +7,7 @@ function toHTTPError(error: unknown): HTTPError {
 
 export type RequestHandler<T> = (
   req: NextApiRequest,
-  res: NextApiResponse<T>,
-  ctx: ServerRequestContext
+  res: NextApiResponse<T>
 ) => void | Promise<void>;
 
 async function wait(ms: number): Promise<void> {
@@ -21,11 +19,10 @@ async function wait(ms: number): Promise<void> {
 async function handleRequest<T>(
   handler: RequestHandler<T>,
   req: NextApiRequest,
-  res: NextApiResponse<T>,
-  ctx: ServerRequestContext
+  res: NextApiResponse<T>
 ): Promise<void> {
   try {
-    await handler(req, res, ctx);
+    await handler(req, res);
   } catch (error: unknown) {
     if (
       error instanceof Error &&
@@ -36,7 +33,7 @@ async function handleRequest<T>(
 
       await wait(300);
 
-      await handleRequest(handler, req, res, ctx);
+      await handleRequest(handler, req, res);
     } else {
       throw error;
     }
@@ -47,12 +44,10 @@ export function createRequestHandler<T>(
   handler: RequestHandler<T>
 ): NextApiHandler {
   return async (req, res) => {
-    const ctx = await ServerRequestContext.resolve(req);
-
     console.info("%s %s", req.method, req.url);
 
     try {
-      await handleRequest(handler, req, res, ctx);
+      await handleRequest(handler, req, res);
     } catch (error: unknown) {
       const httpError = toHTTPError(error);
 

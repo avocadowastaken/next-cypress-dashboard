@@ -10,23 +10,12 @@ module.exports = withMDX({
   async rewrites() {
     return [
       {
-        source: "/runs",
-        destination: "/api/runs",
+        source: "/runs/:path*",
+        destination: "/api/cypress/runs/:path*",
       },
-
       {
-        source: "/runs/:runId/instances",
-        destination: "/api/runs/:runId/instances",
-      },
-
-      {
-        source: "/instances/:instanceId",
-        destination: "/api/instances/:instanceId",
-      },
-
-      {
-        source: "/instances/:instanceId/stdout",
-        destination: "/api/instances/:instanceId/stdout",
+        source: "/instances/:path*",
+        destination: "/api/cypress/instances/:path*",
       },
     ];
   },

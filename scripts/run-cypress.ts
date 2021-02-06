@@ -11,7 +11,7 @@ async function main() {
       "--record",
       "--parallel",
       "--ci-build-id",
-      `ci-build-id-${new Date().toISOString().slice(0, 10)}`,
+      `ci-build-id-4-${new Date().toISOString().slice(0, 10)}`,
     ],
     {
       env: {
