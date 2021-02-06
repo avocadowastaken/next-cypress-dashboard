@@ -4,7 +4,8 @@ import fetch, { Headers } from "node-fetch";
 
 const { CYPRESS_RECORD_KEY } = process.env;
 const token = getInput("token", { required: true });
-const payload = getInput("payload", { required: true });
+const name = getInput("name", { required: true });
+const payload = getInput("payload", { required: false });
 const environment = getInput("environment", { required: true });
 const ignoreErrors = getInput("ignore_errors", { required: false }) === "true";
 
@@ -55,9 +56,9 @@ async function main(): Promise<void> {
     headers.set("Authorization", `Token ${CYPRESS_RECORD_KEY}`);
   }
 
-  info(`Making request to: '${deploymentURL}' with '${payload}…'`);
+  info(`Making request to: '${deploymentURL}' with '${name}'…`);
 
-  const response = await fetch(`${deploymentURL}/api/tasks`, {
+  const response = await fetch(`${deploymentURL}/api/tasks/${name}`, {
     headers,
     body: payload,
     method: "POST",

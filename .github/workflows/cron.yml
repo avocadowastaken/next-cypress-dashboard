@@ -3,7 +3,7 @@ name: cron
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */1 * * *"
+    - cron: "0 0 * * *"
 
 jobs:
   cleanup-runs:
@@ -17,11 +17,11 @@ jobs:
         with:
           environment: Preview
           ignore_errors: true
-          payload: '{ "name": "cleanup-runs" }'
+          name: "cleanup-runs"
 
       - uses: ./actions/exec-task
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
         with:
           environment: Production
-          payload: '{ "name": "cleanup-runs" }'
+          name: "cleanup-runs"
