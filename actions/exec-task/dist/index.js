@@ -2,8 +2,8 @@ var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = 
 var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
 var __commonJS = (callback, module2) => () => (module2 || (module2 = {exports: {}}, callback(module2.exports, module2)), module2.exports), __export = (target, all) => {
   __markAsModule(target);
-  for (var name in all)
-    __defProp(target, name, {get: all[name], enumerable: !0});
+  for (var name2 in all)
+    __defProp(target, name2, {get: all[name2], enumerable: !0});
 }, __exportStar = (target, module2, desc) => {
   if (__markAsModule(target), module2 && typeof module2 == "object" || typeof module2 == "function")
     for (let key of __getOwnPropNames(module2))
@@ -42,8 +42,8 @@ var require_command = __commonJS((exports2) => {
   }
   __name(issueCommand, "issueCommand");
   exports2.issueCommand = issueCommand;
-  function issue(name, message = "") {
-    issueCommand(name, {}, message);
+  function issue(name2, message = "") {
+    issueCommand(name2, {}, message);
   }
   __name(issue, "issue");
   exports2.issue = issue;
@@ -149,13 +149,13 @@ var require_core = __commonJS((exports2) => {
   (function(ExitCode2) {
     ExitCode2[ExitCode2.Success = 0] = "Success", ExitCode2[ExitCode2.Failure = 1] = "Failure";
   })(ExitCode = exports2.ExitCode || (exports2.ExitCode = {}));
-  function exportVariable(name, val) {
+  function exportVariable(name2, val) {
     let convertedVal = utils_1.toCommandValue(val);
-    if (process.env[name] = convertedVal, process.env.GITHUB_ENV || "") {
-      let delimiter = "_GitHubActionsFileCommandDelimeter_", commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
+    if (process.env[name2] = convertedVal, process.env.GITHUB_ENV || "") {
+      let delimiter = "_GitHubActionsFileCommandDelimeter_", commandValue = `${name2}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
       file_command_1.issueCommand("ENV", commandValue);
     } else
-      command_1.issueCommand("set-env", {name}, convertedVal);
+      command_1.issueCommand("set-env", {name: name2}, convertedVal);
   }
   __name(exportVariable, "exportVariable");
   exports2.exportVariable = exportVariable;
@@ -169,16 +169,16 @@ var require_core = __commonJS((exports2) => {
   }
   __name(addPath, "addPath");
   exports2.addPath = addPath;
-  function getInput2(name, options) {
-    let val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
+  function getInput2(name2, options) {
+    let val = process.env[`INPUT_${name2.replace(/ /g, "_").toUpperCase()}`] || "";
     if (options && options.required && !val)
-      throw new Error(`Input required and not supplied: ${name}`);
+      throw new Error(`Input required and not supplied: ${name2}`);
     return val.trim();
   }
   __name(getInput2, "getInput");
   exports2.getInput = getInput2;
-  function setOutput(name, value) {
-    command_1.issueCommand("set-output", {name}, value);
+  function setOutput(name2, value) {
+    command_1.issueCommand("set-output", {name: name2}, value);
   }
   __name(setOutput, "setOutput");
   exports2.setOutput = setOutput;
@@ -217,8 +217,8 @@ var require_core = __commonJS((exports2) => {
   }
   __name(info2, "info");
   exports2.info = info2;
-  function startGroup(name) {
-    command_1.issue("group", name);
+  function startGroup(name2) {
+    command_1.issue("group", name2);
   }
   __name(startGroup, "startGroup");
   exports2.startGroup = startGroup;
@@ -227,9 +227,9 @@ var require_core = __commonJS((exports2) => {
   }
   __name(endGroup, "endGroup");
   exports2.endGroup = endGroup;
-  function group(name, fn) {
+  function group(name2, fn) {
     return __awaiter(this, void 0, void 0, function* () {
-      startGroup(name);
+      startGroup(name2);
       let result;
       try {
         result = yield fn();
@@ -241,13 +241,13 @@ var require_core = __commonJS((exports2) => {
   }
   __name(group, "group");
   exports2.group = group;
-  function saveState(name, value) {
-    command_1.issueCommand("save-state", {name}, value);
+  function saveState(name2, value) {
+    command_1.issueCommand("save-state", {name: name2}, value);
   }
   __name(saveState, "saveState");
   exports2.saveState = saveState;
-  function getState(name) {
-    return process.env[`STATE_${name}`] || "";
+  function getState(name2) {
+    return process.env[`STATE_${name2}`] || "";
   }
   __name(getState, "getState");
   exports2.getState = getState;
@@ -799,13 +799,13 @@ var require_utils2 = __commonJS((exports2) => {
 // node_modules/before-after-hook/lib/register.js
 var require_register = __commonJS((exports2, module2) => {
   module2.exports = register;
-  function register(state, name, method, options) {
+  function register(state, name2, method, options) {
     if (typeof method != "function")
       throw new Error("method for before hook must be a function");
-    return options || (options = {}), Array.isArray(name) ? name.reverse().reduce(function(callback, name2) {
-      return register.bind(null, state, name2, callback, options);
+    return options || (options = {}), Array.isArray(name2) ? name2.reverse().reduce(function(callback, name3) {
+      return register.bind(null, state, name3, callback, options);
     }, method)() : Promise.resolve().then(function() {
-      return state.registry[name] ? state.registry[name].reduce(function(method2, registered) {
+      return state.registry[name2] ? state.registry[name2].reduce(function(method2, registered) {
         return registered.hook.bind(null, method2, options);
       }, method)() : method(options);
     });
@@ -816,9 +816,9 @@ var require_register = __commonJS((exports2, module2) => {
 // node_modules/before-after-hook/lib/add.js
 var require_add = __commonJS((exports2, module2) => {
   module2.exports = addHook;
-  function addHook(state, kind, name, hook2) {
+  function addHook(state, kind, name2, hook2) {
     var orig = hook2;
-    state.registry[name] || (state.registry[name] = []), kind === "before" && (hook2 = /* @__PURE__ */ __name(function(method, options) {
+    state.registry[name2] || (state.registry[name2] = []), kind === "before" && (hook2 = /* @__PURE__ */ __name(function(method, options) {
       return Promise.resolve().then(orig.bind(null, options)).then(method.bind(null, options));
     }, "hook")), kind === "after" && (hook2 = /* @__PURE__ */ __name(function(method, options) {
       var result;
@@ -831,7 +831,7 @@ var require_add = __commonJS((exports2, module2) => {
       return Promise.resolve().then(method.bind(null, options)).catch(function(error) {
         return orig(error, options);
       });
-    }, "hook")), state.registry[name].push({
+    }, "hook")), state.registry[name2].push({
       hook: hook2,
       orig
     });
@@ -842,12 +842,12 @@ var require_add = __commonJS((exports2, module2) => {
 // node_modules/before-after-hook/lib/remove.js
 var require_remove = __commonJS((exports2, module2) => {
   module2.exports = removeHook;
-  function removeHook(state, name, method) {
-    if (!!state.registry[name]) {
-      var index = state.registry[name].map(function(registered) {
+  function removeHook(state, name2, method) {
+    if (!!state.registry[name2]) {
+      var index = state.registry[name2].map(function(registered) {
         return registered.orig;
       }).indexOf(method);
-      index !== -1 && state.registry[name].splice(index, 1);
+      index !== -1 && state.registry[name2].splice(index, 1);
     }
   }
   __name(removeHook, "removeHook");
@@ -856,10 +856,10 @@ var require_remove = __commonJS((exports2, module2) => {
 // node_modules/before-after-hook/index.js
 var require_before_after_hook = __commonJS((exports2, module2) => {
   var register = require_register(), addHook = require_add(), removeHook = require_remove(), bind = Function.bind, bindable = bind.bind(bind);
-  function bindApi(hook2, state, name) {
-    var removeHookRef = bindable(removeHook, null).apply(null, name ? [state, name] : [state]);
+  function bindApi(hook2, state, name2) {
+    var removeHookRef = bindable(removeHook, null).apply(null, name2 ? [state, name2] : [state]);
     hook2.api = {remove: removeHookRef}, hook2.remove = removeHookRef, ["before", "error", "after", "wrap"].forEach(function(kind) {
-      var args = name ? [state, kind, name] : [state, kind];
+      var args = name2 ? [state, kind, name2] : [state, kind];
       hook2[kind] = hook2.api[kind] = bindable(addHook, null).apply(null, args);
     });
   }
@@ -945,8 +945,8 @@ var require_once = __commonJS((exports2, module2) => {
       if (f.called)
         throw new Error(f.onceError);
       return f.called = !0, f.value = fn.apply(this, arguments);
-    }, "f"), name = fn.name || "Function wrapped with `once`";
-    return f.onceError = name + " shouldn't be called more than once", f.called = !1, f;
+    }, "f"), name2 = fn.name || "Function wrapped with `once`";
+    return f.onceError = name2 + " shouldn't be called more than once", f.called = !1, f;
   }
   __name(onceStrict, "onceStrict");
 });
@@ -1412,17 +1412,32 @@ var require_dist_web2 = __commonJS((exports2) => {
       getTemplate: ["GET /gitignore/templates/{name}"]
     },
     interactions: {
+      getRestrictionsForAuthenticatedUser: ["GET /user/interaction-limits"],
       getRestrictionsForOrg: ["GET /orgs/{org}/interaction-limits"],
       getRestrictionsForRepo: ["GET /repos/{owner}/{repo}/interaction-limits"],
-      getRestrictionsForYourPublicRepos: ["GET /user/interaction-limits"],
+      getRestrictionsForYourPublicRepos: [
+        "GET /user/interaction-limits",
+        {},
+        {renamed: ["interactions", "getRestrictionsForAuthenticatedUser"]}
+      ],
+      removeRestrictionsForAuthenticatedUser: ["DELETE /user/interaction-limits"],
       removeRestrictionsForOrg: ["DELETE /orgs/{org}/interaction-limits"],
       removeRestrictionsForRepo: [
         "DELETE /repos/{owner}/{repo}/interaction-limits"
       ],
-      removeRestrictionsForYourPublicRepos: ["DELETE /user/interaction-limits"],
+      removeRestrictionsForYourPublicRepos: [
+        "DELETE /user/interaction-limits",
+        {},
+        {renamed: ["interactions", "removeRestrictionsForAuthenticatedUser"]}
+      ],
+      setRestrictionsForAuthenticatedUser: ["PUT /user/interaction-limits"],
       setRestrictionsForOrg: ["PUT /orgs/{org}/interaction-limits"],
       setRestrictionsForRepo: ["PUT /repos/{owner}/{repo}/interaction-limits"],
-      setRestrictionsForYourPublicRepos: ["PUT /user/interaction-limits"]
+      setRestrictionsForYourPublicRepos: [
+        "PUT /user/interaction-limits",
+        {},
+        {renamed: ["interactions", "setRestrictionsForAuthenticatedUser"]}
+      ]
     },
     issues: {
       addAssignees: [
@@ -2305,7 +2320,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       unfollow: ["DELETE /user/following/{username}"],
       updateAuthenticated: ["PATCH /user"]
     }
-  }, VERSION4 = "4.9.0";
+  }, VERSION4 = "4.10.1";
   function endpointsToMethods(octokit2, endpointsMap) {
     let newMethods = {};
     for (let [scope, endpoints] of Object.entries(endpointsMap))
@@ -2337,8 +2352,8 @@ var require_dist_web2 = __commonJS((exports2) => {
       }
       if (decorations.deprecated && octokit2.log.warn(decorations.deprecated), decorations.renamedParameters) {
         let options2 = requestWithDefaults.endpoint.merge(...args);
-        for (let [name, alias] of Object.entries(decorations.renamedParameters))
-          name in options2 && (octokit2.log.warn(`"${name}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias}" instead`), alias in options2 || (options2[alias] = options2[name]), delete options2[name]);
+        for (let [name2, alias] of Object.entries(decorations.renamedParameters))
+          name2 in options2 && (octokit2.log.warn(`"${name2}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias}" instead`), alias in options2 || (options2[alias] = options2[name2]), delete options2[name2]);
         return requestWithDefaults(options2);
       }
       return requestWithDefaults(...args);
@@ -2359,7 +2374,7 @@ var require_dist_web3 = __commonJS((exports2) => {
     composePaginateRest: () => composePaginateRest,
     paginateRest: () => paginateRest
   });
-  var VERSION4 = "2.9.0";
+  var VERSION4 = "2.9.1";
   function normalizePaginatedListResponse(response) {
     if (!("total_count" in response.data && !("url" in response.data)))
       return response;
@@ -2544,7 +2559,7 @@ function merge(defaults, route, options) {
 __name(merge, "merge");
 function addQueryParameters(url, parameters) {
   let separator = /\?/.test(url) ? "&" : "?", names = Object.keys(parameters);
-  return names.length === 0 ? url : url + separator + names.map((name) => name === "q" ? "q=" + parameters.q.split("+").map(encodeURIComponent).join("+") : `${name}=${encodeURIComponent(parameters[name])}`).join("&");
+  return names.length === 0 ? url : url + separator + names.map((name2) => name2 === "q" ? "q=" + parameters.q.split("+").map(encodeURIComponent).join("+") : `${name2}=${encodeURIComponent(parameters[name2])}`).join("&");
 }
 __name(addQueryParameters, "addQueryParameters");
 var urlVariableRegex = /\{[^}]+\}/g;
@@ -2838,10 +2853,10 @@ Object.defineProperties(Body.prototype, {
   text: {enumerable: !0}
 });
 Body.mixIn = function(proto) {
-  for (let name of Object.getOwnPropertyNames(Body.prototype))
-    if (!(name in proto)) {
-      let desc = Object.getOwnPropertyDescriptor(Body.prototype, name);
-      Object.defineProperty(proto, name, desc);
+  for (let name2 of Object.getOwnPropertyNames(Body.prototype))
+    if (!(name2 in proto)) {
+      let desc = Object.getOwnPropertyDescriptor(Body.prototype, name2);
+      Object.defineProperty(proto, name2, desc);
     }
 };
 function consumeBody() {
@@ -2923,9 +2938,9 @@ function writeToStream(dest, instance) {
 __name(writeToStream, "writeToStream");
 Body.Promise = global.Promise;
 var invalidTokenRegex = /[^\^_`a-zA-Z\-0-9!#$%&'*+.|~]/, invalidHeaderCharRegex = /[^\t\x20-\x7e\x80-\xff]/;
-function validateName(name) {
-  if (name = `${name}`, invalidTokenRegex.test(name) || name === "")
-    throw new TypeError(`${name} is not a legal HTTP header name`);
+function validateName(name2) {
+  if (name2 = `${name2}`, invalidTokenRegex.test(name2) || name2 === "")
+    throw new TypeError(`${name2} is not a legal HTTP header name`);
 }
 __name(validateName, "validateName");
 function validateValue(value) {
@@ -2933,10 +2948,10 @@ function validateValue(value) {
     throw new TypeError(`${value} is not a legal HTTP header value`);
 }
 __name(validateValue, "validateValue");
-function find(map, name) {
-  name = name.toLowerCase();
+function find(map, name2) {
+  name2 = name2.toLowerCase();
   for (let key in map)
-    if (key.toLowerCase() === name)
+    if (key.toLowerCase() === name2)
       return key;
 }
 __name(find, "find");
@@ -2975,35 +2990,35 @@ var MAP = Symbol("map"), Headers = class {
       } else
         throw new TypeError("Provided initializer must be an object");
   }
-  get(name) {
-    name = `${name}`, validateName(name);
-    let key = find(this[MAP], name);
+  get(name2) {
+    name2 = `${name2}`, validateName(name2);
+    let key = find(this[MAP], name2);
     return key === void 0 ? null : this[MAP][key].join(", ");
   }
   forEach(callback) {
     let thisArg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : void 0, pairs = getHeaders(this), i = 0;
     for (; i < pairs.length; ) {
       var _pairs$i = pairs[i];
-      let name = _pairs$i[0], value = _pairs$i[1];
-      callback.call(thisArg, value, name, this), pairs = getHeaders(this), i++;
+      let name2 = _pairs$i[0], value = _pairs$i[1];
+      callback.call(thisArg, value, name2, this), pairs = getHeaders(this), i++;
     }
   }
-  set(name, value) {
-    name = `${name}`, value = `${value}`, validateName(name), validateValue(value);
-    let key = find(this[MAP], name);
-    this[MAP][key !== void 0 ? key : name] = [value];
+  set(name2, value) {
+    name2 = `${name2}`, value = `${value}`, validateName(name2), validateValue(value);
+    let key = find(this[MAP], name2);
+    this[MAP][key !== void 0 ? key : name2] = [value];
   }
-  append(name, value) {
-    name = `${name}`, value = `${value}`, validateName(name), validateValue(value);
-    let key = find(this[MAP], name);
-    key !== void 0 ? this[MAP][key].push(value) : this[MAP][name] = [value];
+  append(name2, value) {
+    name2 = `${name2}`, value = `${value}`, validateName(name2), validateValue(value);
+    let key = find(this[MAP], name2);
+    key !== void 0 ? this[MAP][key].push(value) : this[MAP][name2] = [value];
   }
-  has(name) {
-    return name = `${name}`, validateName(name), find(this[MAP], name) !== void 0;
+  has(name2) {
+    return name2 = `${name2}`, validateName(name2), find(this[MAP], name2) !== void 0;
   }
-  delete(name) {
-    name = `${name}`, validateName(name);
-    let key = find(this[MAP], name);
+  delete(name2) {
+    name2 = `${name2}`, validateName(name2);
+    let key = find(this[MAP], name2);
     key !== void 0 && delete this[MAP][key];
   }
   raw() {
@@ -3087,13 +3102,13 @@ function exportNodeCompatibleHeaders(headers) {
 __name(exportNodeCompatibleHeaders, "exportNodeCompatibleHeaders");
 function createHeadersLenient(obj) {
   let headers = new Headers();
-  for (let name of Object.keys(obj))
-    if (!invalidTokenRegex.test(name))
-      if (Array.isArray(obj[name]))
-        for (let val of obj[name])
-          invalidHeaderCharRegex.test(val) || (headers[MAP][name] === void 0 ? headers[MAP][name] = [val] : headers[MAP][name].push(val));
+  for (let name2 of Object.keys(obj))
+    if (!invalidTokenRegex.test(name2))
+      if (Array.isArray(obj[name2]))
+        for (let val of obj[name2])
+          invalidHeaderCharRegex.test(val) || (headers[MAP][name2] === void 0 ? headers[MAP][name2] = [val] : headers[MAP][name2].push(val));
       else
-        invalidHeaderCharRegex.test(obj[name]) || (headers[MAP][name] = [obj[name]]);
+        invalidHeaderCharRegex.test(obj[name2]) || (headers[MAP][name2] = [obj[name2]]);
   return headers;
 }
 __name(createHeadersLenient, "createHeadersLenient");
@@ -3404,7 +3419,7 @@ var import_once = __toModule(require_once()), logOnce = import_once.default((dep
 __name(RequestError, "RequestError");
 
 // node_modules/@octokit/request/dist-web/index.js
-var VERSION2 = "5.4.13";
+var VERSION2 = "5.4.14";
 function getBufferResponse(response) {
   return response.arrayBuffer();
 }
@@ -3490,7 +3505,7 @@ var request = withDefaults2(endpoint, {
 });
 
 // node_modules/@octokit/graphql/dist-web/index.js
-var VERSION3 = "4.5.9", GraphqlError = class extends Error {
+var VERSION3 = "4.6.0", GraphqlError = class extends Error {
   constructor(request2, response) {
     let message = response.data.errors[0].message;
     super(message);
@@ -3579,7 +3594,7 @@ var createTokenAuth = /* @__PURE__ */ __name(function(token2) {
 
 // actions/exec-task/index.ts
 var import_github = __toModule(require_github());
-var {CYPRESS_RECORD_KEY} = process.env, token = import_core.getInput("token", {required: !0}), payload = import_core.getInput("payload", {required: !0}), environment = import_core.getInput("environment", {required: !0}), ignoreErrors = import_core.getInput("ignore_errors", {required: !1}) === "true", octokit = import_github.getOctokit(token);
+var {CYPRESS_RECORD_KEY} = process.env, token = import_core.getInput("token", {required: !0}), name = import_core.getInput("name", {required: !0}), payload = import_core.getInput("payload", {required: !1}), environment = import_core.getInput("environment", {required: !0}), ignoreErrors = import_core.getInput("ignore_errors", {required: !1}) === "true", octokit = import_github.getOctokit(token);
 async function findDeploymentURL() {
   for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", {
     ...import_github.context.repo,
@@ -3605,8 +3620,8 @@ async function main() {
     Accept: "application/json",
     "Content-Type": "application/json"
   });
-  CYPRESS_RECORD_KEY && headers.set("Authorization", `Token ${CYPRESS_RECORD_KEY}`), import_core.info(`Making request to: '${deploymentURL}' with '${payload}\u2026'`);
-  let response = await lib_default(`${deploymentURL}/api/tasks`, {
+  CYPRESS_RECORD_KEY && headers.set("Authorization", `Token ${CYPRESS_RECORD_KEY}`), import_core.info(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
+  let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, {
     headers,
     body: payload,
     method: "POST"
