@@ -13,7 +13,7 @@
     "start": "next start",
     "tdd": "jest --watch",
     "test": "jest",
-    "check": "run-p check:*",
+    "checks": "run-p check:*",
     "check:types": "tsc",
     "check:format": "prettier . --check",
     "db:push": "prisma db push --preview-feature",
@@ -38,7 +38,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "yarn run check"
+      "pre-push": "yarn checks"
     }
   },
   "dependencies": {

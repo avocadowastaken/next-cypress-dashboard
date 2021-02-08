@@ -26,4 +26,4 @@ jobs:
 
       - run: yarn install --force --frozen-lockfile
 
-      - run: yarn run check
+      - run: yarn checks
