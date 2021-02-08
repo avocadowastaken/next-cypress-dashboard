@@ -7,6 +7,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  name  String?
+  image String?
+
+  email         String?   @unique
+  emailVerified DateTime?
+
+  accounts UserAccount[]
+  sessions UserSession[]
+}
+
+model UserAccount {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  compoundId String @unique
+
+  providerId        String
+  providerType      String
+  providerAccountId String
+
+  accessToken        String?
+  refreshToken       String?
+  accessTokenExpires DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, providerId, providerAccountId])
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  expires      DateTime
+  accessToken  String   @unique
+  sessionToken String   @unique
+}
+
+model UserVerificationRequest {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  expires    DateTime
+  identifier String
+  token      String   @unique
+}
+
 model Project {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -25,7 +80,6 @@ model RunInstance {
 
   runId String
   run   Run    @relation(fields: [runId], references: [id])
-
 
   @@unique([spec, runId, groupId])
   @@index([id, claimed])
