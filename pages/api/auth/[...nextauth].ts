@@ -43,7 +43,7 @@ export default function nextAuthApi(
           refresh_token_expires_in?: string;
         }
       ) {
-        if (typeof user.id === "string" && user.createdAt != null) {
+        if (typeof user.id === "string" && user.createdAt instanceof Date) {
           await prisma.userAccount.update({
             where: {
               userId_providerId_providerAccountId: {
