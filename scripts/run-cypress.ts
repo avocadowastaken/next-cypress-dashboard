@@ -1,8 +1,8 @@
 import { exec } from "@actions/exec";
-import { patchCypressConfig } from "./patch-cypress-config";
+import * as path from "path";
 
 async function main() {
-  await patchCypressConfig({ api_url: "http://localhost:3000/" });
+  await exec("ts-node", [path.join(__dirname, "patch-cypress-config.ts")]);
 
   await exec(
     "cypress",
