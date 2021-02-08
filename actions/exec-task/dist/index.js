@@ -3616,16 +3616,17 @@ async function main() {
   let deploymentURL = await findDeploymentURL();
   if (!deploymentURL)
     return import_core.warning(`There are no deployments for the environment '${environment}'`);
-  let headers = new Headers({
+  let headers = {
     Accept: "application/json",
     "Content-Type": "application/json"
-  });
-  CYPRESS_RECORD_KEY && headers.set("Authorization", `Token ${CYPRESS_RECORD_KEY}`), import_core.info(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
-  let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, {
+  };
+  CYPRESS_RECORD_KEY && (headers.Authorization = `Token ${CYPRESS_RECORD_KEY}`), import_core.info(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
+  let requestInit = {
     headers,
-    body: payload,
     method: "POST"
-  }), responseText = await response.text().catch(() => null);
+  };
+  payload && (requestInit.body = payload);
+  let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, requestInit), responseText = await response.text().catch(() => null);
   if (response.ok)
     responseText && import_core.info(responseText);
   else

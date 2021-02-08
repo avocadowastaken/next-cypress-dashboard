@@ -1,6 +1,6 @@
 import { getInput, info, setFailed, warning } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import fetch, { Headers } from "node-fetch";
+import fetch, { RequestInit } from "node-fetch";
 
 const { CYPRESS_RECORD_KEY } = process.env;
 const token = getInput("token", { required: true });
@@ -47,22 +47,30 @@ async function main(): Promise<void> {
     );
   }
 
-  const headers = new Headers({
+  const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
-  });
+  };
 
   if (CYPRESS_RECORD_KEY) {
-    headers.set("Authorization", `Token ${CYPRESS_RECORD_KEY}`);
+    headers["Authorization"] = `Token ${CYPRESS_RECORD_KEY}`;
   }
 
   info(`Making request to: '${deploymentURL}' with '${name}'…`);
 
-  const response = await fetch(`${deploymentURL}/api/tasks/${name}`, {
+  const requestInit: RequestInit = {
     headers,
-    body: payload,
     method: "POST",
-  });
+  };
+
+  if (payload) {
+    requestInit.body = payload;
+  }
+
+  const response = await fetch(
+    `${deploymentURL}/api/tasks/${name}`,
+    requestInit
+  );
 
   const responseText = await response.text().catch(() => null);
   if (!response.ok) {
