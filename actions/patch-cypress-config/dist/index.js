@@ -1,10 +1,7 @@
 var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
-var __commonJS = (callback, module2) => () => (module2 || (module2 = {exports: {}}, callback(module2.exports, module2)), module2.exports), __export = (target, all) => {
-  __markAsModule(target);
-  for (var name in all)
-    __defProp(target, name, {get: all[name], enumerable: !0});
-}, __exportStar = (target, module2, desc) => {
+var __commonJS = (callback, module2) => () => (module2 || (module2 = {exports: {}}, callback(module2.exports, module2)), module2.exports);
+var __exportStar = (target, module2, desc) => {
   if (__markAsModule(target), module2 && typeof module2 == "object" || typeof module2 == "function")
     for (let key of __getOwnPropNames(module2))
       !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
@@ -89,14 +86,14 @@ var require_file_command = __commonJS((exports2) => {
     return result.default = mod, result;
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var fs = __importStar(require("fs")), os = __importStar(require("os")), utils_1 = require_utils();
+  var fs2 = __importStar(require("fs")), os = __importStar(require("os")), utils_1 = require_utils();
   function issueCommand(command, message) {
     let filePath = process.env[`GITHUB_${command}`];
     if (!filePath)
       throw new Error(`Unable to find environment variable for file command ${command}`);
-    if (!fs.existsSync(filePath))
+    if (!fs2.existsSync(filePath))
       throw new Error(`Missing file at path: ${filePath}`);
-    fs.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
+    fs2.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
       encoding: "utf8"
     });
   }
@@ -286,8 +283,8 @@ var require_io_util = __commonJS((exports2) => {
     });
   }, _a;
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var assert_1 = require("assert"), fs = require("fs"), path = require("path");
-  _a = fs.promises, exports2.chmod = _a.chmod, exports2.copyFile = _a.copyFile, exports2.lstat = _a.lstat, exports2.mkdir = _a.mkdir, exports2.readdir = _a.readdir, exports2.readlink = _a.readlink, exports2.rename = _a.rename, exports2.rmdir = _a.rmdir, exports2.stat = _a.stat, exports2.symlink = _a.symlink, exports2.unlink = _a.unlink;
+  var assert_1 = require("assert"), fs2 = require("fs"), path = require("path");
+  _a = fs2.promises, exports2.chmod = _a.chmod, exports2.copyFile = _a.copyFile, exports2.lstat = _a.lstat, exports2.mkdir = _a.mkdir, exports2.readdir = _a.readdir, exports2.readlink = _a.readlink, exports2.rename = _a.rename, exports2.rmdir = _a.rmdir, exports2.stat = _a.stat, exports2.symlink = _a.symlink, exports2.unlink = _a.unlink;
   exports2.IS_WINDOWS = process.platform === "win32";
   function exists(fsPath) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -435,7 +432,7 @@ var require_io = __commonJS((exports2) => {
     });
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var childProcess = require("child_process"), path = require("path"), util_1 = require("util"), ioUtil = require_io_util(), exec = util_1.promisify(childProcess.exec);
+  var childProcess = require("child_process"), path = require("path"), util_1 = require("util"), ioUtil = require_io_util(), exec2 = util_1.promisify(childProcess.exec);
   function cp(source, dest, options = {}) {
     return __awaiter(this, void 0, void 0, function* () {
       let {force, recursive} = readCopyOptions(options), destStat = (yield ioUtil.exists(dest)) ? yield ioUtil.stat(dest) : null;
@@ -477,7 +474,7 @@ var require_io = __commonJS((exports2) => {
     return __awaiter(this, void 0, void 0, function* () {
       if (ioUtil.IS_WINDOWS) {
         try {
-          (yield ioUtil.isDirectory(inputPath, !0)) ? yield exec(`rd /s /q "${inputPath}"`) : yield exec(`del /f /a "${inputPath}"`);
+          (yield ioUtil.isDirectory(inputPath, !0)) ? yield exec2(`rd /s /q "${inputPath}"`) : yield exec2(`del /f /a "${inputPath}"`);
         } catch (err) {
           if (err.code !== "ENOENT")
             throw err;
@@ -497,7 +494,7 @@ var require_io = __commonJS((exports2) => {
             throw err;
           return;
         }
-        isDir ? yield exec(`rm -rf "${inputPath}"`) : yield ioUtil.unlink(inputPath);
+        isDir ? yield exec2(`rm -rf "${inputPath}"`) : yield ioUtil.unlink(inputPath);
       }
     });
   }
@@ -900,7 +897,7 @@ var require_exec = __commonJS((exports2) => {
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
   var tr = __importStar(require_toolrunner());
-  function exec(commandLine, args, options) {
+  function exec2(commandLine, args, options) {
     return __awaiter(this, void 0, void 0, function* () {
       let commandArgs = tr.argStringToArray(commandLine);
       if (commandArgs.length === 0)
@@ -909,8 +906,8 @@ var require_exec = __commonJS((exports2) => {
       return args = commandArgs.slice(1).concat(args || []), new tr.ToolRunner(toolPath, args, options).exec();
     });
   }
-  __name(exec, "exec");
-  exports2.exec = exec;
+  __name(exec2, "exec");
+  exports2.exec = exec2;
 });
 
 // node_modules/@actions/glob/lib/internal-glob-options-helper.js
@@ -1856,7 +1853,7 @@ var require_internal_globber = __commonJS((exports2) => {
     return result.default = mod, result;
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var core = __importStar(require_core()), fs = __importStar(require("fs")), globOptionsHelper = __importStar(require_internal_glob_options_helper()), path = __importStar(require("path")), patternHelper = __importStar(require_internal_pattern_helper()), internal_match_kind_1 = require_internal_match_kind(), internal_pattern_1 = require_internal_pattern(), internal_search_state_1 = require_internal_search_state(), IS_WINDOWS = process.platform === "win32", DefaultGlobber = class {
+  var core = __importStar(require_core()), fs2 = __importStar(require("fs")), globOptionsHelper = __importStar(require_internal_glob_options_helper()), path = __importStar(require("path")), patternHelper = __importStar(require_internal_pattern_helper()), internal_match_kind_1 = require_internal_match_kind(), internal_pattern_1 = require_internal_pattern(), internal_search_state_1 = require_internal_search_state(), IS_WINDOWS = process.platform === "win32", DefaultGlobber = class {
     constructor(options) {
       this.patterns = [], this.searchPaths = [], this.options = globOptionsHelper.getOptions(options);
     }
@@ -1894,7 +1891,7 @@ var require_internal_globber = __commonJS((exports2) => {
         for (let searchPath of patternHelper.getSearchPaths(patterns)) {
           core.debug(`Search path '${searchPath}'`);
           try {
-            yield __await(fs.promises.lstat(searchPath));
+            yield __await(fs2.promises.lstat(searchPath));
           } catch (err) {
             if (err.code === "ENOENT")
               continue;
@@ -1914,7 +1911,7 @@ var require_internal_globber = __commonJS((exports2) => {
                 yield yield __await(item.path);
               else if (!partialMatch)
                 continue;
-              let childLevel = item.level + 1, childItems = (yield __await(fs.promises.readdir(item.path))).map((x) => new internal_search_state_1.SearchState(path.join(item.path, x), childLevel));
+              let childLevel = item.level + 1, childItems = (yield __await(fs2.promises.readdir(item.path))).map((x) => new internal_search_state_1.SearchState(path.join(item.path, x), childLevel));
               stack.push(...childItems.reverse());
             } else
               match & internal_match_kind_1.MatchKind.File && (yield yield __await(item.path));
@@ -1939,7 +1936,7 @@ var require_internal_globber = __commonJS((exports2) => {
         let stats;
         if (options.followSymbolicLinks)
           try {
-            stats = yield fs.promises.stat(item.path);
+            stats = yield fs2.promises.stat(item.path);
           } catch (err) {
             if (err.code === "ENOENT") {
               if (options.omitBrokenSymbolicLinks) {
@@ -1951,9 +1948,9 @@ var require_internal_globber = __commonJS((exports2) => {
             throw err;
           }
         else
-          stats = yield fs.promises.lstat(item.path);
+          stats = yield fs2.promises.lstat(item.path);
         if (stats.isDirectory() && options.followSymbolicLinks) {
-          let realPath = yield fs.promises.realpath(item.path);
+          let realPath = yield fs2.promises.realpath(item.path);
           for (; traversalChain.length >= item.level; )
             traversalChain.pop();
           if (traversalChain.some((x) => x === realPath)) {
@@ -6434,46 +6431,31 @@ var require_yaml = __commonJS((exports2, module2) => {
   module2.exports = require_dist().YAML;
 });
 
-// scripts/patch-cypress-config.ts
-var require_patch_cypress_config = __commonJS((exports2, module2) => {
-  __export(exports2, {
-    patchCypressConfig: () => patchCypressConfig2
-  });
-  var import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), import_path = __toModule(require("path")), import_yaml = __toModule(require_yaml());
-  async function resolveCachePath() {
-    let version = "", cachePath = "";
-    return await import_exec.exec("npx", ["cypress", "cache", "path"], {
-      listeners: {
-        stdout: (data) => {
-          cachePath += data.toString("utf8");
-        }
-      }
-    }), await import_exec.exec("npx", ["cypress", "version", "--component", "binary"], {
-      listeners: {
-        stdout: (data) => {
-          version += data.toString("utf8");
-        }
-      }
-    }), import_path.join(cachePath.trim(), version.trim());
-  }
-  __name(resolveCachePath, "resolveCachePath");
-  async function patchCypressConfig2(overrides) {
-    let cachePath = await resolveCachePath(), glob = await import_glob.create(`${cachePath}/**/app.yml`);
-    for await (let configPath of glob.globGenerator()) {
-      let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = import_yaml.parse(configYaml);
-      config.production.api_url !== overrides.api_url && (config.production.api_url = overrides.api_url, await import_fs.promises.writeFile(configPath, import_yaml.stringify(config), "utf-8"));
-    }
-  }
-  __name(patchCypressConfig2, "patchCypressConfig");
-  require.main === module2 && patchCypressConfig2({api_url: "http://localhost:3000"}).catch(console.error);
-});
-
 // actions/patch-cypress-config/index.ts
-var import_core = __toModule(require_core()), import_patch_cypress_config = __toModule(require_patch_cypress_config());
+var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), import_path = __toModule(require("path")), import_yaml = __toModule(require_yaml()), apiUrl = import_core.getInput("api_url", {required: !0});
+async function resolveCachePath() {
+  let version = "", cachePath = "";
+  return await import_exec.exec("npx", ["cypress", "cache", "path"], {
+    listeners: {
+      stdout: (data) => {
+        cachePath += data.toString("utf8");
+      }
+    }
+  }), await import_exec.exec("npx", ["cypress", "version", "--component", "binary"], {
+    listeners: {
+      stdout: (data) => {
+        version += data.toString("utf8");
+      }
+    }
+  }), import_path.join(cachePath.trim(), version.trim());
+}
+__name(resolveCachePath, "resolveCachePath");
 async function main() {
-  await import_patch_cypress_config.patchCypressConfig({
-    api_url: import_core.getInput("api_url", {required: !0})
-  });
+  let cachePath = await resolveCachePath(), glob = await import_glob.create(`${cachePath}/**/app.yml`);
+  for await (let configPath of glob.globGenerator()) {
+    let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = import_yaml.parse(configYaml);
+    config.production.api_url !== apiUrl && (config.production.api_url = apiUrl, await import_fs.promises.writeFile(configPath, import_yaml.stringify(config), "utf-8"));
+  }
 }
 __name(main, "main");
 main().catch(import_core.setFailed);
