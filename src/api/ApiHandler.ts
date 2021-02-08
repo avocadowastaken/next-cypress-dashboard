@@ -15,12 +15,14 @@ export function createApiHandler(
   setup(app);
 
   return async (req, res) => {
+    const { "content-length": contentLength, ...requestHeaders } = req.headers;
+
     const { statusCode, body, headers } = await app.inject({
       url: req.url,
       query: req.query,
       payload: req.body,
       cookies: req.cookies,
-      headers: req.headers,
+      headers: requestHeaders,
       method: req.method as HTTPMethods,
     });
 
