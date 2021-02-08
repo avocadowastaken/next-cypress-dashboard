@@ -24,7 +24,7 @@ jobs:
 
       - run: yarn install --force --frozen-lockfile
 
-      - run: yarn check
+      - run: yarn checks
 
   build:
     runs-on: ubuntu-latest
