@@ -51,6 +51,16 @@ export class BadRequestError extends HTTPError {
 }
 
 //
+// 401
+//
+
+export class UnauthorizedError extends HTTPError {
+  constructor() {
+    super(401, "Unauthorized", {});
+  }
+}
+
+//
 // 403
 //
 
