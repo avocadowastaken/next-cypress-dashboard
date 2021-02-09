@@ -66,7 +66,15 @@ model Project {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
+  org        String
+  repo       String
+  providerId String
+
+  recordKey String @default(cuid())
+
   runs Run[]
+
+  @@unique([org, repo, providerId])
 }
 
 model RunInstance {
