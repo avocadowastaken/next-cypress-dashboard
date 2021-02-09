@@ -1,7 +1,7 @@
 import { createApiHandler } from "@/api/ApiHandler";
 import { isUniqueConstraintError, prisma } from "@/api/db";
 import { CYPRESS_RECORD_KEY } from "@/api/env";
-import { ForbiddenError } from "@/api/http/HTTPError";
+import { BadRequestError, ForbiddenError } from "@/api/HTTPError";
 import {
   CreateInstanceInput,
   CreateInstanceResponse,
@@ -10,7 +10,92 @@ import {
   UpdateInstanceInput,
   UpdateInstanceResponse,
 } from "@/shared/cypress-types";
-import { Run } from "@prisma/client";
+import { Prisma, Project, Run } from "@prisma/client";
+import parseGitUrl from "git-url-parse";
+
+const resourceProviderMap = new Map<string, string>().set(
+  "github.com",
+  "github"
+);
+
+async function obtainRunProject({
+  projectId,
+  commit: { remoteOrigin },
+}: CreateRunInput): Promise<Project> {
+  let project = await prisma.project.findUnique({ where: { id: projectId } });
+
+  if (!project) {
+    if (!remoteOrigin) {
+      throw new BadRequestError({
+        "commit.remoteOrigin": "Empty Git remote url",
+      });
+    }
+
+    const { resource, name: repo, organization: org } = parseGitUrl(
+      remoteOrigin
+    );
+
+    if (!org || !repo || !resource) {
+      throw new BadRequestError({
+        "commit.remoteOrigin": "Invalid Git remote url",
+      });
+    }
+
+    const providerId = resourceProviderMap.get(resource);
+
+    if (!providerId) {
+      throw new BadRequestError({
+        "commit.remoteOrigin": "Unknown provider ID",
+      });
+    }
+
+    try {
+      project = await prisma.project.create({
+        data: { org, repo, providerId },
+      });
+    } catch (error: unknown) {
+      if (!isUniqueConstraintError(error)) {
+        throw error;
+      }
+
+      project = await prisma.project.findUnique({
+        rejectOnNotFound: true,
+        where: { org_repo_providerId: { org, repo, providerId } },
+      });
+    }
+  }
+
+  return project;
+}
+
+async function obtainRun(
+  input: Prisma.RunUncheckedCreateInput
+): Promise<[run: Run, isNewRun: boolean]> {
+  let run: Run;
+  let isNewRun = true;
+
+  try {
+    run = await prisma.run.create({ data: input });
+  } catch (error: unknown) {
+    if (!isUniqueConstraintError(error)) {
+      throw error;
+    }
+
+    isNewRun = false;
+    run = await prisma.run.findUnique({
+      rejectOnNotFound: true,
+      where: {
+        groupId_ciBuildId_projectId: {
+          groupId: input.groupId,
+          ciBuildId: input.ciBuildId,
+          projectId: input.projectId,
+        },
+      },
+    });
+  }
+
+  return [run, isNewRun];
+}
 
 export default createApiHandler((app) => {
   //
@@ -20,71 +105,42 @@ export default createApiHandler((app) => {
   app.post<{
     Body: CreateRunInput;
     Reply: CreateRunResponse;
-  }>("/runs", async (request, reply) => {
+  }>("/runs", async ({ body, headers }, reply) => {
     const {
       group,
       specs,
-
       recordKey,
       ciBuildId,
-      projectId,
       commit: { defaultBranch, ...commit },
       platform: { osCpus, osMemory, ...platform },
-    } = request.body;
+    } = body;
 
     if (CYPRESS_RECORD_KEY != null && CYPRESS_RECORD_KEY !== recordKey) {
       throw new ForbiddenError();
     }
 
     const groupId = group || ciBuildId;
+    const project = await obtainRunProject(body);
 
-    try {
-      await prisma.project.create({ data: { id: projectId } });
-    } catch (e: unknown) {
-      if (!isUniqueConstraintError(e)) {
-        throw e;
-      }
-    }
+    const [run, isNewRun] = await obtainRun({
+      groupId,
+      ciBuildId,
+      commit: { ...commit },
+      platform: { ...platform },
+      projectId: project.id,
+      instances: {
+        create: specs.map((spec) => ({ spec, groupId })),
+      },
+    });
 
-    let run: Run;
-    let isNewRun = true;
-
-    try {
-      run = await prisma.run.create({
-        data: {
-          groupId,
-          ciBuildId,
-          project: { connect: { id: projectId } },
-          commit: { create: { ...commit } },
-          platform: { create: { ...platform } },
-          instances: {
-            create: specs.map((spec) => ({ spec, groupId })),
-          },
-        },
-      });
-    } catch (e: unknown) {
-      if (!isUniqueConstraintError(e)) {
-        throw e;
-      }
-      isNewRun = false;
-      run = await prisma.run.findUnique({
-        rejectOnNotFound: true,
-        where: {
-          groupId_ciBuildId_projectId: {
-            groupId,
-            ciBuildId,
-            projectId,
-          },
-        },
-      });
-    }
+    const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
 
     reply.send({
       groupId,
       isNewRun,
       runId: run.id,
       machineId: run.machineId,
-      runUrl: `http://${request.headers.host}/projects/${projectId}/runs/${run.id}`,
+      runUrl: `${protocol}://${headers.host}/projects/${project.id}/runs/${run.id}`,
     });
   });
 

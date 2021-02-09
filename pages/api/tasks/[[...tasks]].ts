@@ -1,7 +1,7 @@
 import { createApiHandler } from "@/api/ApiHandler";
 import { prisma } from "@/api/db";
 import { CYPRESS_RECORD_KEY } from "@/api/env";
-import { ForbiddenError } from "@/api/http/HTTPError";
+import { ForbiddenError } from "@/api/HTTPError";
 
 export default createApiHandler((app) => {
   app.addHook("preHandler", (request, reply, done) => {
@@ -20,7 +20,7 @@ export default createApiHandler((app) => {
 
   app.post<{ Reply: { runs: number; runInstances: number } }>(
     "/api/tasks/cleanup-runs",
-    async () => {
+    async (_, reply) => {
       const oneDay = 24 * 60 * 60 * 1000;
       const oneDayAgo = new Date(Date.now() - oneDay);
       const response = { runs: 0, runInstances: 0 };
@@ -39,7 +39,7 @@ export default createApiHandler((app) => {
         response.runInstances += count;
       }
 
-      return response;
+      reply.send(response);
     }
   );
 });
