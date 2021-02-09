@@ -11,6 +11,8 @@ jobs:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2
       - uses: umidbekk/actions/npm/install@v1
+        with:
+          binaries: cypress
       - run: yarn checks
 
   build:
@@ -19,6 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: umidbekk/actions/npm/install@v1
+        with:
+          binaries: cypress
       - run: yarn build
       - run: |
           git add .
