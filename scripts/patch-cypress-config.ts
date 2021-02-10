@@ -13,4 +13,7 @@ const PATCH_CYPRESS_CONFIG_PATH = path.join(
 exec("node", [PATCH_CYPRESS_CONFIG_PATH], {
   cwd: ROOT_DIR,
   env: { ...process.env, INPUT_API_URL: "http://localhost:3000" },
-}).catch(console.error);
+}).catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
