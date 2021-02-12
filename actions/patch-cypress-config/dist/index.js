@@ -2,11 +2,11 @@ var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = 
 var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
 var __commonJS = (callback, module2) => () => (module2 || (module2 = {exports: {}}, callback(module2.exports, module2)), module2.exports);
 var __exportStar = (target, module2, desc) => {
-  if (__markAsModule(target), module2 && typeof module2 == "object" || typeof module2 == "function")
+  if (module2 && typeof module2 == "object" || typeof module2 == "function")
     for (let key of __getOwnPropNames(module2))
       !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
   return target;
-}, __toModule = (module2) => module2 && module2.__esModule ? module2 : __exportStar(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", {value: module2, enumerable: !0}), module2);
+}, __toModule = (module2) => module2 && module2.__esModule ? module2 : __exportStar(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", {value: module2, enumerable: !0})), module2);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS((exports2) => {
@@ -142,7 +142,7 @@ var require_core = __commonJS((exports2) => {
     return result.default = mod, result;
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var command_1 = require_command(), file_command_1 = require_file_command(), utils_1 = require_utils(), os = __importStar(require("os")), path = __importStar(require("path")), ExitCode;
+  var command_1 = require_command(), file_command_1 = require_file_command(), utils_1 = require_utils(), os = __importStar(require("os")), path2 = __importStar(require("path")), ExitCode;
   (function(ExitCode2) {
     ExitCode2[ExitCode2.Success = 0] = "Success", ExitCode2[ExitCode2.Failure = 1] = "Failure";
   })(ExitCode = exports2.ExitCode || (exports2.ExitCode = {}));
@@ -162,7 +162,7 @@ var require_core = __commonJS((exports2) => {
   __name(setSecret, "setSecret");
   exports2.setSecret = setSecret;
   function addPath(inputPath) {
-    process.env.GITHUB_PATH || "" ? file_command_1.issueCommand("PATH", inputPath) : command_1.issueCommand("add-path", {}, inputPath), process.env.PATH = `${inputPath}${path.delimiter}${process.env.PATH}`;
+    process.env.GITHUB_PATH || "" ? file_command_1.issueCommand("PATH", inputPath) : command_1.issueCommand("add-path", {}, inputPath), process.env.PATH = `${inputPath}${path2.delimiter}${process.env.PATH}`;
   }
   __name(addPath, "addPath");
   exports2.addPath = addPath;
@@ -283,7 +283,7 @@ var require_io_util = __commonJS((exports2) => {
     });
   }, _a;
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var assert_1 = require("assert"), fs2 = require("fs"), path = require("path");
+  var assert_1 = require("assert"), fs2 = require("fs"), path2 = require("path");
   _a = fs2.promises, exports2.chmod = _a.chmod, exports2.copyFile = _a.copyFile, exports2.lstat = _a.lstat, exports2.mkdir = _a.mkdir, exports2.readdir = _a.readdir, exports2.readlink = _a.readlink, exports2.rename = _a.rename, exports2.rmdir = _a.rmdir, exports2.stat = _a.stat, exports2.symlink = _a.symlink, exports2.unlink = _a.unlink;
   exports2.IS_WINDOWS = process.platform === "win32";
   function exists(fsPath) {
@@ -316,7 +316,7 @@ var require_io_util = __commonJS((exports2) => {
   exports2.isRooted = isRooted;
   function mkdirP(fsPath, maxDepth = 1e3, depth = 1) {
     return __awaiter(this, void 0, void 0, function* () {
-      if (assert_1.ok(fsPath, "a path argument must be provided"), fsPath = path.resolve(fsPath), depth >= maxDepth)
+      if (assert_1.ok(fsPath, "a path argument must be provided"), fsPath = path2.resolve(fsPath), depth >= maxDepth)
         return exports2.mkdir(fsPath);
       try {
         yield exports2.mkdir(fsPath);
@@ -324,7 +324,7 @@ var require_io_util = __commonJS((exports2) => {
       } catch (err) {
         switch (err.code) {
           case "ENOENT": {
-            yield mkdirP(path.dirname(fsPath), maxDepth, depth + 1), yield exports2.mkdir(fsPath);
+            yield mkdirP(path2.dirname(fsPath), maxDepth, depth + 1), yield exports2.mkdir(fsPath);
             return;
           }
           default: {
@@ -353,7 +353,7 @@ var require_io_util = __commonJS((exports2) => {
       }
       if (stats && stats.isFile()) {
         if (exports2.IS_WINDOWS) {
-          let upperExt = path.extname(filePath).toUpperCase();
+          let upperExt = path2.extname(filePath).toUpperCase();
           if (extensions.some((validExt) => validExt.toUpperCase() === upperExt))
             return filePath;
         } else if (isUnixExecutable(stats))
@@ -370,10 +370,10 @@ var require_io_util = __commonJS((exports2) => {
         if (stats && stats.isFile()) {
           if (exports2.IS_WINDOWS) {
             try {
-              let directory = path.dirname(filePath), upperName = path.basename(filePath).toUpperCase();
+              let directory = path2.dirname(filePath), upperName = path2.basename(filePath).toUpperCase();
               for (let actualName of yield exports2.readdir(directory))
                 if (upperName === actualName.toUpperCase()) {
-                  filePath = path.join(directory, actualName);
+                  filePath = path2.join(directory, actualName);
                   break;
                 }
             } catch (err) {
@@ -432,13 +432,13 @@ var require_io = __commonJS((exports2) => {
     });
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var childProcess = require("child_process"), path = require("path"), util_1 = require("util"), ioUtil = require_io_util(), exec2 = util_1.promisify(childProcess.exec);
+  var childProcess = require("child_process"), path2 = require("path"), util_1 = require("util"), ioUtil = require_io_util(), exec2 = util_1.promisify(childProcess.exec);
   function cp(source, dest, options = {}) {
     return __awaiter(this, void 0, void 0, function* () {
       let {force, recursive} = readCopyOptions(options), destStat = (yield ioUtil.exists(dest)) ? yield ioUtil.stat(dest) : null;
       if (destStat && destStat.isFile() && !force)
         return;
-      let newDest = destStat && destStat.isDirectory() ? path.join(dest, path.basename(source)) : dest;
+      let newDest = destStat && destStat.isDirectory() ? path2.join(dest, path2.basename(source)) : dest;
       if (!(yield ioUtil.exists(source)))
         throw new Error(`no such file or directory: ${source}`);
       if ((yield ioUtil.stat(source)).isDirectory())
@@ -447,7 +447,7 @@ var require_io = __commonJS((exports2) => {
         else
           throw new Error(`Failed to copy. ${source} is a directory, but tried to copy without recursive flag.`);
       else {
-        if (path.relative(source, newDest) === "")
+        if (path2.relative(source, newDest) === "")
           throw new Error(`'${newDest}' and '${source}' are the same file`);
         yield copyFile(source, newDest, force);
       }
@@ -459,13 +459,13 @@ var require_io = __commonJS((exports2) => {
     return __awaiter(this, void 0, void 0, function* () {
       if (yield ioUtil.exists(dest)) {
         let destExists = !0;
-        if ((yield ioUtil.isDirectory(dest)) && (dest = path.join(dest, path.basename(source)), destExists = yield ioUtil.exists(dest)), destExists)
+        if ((yield ioUtil.isDirectory(dest)) && (dest = path2.join(dest, path2.basename(source)), destExists = yield ioUtil.exists(dest)), destExists)
           if (options.force == null || options.force)
             yield rmRF(dest);
           else
             throw new Error("Destination already exists");
       }
-      yield mkdirP(path.dirname(dest)), yield ioUtil.rename(source, dest);
+      yield mkdirP(path2.dirname(dest)), yield ioUtil.rename(source, dest);
     });
   }
   __name(mv, "mv");
@@ -516,7 +516,7 @@ var require_io = __commonJS((exports2) => {
       try {
         let extensions = [];
         if (ioUtil.IS_WINDOWS && process.env.PATHEXT)
-          for (let extension of process.env.PATHEXT.split(path.delimiter))
+          for (let extension of process.env.PATHEXT.split(path2.delimiter))
             extension && extensions.push(extension);
         if (ioUtil.isRooted(tool)) {
           let filePath = yield ioUtil.tryGetExecutablePath(tool, extensions);
@@ -526,10 +526,10 @@ var require_io = __commonJS((exports2) => {
           return "";
         let directories = [];
         if (process.env.PATH)
-          for (let p of process.env.PATH.split(path.delimiter))
+          for (let p of process.env.PATH.split(path2.delimiter))
             p && directories.push(p);
         for (let directory of directories) {
-          let filePath = yield ioUtil.tryGetExecutablePath(directory + path.sep + tool, extensions);
+          let filePath = yield ioUtil.tryGetExecutablePath(directory + path2.sep + tool, extensions);
           if (filePath)
             return filePath;
         }
@@ -618,7 +618,7 @@ var require_toolrunner = __commonJS((exports2) => {
     return result.default = mod, result;
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var os = __importStar(require("os")), events = __importStar(require("events")), child = __importStar(require("child_process")), path = __importStar(require("path")), io = __importStar(require_io()), ioUtil = __importStar(require_io_util()), IS_WINDOWS = process.platform === "win32", ToolRunner = class extends events.EventEmitter {
+  var os = __importStar(require("os")), events = __importStar(require("events")), child = __importStar(require("child_process")), path2 = __importStar(require("path")), io = __importStar(require_io()), ioUtil = __importStar(require_io_util()), IS_WINDOWS = process.platform === "win32", ToolRunner = class extends events.EventEmitter {
     constructor(toolPath, args, options) {
       super();
       if (!toolPath)
@@ -755,7 +755,7 @@ var require_toolrunner = __commonJS((exports2) => {
     }
     exec() {
       return __awaiter(this, void 0, void 0, function* () {
-        return !ioUtil.isRooted(this.toolPath) && (this.toolPath.includes("/") || IS_WINDOWS && this.toolPath.includes("\\")) && (this.toolPath = path.resolve(process.cwd(), this.options.cwd || process.cwd(), this.toolPath)), this.toolPath = yield io.which(this.toolPath, !0), new Promise((resolve, reject) => {
+        return !ioUtil.isRooted(this.toolPath) && (this.toolPath.includes("/") || IS_WINDOWS && this.toolPath.includes("\\")) && (this.toolPath = path2.resolve(process.cwd(), this.options.cwd || process.cwd(), this.toolPath)), this.toolPath = yield io.which(this.toolPath, !0), new Promise((resolve, reject) => {
           this._debug(`exec tool: ${this.toolPath}`), this._debug("arguments:");
           for (let arg of this.args)
             this._debug(`   ${arg}`);
@@ -951,11 +951,11 @@ var require_internal_path_helper = __commonJS((exports2) => {
     return mod && mod.__esModule ? mod : {default: mod};
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var path = __importStar(require("path")), assert_1 = __importDefault(require("assert")), IS_WINDOWS = process.platform === "win32";
+  var path2 = __importStar(require("path")), assert_1 = __importDefault(require("assert")), IS_WINDOWS = process.platform === "win32";
   function dirname(p) {
     if (p = safeTrimTrailingSeparator(p), IS_WINDOWS && /^\\\\[^\\]+(\\[^\\]+)?$/.test(p))
       return p;
-    let result = path.dirname(p);
+    let result = path2.dirname(p);
     return IS_WINDOWS && /^\\\\[^\\]+\\[^\\]+\\$/.test(result) && (result = safeTrimTrailingSeparator(result)), result;
   }
   __name(dirname, "dirname");
@@ -972,7 +972,7 @@ var require_internal_path_helper = __commonJS((exports2) => {
         return assert_1.default(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`), `${cwd[0]}:\\${itemPath.substr(1)}`;
       }
     }
-    return assert_1.default(hasAbsoluteRoot(root), "ensureAbsoluteRoot parameter 'root' must have an absolute root"), root.endsWith("/") || IS_WINDOWS && root.endsWith("\\") || (root += path.sep), root + itemPath;
+    return assert_1.default(hasAbsoluteRoot(root), "ensureAbsoluteRoot parameter 'root' must have an absolute root"), root.endsWith("/") || IS_WINDOWS && root.endsWith("\\") || (root += path2.sep), root + itemPath;
   }
   __name(ensureAbsoluteRoot, "ensureAbsoluteRoot");
   exports2.ensureAbsoluteRoot = ensureAbsoluteRoot;
@@ -992,7 +992,7 @@ var require_internal_path_helper = __commonJS((exports2) => {
   __name(normalizeSeparators, "normalizeSeparators");
   exports2.normalizeSeparators = normalizeSeparators;
   function safeTrimTrailingSeparator(p) {
-    return p ? (p = normalizeSeparators(p), !p.endsWith(path.sep) || p === path.sep || IS_WINDOWS && /^[A-Z]:\\$/i.test(p) ? p : p.substr(0, p.length - 1)) : "";
+    return p ? (p = normalizeSeparators(p), !p.endsWith(path2.sep) || p === path2.sep || IS_WINDOWS && /^[A-Z]:\\$/i.test(p) ? p : p.substr(0, p.length - 1)) : "";
   }
   __name(safeTrimTrailingSeparator, "safeTrimTrailingSeparator");
   exports2.safeTrimTrailingSeparator = safeTrimTrailingSeparator;
@@ -1213,9 +1213,9 @@ var require_brace_expansion = __commonJS((exports2, module2) => {
 var require_minimatch = __commonJS((exports2, module2) => {
   module2.exports = minimatch;
   minimatch.Minimatch = Minimatch;
-  var path = {sep: "/"};
+  var path2 = {sep: "/"};
   try {
-    path = require("path");
+    path2 = require("path");
   } catch (er) {
   }
   var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}, expand = require_brace_expansion(), plTypes = {
@@ -1273,7 +1273,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
       return new Minimatch(pattern, options);
     if (typeof pattern != "string")
       throw new TypeError("glob pattern string required");
-    options || (options = {}), pattern = pattern.trim(), path.sep !== "/" && (pattern = pattern.split(path.sep).join("/")), this.options = options, this.set = [], this.pattern = pattern, this.regexp = null, this.negate = !1, this.comment = !1, this.empty = !1, this.make();
+    options || (options = {}), pattern = pattern.trim(), path2.sep !== "/" && (pattern = pattern.split(path2.sep).join("/")), this.options = options, this.set = [], this.pattern = pattern, this.regexp = null, this.negate = !1, this.comment = !1, this.empty = !1, this.make();
   }
   __name(Minimatch, "Minimatch");
   Minimatch.prototype.debug = function() {
@@ -1322,9 +1322,9 @@ var require_minimatch = __commonJS((exports2, module2) => {
     return options.nobrace || !pattern.match(/\{.*\}/) ? [pattern] : expand(pattern);
   }
   __name(braceExpand, "braceExpand");
-  Minimatch.prototype.parse = parse;
+  Minimatch.prototype.parse = parse2;
   var SUBPARSE = {};
-  function parse(pattern, isSub) {
+  function parse2(pattern, isSub) {
     if (pattern.length > 1024 * 64)
       throw new TypeError("pattern is too long");
     var options = this.options;
@@ -1474,7 +1474,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
     }
     return regExp._glob = pattern, regExp._src = re, regExp;
   }
-  __name(parse, "parse");
+  __name(parse2, "parse");
   minimatch.makeRe = function(pattern, options) {
     return new Minimatch(pattern, options || {}).makeRe();
   };
@@ -1515,7 +1515,7 @@ var require_minimatch = __commonJS((exports2, module2) => {
     if (f === "/" && partial)
       return !0;
     var options = this.options;
-    path.sep !== "/" && (f = f.split(path.sep).join("/")), f = f.split(slashSplit), this.debug(this.pattern, "split", f);
+    path2.sep !== "/" && (f = f.split(path2.sep).join("/")), f = f.split(slashSplit), this.debug(this.pattern, "split", f);
     var set = this.set;
     this.debug(this.pattern, "set", set);
     var filename, i;
@@ -1601,15 +1601,15 @@ var require_internal_path = __commonJS((exports2) => {
     return mod && mod.__esModule ? mod : {default: mod};
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var path = __importStar(require("path")), pathHelper = __importStar(require_internal_path_helper()), assert_1 = __importDefault(require("assert")), IS_WINDOWS = process.platform === "win32", Path = class {
+  var path2 = __importStar(require("path")), pathHelper = __importStar(require_internal_path_helper()), assert_1 = __importDefault(require("assert")), IS_WINDOWS = process.platform === "win32", Path = class {
     constructor(itemPath) {
       if (this.segments = [], typeof itemPath == "string")
         if (assert_1.default(itemPath, "Parameter 'itemPath' must not be empty"), itemPath = pathHelper.safeTrimTrailingSeparator(itemPath), !pathHelper.hasRoot(itemPath))
-          this.segments = itemPath.split(path.sep);
+          this.segments = itemPath.split(path2.sep);
         else {
           let remaining = itemPath, dir = pathHelper.dirname(remaining);
           for (; dir !== remaining; ) {
-            let basename = path.basename(remaining);
+            let basename = path2.basename(remaining);
             this.segments.unshift(basename), remaining = dir, dir = pathHelper.dirname(remaining);
           }
           this.segments.unshift(remaining);
@@ -1618,14 +1618,14 @@ var require_internal_path = __commonJS((exports2) => {
         assert_1.default(itemPath.length > 0, "Parameter 'itemPath' must not be an empty array");
         for (let i = 0; i < itemPath.length; i++) {
           let segment = itemPath[i];
-          assert_1.default(segment, "Parameter 'itemPath' must not contain any empty segments"), segment = pathHelper.normalizeSeparators(itemPath[i]), i === 0 && pathHelper.hasRoot(segment) ? (segment = pathHelper.safeTrimTrailingSeparator(segment), assert_1.default(segment === pathHelper.dirname(segment), "Parameter 'itemPath' root segment contains information for multiple segments"), this.segments.push(segment)) : (assert_1.default(!segment.includes(path.sep), "Parameter 'itemPath' contains unexpected path separators"), this.segments.push(segment));
+          assert_1.default(segment, "Parameter 'itemPath' must not contain any empty segments"), segment = pathHelper.normalizeSeparators(itemPath[i]), i === 0 && pathHelper.hasRoot(segment) ? (segment = pathHelper.safeTrimTrailingSeparator(segment), assert_1.default(segment === pathHelper.dirname(segment), "Parameter 'itemPath' root segment contains information for multiple segments"), this.segments.push(segment)) : (assert_1.default(!segment.includes(path2.sep), "Parameter 'itemPath' contains unexpected path separators"), this.segments.push(segment));
         }
       }
     }
     toString() {
-      let result = this.segments[0], skipSlash = result.endsWith(path.sep) || IS_WINDOWS && /^[A-Z]:$/i.test(result);
+      let result = this.segments[0], skipSlash = result.endsWith(path2.sep) || IS_WINDOWS && /^[A-Z]:$/i.test(result);
       for (let i = 1; i < this.segments.length; i++)
-        skipSlash ? skipSlash = !1 : result += path.sep, result += this.segments[i];
+        skipSlash ? skipSlash = !1 : result += path2.sep, result += this.segments[i];
       return result;
     }
   };
@@ -1648,7 +1648,7 @@ var require_internal_pattern = __commonJS((exports2) => {
     return mod && mod.__esModule ? mod : {default: mod};
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var os = __importStar(require("os")), path = __importStar(require("path")), pathHelper = __importStar(require_internal_path_helper()), assert_1 = __importDefault(require("assert")), minimatch_1 = require_minimatch(), internal_match_kind_1 = require_internal_match_kind(), internal_path_1 = require_internal_path(), IS_WINDOWS = process.platform === "win32", Pattern = class {
+  var os = __importStar(require("os")), path2 = __importStar(require("path")), pathHelper = __importStar(require_internal_path_helper()), assert_1 = __importDefault(require("assert")), minimatch_1 = require_minimatch(), internal_match_kind_1 = require_internal_match_kind(), internal_path_1 = require_internal_path(), IS_WINDOWS = process.platform === "win32", Pattern = class {
     constructor(patternOrNegate, segments, homedir) {
       this.negate = !1;
       let pattern;
@@ -1661,7 +1661,7 @@ var require_internal_pattern = __commonJS((exports2) => {
       }
       for (; pattern.startsWith("!"); )
         this.negate = !this.negate, pattern = pattern.substr(1).trim();
-      pattern = Pattern.fixupPattern(pattern, homedir), this.segments = new internal_path_1.Path(pattern).segments, this.trailingSeparator = pathHelper.normalizeSeparators(pattern).endsWith(path.sep), pattern = pathHelper.safeTrimTrailingSeparator(pattern);
+      pattern = Pattern.fixupPattern(pattern, homedir), this.segments = new internal_path_1.Path(pattern).segments, this.trailingSeparator = pathHelper.normalizeSeparators(pattern).endsWith(path2.sep), pattern = pathHelper.safeTrimTrailingSeparator(pattern);
       let foundGlob = !1, searchSegments = this.segments.map((x) => Pattern.getLiteral(x)).filter((x) => !foundGlob && !(foundGlob = x === ""));
       this.searchPath = new internal_path_1.Path(searchSegments).toString(), this.rootRegExp = new RegExp(Pattern.regExpEscape(searchSegments[0]), IS_WINDOWS ? "i" : "");
       let minimatchOptions = {
@@ -1675,7 +1675,7 @@ var require_internal_pattern = __commonJS((exports2) => {
       pattern = IS_WINDOWS ? pattern.replace(/\\/g, "/") : pattern, this.minimatch = new minimatch_1.Minimatch(pattern, minimatchOptions);
     }
     match(itemPath) {
-      return this.segments[this.segments.length - 1] === "**" ? (itemPath = pathHelper.normalizeSeparators(itemPath), itemPath.endsWith(path.sep) || (itemPath = `${itemPath}${path.sep}`)) : itemPath = pathHelper.safeTrimTrailingSeparator(itemPath), this.minimatch.match(itemPath) ? this.trailingSeparator ? internal_match_kind_1.MatchKind.Directory : internal_match_kind_1.MatchKind.All : internal_match_kind_1.MatchKind.None;
+      return this.segments[this.segments.length - 1] === "**" ? (itemPath = pathHelper.normalizeSeparators(itemPath), itemPath.endsWith(path2.sep) || (itemPath = `${itemPath}${path2.sep}`)) : itemPath = pathHelper.safeTrimTrailingSeparator(itemPath), this.minimatch.match(itemPath) ? this.trailingSeparator ? internal_match_kind_1.MatchKind.Directory : internal_match_kind_1.MatchKind.All : internal_match_kind_1.MatchKind.None;
     }
     partialMatch(itemPath) {
       return itemPath = pathHelper.safeTrimTrailingSeparator(itemPath), pathHelper.dirname(itemPath) === itemPath ? this.rootRegExp.test(itemPath) : this.minimatch.matchOne(itemPath.split(IS_WINDOWS ? /\\+/ : /\/+/), this.minimatch.set[0], !0);
@@ -1686,9 +1686,9 @@ var require_internal_pattern = __commonJS((exports2) => {
     static fixupPattern(pattern, homedir) {
       assert_1.default(pattern, "pattern cannot be empty");
       let literalSegments = new internal_path_1.Path(pattern).segments.map((x) => Pattern.getLiteral(x));
-      if (assert_1.default(literalSegments.every((x, i) => (x !== "." || i === 0) && x !== ".."), `Invalid pattern '${pattern}'. Relative pathing '.' and '..' is not allowed.`), assert_1.default(!pathHelper.hasRoot(pattern) || literalSegments[0], `Invalid pattern '${pattern}'. Root segment must not contain globs.`), pattern = pathHelper.normalizeSeparators(pattern), pattern === "." || pattern.startsWith(`.${path.sep}`))
+      if (assert_1.default(literalSegments.every((x, i) => (x !== "." || i === 0) && x !== ".."), `Invalid pattern '${pattern}'. Relative pathing '.' and '..' is not allowed.`), assert_1.default(!pathHelper.hasRoot(pattern) || literalSegments[0], `Invalid pattern '${pattern}'. Root segment must not contain globs.`), pattern = pathHelper.normalizeSeparators(pattern), pattern === "." || pattern.startsWith(`.${path2.sep}`))
         pattern = Pattern.globEscape(process.cwd()) + pattern.substr(1);
-      else if (pattern === "~" || pattern.startsWith(`~${path.sep}`))
+      else if (pattern === "~" || pattern.startsWith(`~${path2.sep}`))
         homedir = homedir || os.homedir(), assert_1.default(homedir, "Unable to determine HOME directory"), assert_1.default(pathHelper.hasAbsoluteRoot(homedir), `Expected HOME directory to be a rooted path. Actual '${homedir}'`), pattern = Pattern.globEscape(homedir) + pattern.substr(1);
       else if (IS_WINDOWS && (pattern.match(/^[A-Z]:$/i) || pattern.match(/^[A-Z]:[^\\]/i))) {
         let root = pathHelper.ensureAbsoluteRoot("C:\\dummy-root", pattern.substr(0, 2));
@@ -1750,8 +1750,8 @@ var require_internal_search_state = __commonJS((exports2) => {
   "use strict";
   Object.defineProperty(exports2, "__esModule", {value: !0});
   var SearchState = class {
-    constructor(path, level) {
-      this.path = path, this.level = level;
+    constructor(path2, level) {
+      this.path = path2, this.level = level;
     }
   };
   __name(SearchState, "SearchState");
@@ -1853,7 +1853,7 @@ var require_internal_globber = __commonJS((exports2) => {
     return result.default = mod, result;
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var core = __importStar(require_core()), fs2 = __importStar(require("fs")), globOptionsHelper = __importStar(require_internal_glob_options_helper()), path = __importStar(require("path")), patternHelper = __importStar(require_internal_pattern_helper()), internal_match_kind_1 = require_internal_match_kind(), internal_pattern_1 = require_internal_pattern(), internal_search_state_1 = require_internal_search_state(), IS_WINDOWS = process.platform === "win32", DefaultGlobber = class {
+  var core = __importStar(require_core()), fs2 = __importStar(require("fs")), globOptionsHelper = __importStar(require_internal_glob_options_helper()), path2 = __importStar(require("path")), patternHelper = __importStar(require_internal_pattern_helper()), internal_match_kind_1 = require_internal_match_kind(), internal_pattern_1 = require_internal_pattern(), internal_search_state_1 = require_internal_search_state(), IS_WINDOWS = process.platform === "win32", DefaultGlobber = class {
     constructor(options) {
       this.patterns = [], this.searchPaths = [], this.options = globOptionsHelper.getOptions(options);
     }
@@ -1911,7 +1911,7 @@ var require_internal_globber = __commonJS((exports2) => {
                 yield yield __await(item.path);
               else if (!partialMatch)
                 continue;
-              let childLevel = item.level + 1, childItems = (yield __await(fs2.promises.readdir(item.path))).map((x) => new internal_search_state_1.SearchState(path.join(item.path, x), childLevel));
+              let childLevel = item.level + 1, childItems = (yield __await(fs2.promises.readdir(item.path))).map((x) => new internal_search_state_1.SearchState(path2.join(item.path, x), childLevel));
               stack.push(...childItems.reverse());
             } else
               match & internal_match_kind_1.MatchKind.File && (yield yield __await(item.path));
@@ -3659,7 +3659,7 @@ var require_parse_cst = __commonJS((exports2) => {
     }
   };
   __name(ParseContext, "ParseContext");
-  function parse(src) {
+  function parse2(src) {
     let cr = [];
     src.indexOf("\r") !== -1 && (src = src.replace(/\r\n?/g, (match, offset2) => (match.length > 1 && cr.push(offset2), `
 `)));
@@ -3682,8 +3682,8 @@ var require_parse_cst = __commonJS((exports2) => {
     }, documents.toString = () => documents.join(`...
 `), documents;
   }
-  __name(parse, "parse");
-  exports2.parse = parse;
+  __name(parse2, "parse");
+  exports2.parse = parse2;
 });
 
 // node_modules/yaml/dist/resolveSeq-4a68b39b.js
@@ -3731,25 +3731,25 @@ ${indent}${str}` : str;
     }
   };
   __name(Scalar, "Scalar");
-  function collectionFromPath(schema, path, value) {
+  function collectionFromPath(schema, path2, value) {
     let v = value;
-    for (let i = path.length - 1; i >= 0; --i) {
-      let k = path[i], o = Number.isInteger(k) && k >= 0 ? [] : {};
+    for (let i = path2.length - 1; i >= 0; --i) {
+      let k = path2[i], o = Number.isInteger(k) && k >= 0 ? [] : {};
       o[k] = v, v = o;
     }
     return schema.createNode(v, !1);
   }
   __name(collectionFromPath, "collectionFromPath");
-  var isEmptyPath = /* @__PURE__ */ __name((path) => path == null || typeof path == "object" && path[Symbol.iterator]().next().done, "isEmptyPath"), Collection = class extends Node {
+  var isEmptyPath = /* @__PURE__ */ __name((path2) => path2 == null || typeof path2 == "object" && path2[Symbol.iterator]().next().done, "isEmptyPath"), Collection = class extends Node {
     constructor(schema) {
       super();
       PlainValue._defineProperty(this, "items", []), this.schema = schema;
     }
-    addIn(path, value) {
-      if (isEmptyPath(path))
+    addIn(path2, value) {
+      if (isEmptyPath(path2))
         this.add(value);
       else {
-        let [key, ...rest] = path, node = this.get(key, !0);
+        let [key, ...rest] = path2, node = this.get(key, !0);
         if (node instanceof Collection)
           node.addIn(rest, value);
         else if (node === void 0 && this.schema)
@@ -3809,7 +3809,7 @@ ${indent}${str}` : str;
       let {
         indent,
         indentStep,
-        stringify
+        stringify: stringify2
       } = ctx, inFlow = this.type === PlainValue.Type.FLOW_MAP || this.type === PlainValue.Type.FLOW_SEQ || ctx.inFlow;
       inFlow && (itemIndent += indentStep);
       let allNullValues = isMap && this.hasAllNullValues();
@@ -3830,7 +3830,7 @@ ${indent}${str}` : str;
             str: `#${line}`
           });
         }), item.comment && (comment = item.comment), inFlow && (!chompKeep && item.spaceBefore || item.commentBefore || item.comment || item.key && (item.key.commentBefore || item.key.comment) || item.value && (item.value.commentBefore || item.value.comment)) && (hasItemWithNewLine = !0)), chompKeep = !1;
-        let str2 = stringify(item, ctx, () => comment = null, () => chompKeep = !0);
+        let str2 = stringify2(item, ctx, () => comment = null, () => chompKeep = !0);
         return inFlow && !hasItemWithNewLine && str2.includes(`
 `) && (hasItemWithNewLine = !0), inFlow && i < this.items.length - 1 && (str2 += ","), str2 = addComment(str2, itemIndent, comment), chompKeep && (comment || inFlow) && (chompKeep = !1), nodes2.push({
           type: "item",
@@ -3983,13 +3983,13 @@ ${indent}${s}` : `
         doc,
         indent,
         indentStep,
-        stringify
+        stringify: stringify2
       } = ctx;
       ctx = Object.assign({}, ctx, {
         implicitKey: !explicitKey,
         indent: indent + indentStep
       });
-      let chompKeep = !1, str = stringify(key, ctx, () => keyComment = null, () => chompKeep = !0);
+      let chompKeep = !1, str = stringify2(key, ctx, () => keyComment = null, () => chompKeep = !0);
       if (str = addComment(str, ctx.indent, keyComment), ctx.allNullValues && !simpleKeys)
         return this.comment ? (str = addComment(str, ctx.indent, this.comment), onComment && onComment()) : chompKeep && !keyComment && onChompKeep && onChompKeep(), ctx.inFlow ? str : `? ${str}`;
       str = explicitKey ? `? ${str}
@@ -3998,7 +3998,7 @@ ${indent}:` : `${str}:`, this.comment && (str = addComment(str, ctx.indent, this
       value instanceof Node ? (value.spaceBefore && (vcb = `
 `), value.commentBefore && (vcb += `
 ${value.commentBefore.replace(/^/gm, `${ctx.indent}#`)}`), valueComment = value.comment) : value && typeof value == "object" && (value = doc.schema.createNode(value, !0)), ctx.implicitKey = !1, !explicitKey && !this.comment && value instanceof Scalar && (ctx.indentAtStart = str.length + 1), chompKeep = !1, !indentSeq && indentSize >= 2 && !ctx.inFlow && !explicitKey && value instanceof YAMLSeq && value.type !== PlainValue.Type.FLOW_SEQ && !value.tag && !doc.anchors.getName(value) && (ctx.indent = ctx.indent.substr(2));
-      let valueStr = stringify(value, ctx, () => valueComment = null, () => chompKeep = !0), ws = " ";
+      let valueStr = stringify2(value, ctx, () => valueComment = null, () => chompKeep = !0), ws = " ";
       return vcb || this.comment ? ws = `${vcb}
 ${ctx.indent}` : !explicitKey && value instanceof Collection && (!(valueStr[0] === "[" || valueStr[0] === "{") || valueStr.includes(`
 `)) && (ws = `
@@ -5400,8 +5400,8 @@ ${pair.comment}` : item.comment), item = pair;
   __name(warn, "warn");
   function warnFileDeprecation(filename) {
     if (shouldWarn(!0)) {
-      let path = filename.replace(/.*yaml[/\\]/i, "").replace(/\.js$/, "").replace(/\\/g, "/");
-      warn(`The endpoint 'yaml/${path}' will be removed in a future release.`, "DeprecationWarning");
+      let path2 = filename.replace(/.*yaml[/\\]/i, "").replace(/\.js$/, "").replace(/\\/g, "/");
+      warn(`The endpoint 'yaml/${path2}' will be removed in a future release.`, "DeprecationWarning");
     }
   }
   __name(warnFileDeprecation, "warnFileDeprecation");
@@ -5979,7 +5979,7 @@ var require_Document_2cf6b08c = __commonJS((exports2) => {
     return anchor && (anchors[anchor] = node, props.push(`&${anchor}`)), node.tag ? props.push(stringifyTag(doc, node.tag)) : tagObj.default || props.push(stringifyTag(doc, tagObj.tag)), props.join(" ");
   }
   __name(stringifyProps, "stringifyProps");
-  function stringify(item, ctx, onComment, onChompKeep) {
+  function stringify2(item, ctx, onComment, onChompKeep) {
     let {
       anchors,
       schema
@@ -6006,7 +6006,7 @@ var require_Document_2cf6b08c = __commonJS((exports2) => {
     return props ? item instanceof resolveSeq.Scalar || str[0] === "{" || str[0] === "[" ? `${props} ${str}` : `${props}
 ${ctx.indent}${str}` : str;
   }
-  __name(stringify, "stringify");
+  __name(stringify2, "stringify");
   var Anchors = class {
     static validAnchorNode(node) {
       return node instanceof resolveSeq.Scalar || node instanceof resolveSeq.YAMLSeq || node instanceof resolveSeq.YAMLMap;
@@ -6222,14 +6222,14 @@ ${cbNode.commentBefore}` : cb;
     add(value) {
       return assertCollection(this.contents), this.contents.add(value);
     }
-    addIn(path, value) {
-      assertCollection(this.contents), this.contents.addIn(path, value);
+    addIn(path2, value) {
+      assertCollection(this.contents), this.contents.addIn(path2, value);
     }
     delete(key) {
       return assertCollection(this.contents), this.contents.delete(key);
     }
-    deleteIn(path) {
-      return resolveSeq.isEmptyPath(path) ? this.contents == null ? !1 : (this.contents = null, !0) : (assertCollection(this.contents), this.contents.deleteIn(path));
+    deleteIn(path2) {
+      return resolveSeq.isEmptyPath(path2) ? this.contents == null ? !1 : (this.contents = null, !0) : (assertCollection(this.contents), this.contents.deleteIn(path2));
     }
     getDefaults() {
       return Document.defaults[this.version] || Document.defaults[this.options.version] || {};
@@ -6237,20 +6237,20 @@ ${cbNode.commentBefore}` : cb;
     get(key, keepScalar) {
       return this.contents instanceof resolveSeq.Collection ? this.contents.get(key, keepScalar) : void 0;
     }
-    getIn(path, keepScalar) {
-      return resolveSeq.isEmptyPath(path) ? !keepScalar && this.contents instanceof resolveSeq.Scalar ? this.contents.value : this.contents : this.contents instanceof resolveSeq.Collection ? this.contents.getIn(path, keepScalar) : void 0;
+    getIn(path2, keepScalar) {
+      return resolveSeq.isEmptyPath(path2) ? !keepScalar && this.contents instanceof resolveSeq.Scalar ? this.contents.value : this.contents : this.contents instanceof resolveSeq.Collection ? this.contents.getIn(path2, keepScalar) : void 0;
     }
     has(key) {
       return this.contents instanceof resolveSeq.Collection ? this.contents.has(key) : !1;
     }
-    hasIn(path) {
-      return resolveSeq.isEmptyPath(path) ? this.contents !== void 0 : this.contents instanceof resolveSeq.Collection ? this.contents.hasIn(path) : !1;
+    hasIn(path2) {
+      return resolveSeq.isEmptyPath(path2) ? this.contents !== void 0 : this.contents instanceof resolveSeq.Collection ? this.contents.hasIn(path2) : !1;
     }
     set(key, value) {
       assertCollection(this.contents), this.contents.set(key, value);
     }
-    setIn(path, value) {
-      resolveSeq.isEmptyPath(path) ? this.contents = value : (assertCollection(this.contents), this.contents.setIn(path, value));
+    setIn(path2, value) {
+      resolveSeq.isEmptyPath(path2) ? this.contents = value : (assertCollection(this.contents), this.contents.setIn(path2, value));
     }
     setSchema(id, customTags) {
       if (!id && !customTags && this.schema)
@@ -6302,7 +6302,7 @@ ${cbNode.commentBefore}` : cb;
         keep,
         mapAsMap: keep && !!mapAsMap,
         maxAliasCount,
-        stringify
+        stringify: stringify2
       }, anchorNames = Object.keys(this.anchors.map);
       anchorNames.length > 0 && (ctx.anchors = new Map(anchorNames.map((name) => [this.anchors.map[name], {
         alias: [],
@@ -6344,14 +6344,14 @@ ${cbNode.commentBefore}` : cb;
         doc: this,
         indent: "",
         indentStep: " ".repeat(indentSize),
-        stringify
+        stringify: stringify2
       }, chompKeep = !1, contentComment = null;
       if (this.contents) {
         this.contents instanceof resolveSeq.Node && (this.contents.spaceBefore && (hasDirectives || this.directivesEndMarker) && lines.push(""), this.contents.commentBefore && lines.push(this.contents.commentBefore.replace(/^/gm, "#")), ctx.forceBlockIndent = !!this.comment, contentComment = this.contents.comment);
-        let onChompKeep = contentComment ? null : () => chompKeep = !0, body = stringify(this.contents, ctx, () => contentComment = null, onChompKeep);
+        let onChompKeep = contentComment ? null : () => chompKeep = !0, body = stringify2(this.contents, ctx, () => contentComment = null, onChompKeep);
         lines.push(resolveSeq.addComment(body, "", contentComment));
       } else
-        this.contents !== void 0 && lines.push(stringify(this.contents, ctx));
+        this.contents !== void 0 && lines.push(stringify2(this.contents, ctx));
       return this.comment && ((!chompKeep || contentComment) && lines[lines.length - 1] !== "" && lines.push(""), lines.push(this.comment.replace(/^/gm, "#"))), lines.join(`
 `) + `
 `;
@@ -6400,28 +6400,28 @@ var require_dist = __commonJS((exports2) => {
     return doc;
   }
   __name(parseDocument, "parseDocument");
-  function parse(src, options) {
+  function parse2(src, options) {
     let doc = parseDocument(src, options);
     if (doc.warnings.forEach((warning) => warnings.warn(warning)), doc.errors.length > 0)
       throw doc.errors[0];
     return doc.toJSON();
   }
-  __name(parse, "parse");
-  function stringify(value, options) {
+  __name(parse2, "parse");
+  function stringify2(value, options) {
     let doc = new Document(options);
     return doc.contents = value, String(doc);
   }
-  __name(stringify, "stringify");
+  __name(stringify2, "stringify");
   var YAML = {
     createNode,
     defaultOptions: Document$1.defaultOptions,
     Document,
-    parse,
+    parse: parse2,
     parseAllDocuments,
     parseCST: parseCst.parse,
     parseDocument,
     scalarOptions: Document$1.scalarOptions,
-    stringify
+    stringify: stringify2
   };
   exports2.YAML = YAML;
 });
@@ -6432,7 +6432,7 @@ var require_yaml = __commonJS((exports2, module2) => {
 });
 
 // actions/patch-cypress-config/index.ts
-var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), import_path = __toModule(require("path")), import_yaml = __toModule(require_yaml()), apiUrl = import_core.getInput("api_url", {required: !0});
+var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), apiUrl = import_core.getInput("api_url", {required: !0});
 async function resolveCachePath() {
   let version = "", cachePath = "";
   return await import_exec.exec("npx", ["cypress", "cache", "path"], {
@@ -6447,14 +6447,14 @@ async function resolveCachePath() {
         version += data.toString("utf8");
       }
     }
-  }), import_path.join(cachePath.trim(), version.trim());
+  }), path.join(cachePath.trim(), version.trim());
 }
 __name(resolveCachePath, "resolveCachePath");
 async function main() {
   let cachePath = await resolveCachePath(), glob = await import_glob.create(`${cachePath}/**/app.yml`);
   for await (let configPath of glob.globGenerator()) {
-    let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = import_yaml.parse(configYaml);
-    config.production.api_url !== apiUrl && (config.production.api_url = apiUrl, await import_fs.promises.writeFile(configPath, import_yaml.stringify(config), "utf-8"));
+    let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = yaml.parse(configYaml);
+    config.production.api_url !== apiUrl && (config.production.api_url = apiUrl, await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8"));
   }
 }
 __name(main, "main");
