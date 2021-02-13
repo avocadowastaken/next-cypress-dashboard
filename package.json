@@ -3,21 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "husky install && prisma generate",
+    "postinstall": "husky install",
     "dev": "run-p dev:*",
     "dev:next": "next dev",
     "dev:prisma": "prisma generate --watch",
     "build": "run-p build:*",
-    "build:next": "next build",
+    "build:next": "prisma generate && next build",
     "build:actions": "ts-node scripts/build-actions.ts",
     "start": "next start",
     "tdd": "jest --watch",
     "test": "jest",
     "checks": "run-p check:*",
-    "check:types": "tsc",
+    "check:types": "prisma generate && tsc",
     "check:format": "prettier . --check",
-    "db:push": "prisma db push --preview-feature",
-    "db:syncall": "ts-node scripts/sync-databases.ts"
+    "db:push": "ts-node scripts/db-push.ts"
   },
   "jest": {
     "rootDir": "src",

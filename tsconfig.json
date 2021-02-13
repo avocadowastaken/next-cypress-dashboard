@@ -1,5 +1,10 @@
 {
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "node_modules/.prisma/client/index.d.ts"
+  ],
   "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true,

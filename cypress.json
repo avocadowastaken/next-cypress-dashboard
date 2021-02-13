@@ -1,5 +1,3 @@
 {
-  "video": false,
-  "screenshotOnRunFailure": false,
   "projectId": "umidbekkarimov/next-cypress-dashboard"
 }

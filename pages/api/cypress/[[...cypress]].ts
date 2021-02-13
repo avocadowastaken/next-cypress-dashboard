@@ -171,11 +171,11 @@ export default createApiHandler((app) => {
     while (response.totalInstances > response.claimedInstances) {
       const [firstUnclaimed, claimedInstances] = await prisma.$transaction([
         prisma.runInstance.findFirst({
-          where: { runId, groupId, claimed: false },
+          where: { runId, groupId, claimedAt: null },
         }),
 
         prisma.runInstance.count({
-          where: { runId, groupId, claimed: true },
+          where: { runId, groupId, claimedAt: { not: null } },
         }),
       ]);
 
@@ -183,8 +183,8 @@ export default createApiHandler((app) => {
 
       if (firstUnclaimed) {
         const { count } = await prisma.runInstance.updateMany({
-          data: { claimed: true },
-          where: { id: firstUnclaimed.id, claimed: false },
+          data: { claimedAt: new Date() },
+          where: { id: firstUnclaimed.id, claimedAt: null },
         });
 
         // Task successfully claimed, update response and exit loop.
