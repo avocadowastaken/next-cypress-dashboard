@@ -19,20 +19,33 @@ function getDatabaseURL(): URL {
   return new URL(DATABASE_URL);
 }
 
-export function syncDatabases() {
-  const databaseURL = getDatabaseURL();
+interface DBPushOptions {
+  force?: boolean;
+}
 
-  for (const schema of ["local", "preview", "public"]) {
-    databaseURL.searchParams.set("schema", schema);
-
-    spawnSync("yarn", ["prisma", "db", "push", "--preview-feature"], {
-      stdio: "inherit",
-      encoding: "utf8",
-      env: { ...process.env, DATABASE_URL: databaseURL.toString() },
-    });
+export function dbPush(schema: string, { force = false }: DBPushOptions = {}) {
+  if (!schema) {
+    throw new Error("Schema is empty.");
   }
+
+  const databaseURL = getDatabaseURL();
+  databaseURL.searchParams.set("schema", schema);
+
+  const args = ["prisma", "db", "push", "--preview-feature"];
+
+  if (force) {
+    args.push("--force");
+  }
+
+  spawnSync("yarn", args, {
+    stdio: "inherit",
+    encoding: "utf8",
+    env: { ...process.env, DATABASE_URL: databaseURL.toString() },
+  });
 }
 
 if (require.main === module) {
-  syncDatabases();
+  const [schema, ...args] = process.argv.slice(2);
+
+  dbPush(schema, { force: args.includes("--force") });
 }
