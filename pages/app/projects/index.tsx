@@ -1,3 +1,4 @@
+import { AddProjectDialog } from "@/app/projects/AddProjectDialog";
 import { AppLayout } from "@/ui/AppLayout";
 import {
   Button,
@@ -12,18 +13,40 @@ import {
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 
 export default function Projects(): ReactElement {
+  const router = useRouter();
+
   return (
     <AppLayout
       title="Projects"
       actions={
-        <Button size="small" endIcon={<Add />}>
-          Add
-        </Button>
+        <NextLink
+          passHref={true}
+          href={{ query: { ...router.query, project: "add" } }}
+        >
+          <Button size="small" endIcon={<Add />}>
+            Add
+          </Button>
+        </NextLink>
       }
     >
+      <AddProjectDialog
+        open={router.query.project === "add"}
+        onClose={() => {
+          void router.replace({
+            query: { ...router.query, project: [] },
+          });
+        }}
+        onSubmitSuccess={(owner, repo) => {
+          void router.replace({
+            query: { ...router.query, project: `${owner}/${repo}` },
+          });
+        }}
+      />
+
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>

@@ -9,7 +9,7 @@ export interface PublicLayoutProps {
 }
 
 export function PublicLayout({ children }: PublicLayoutProps): ReactElement {
-  const [session, isSessionLoading] = useSession();
+  const [, isSessionLoading] = useSession();
 
   return (
     <>
@@ -19,7 +19,7 @@ export function PublicLayout({ children }: PublicLayoutProps): ReactElement {
             <Grid item={true}>
               <NextLink href="/app" passHref={true}>
                 <LoadingButton color="inherit" pending={isSessionLoading}>
-                  {session ? "Dashboard" : "Sign In"}
+                  Dashboard
                 </LoadingButton>
               </NextLink>
             </Grid>
