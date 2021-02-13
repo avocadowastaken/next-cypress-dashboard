@@ -14,7 +14,7 @@
     "tdd": "jest --watch",
     "test": "jest",
     "checks": "run-p check:*",
-    "check:types": "tsc",
+    "check:types": "prisma generate && tsc",
     "check:format": "prettier . --check",
     "db:push": "ts-node scripts/db-push.ts"
   },
