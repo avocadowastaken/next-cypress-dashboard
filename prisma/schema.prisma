@@ -78,20 +78,20 @@ model Project {
 }
 
 model RunInstance {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  claimedAt DateTime?
 
   spec    String
   groupId String
   result  Json?
-  claimed Boolean @default(false)
 
   runId String
   run   Run    @relation(fields: [runId], references: [id])
 
   @@unique([spec, runId, groupId])
-  @@index([id, claimed])
-  @@index([runId, groupId, claimed])
+  @@index([id, claimedAt])
+  @@index([runId, groupId, claimedAt])
 }
 
 model Run {
