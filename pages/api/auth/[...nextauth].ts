@@ -1,5 +1,6 @@
 import { prisma } from "@/api/db";
 import { env } from "@/api/env";
+import { SESSION_TOKEN_COOKIE } from "@/api/SecurityContext";
 import { NextApiRequest, NextApiResponse } from "next";
 import nextAuth, { User } from "next-auth";
 import Adapters from "next-auth/adapters";
@@ -10,6 +11,12 @@ export default function nextAuthApi(
   res: NextApiResponse
 ): Promise<void> {
   return nextAuth(req, res, {
+    cookies: {
+      sessionToken: {
+        name: SESSION_TOKEN_COOKIE,
+      },
+    },
+
     adapter: Adapters.Prisma.Adapter({
       prisma,
       modelMapping: {

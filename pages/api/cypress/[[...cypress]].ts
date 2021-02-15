@@ -1,7 +1,7 @@
 import { createApiHandler } from "@/api/ApiHandler";
 import { isUniqueConstraintError, prisma } from "@/api/db";
 import { CYPRESS_RECORD_KEY } from "@/api/env";
-import { BadRequestError, ForbiddenError } from "@/api/HTTPError";
+import { ForbiddenError, ValidationError } from "@/api/HTTPError";
 import {
   CreateInstanceInput,
   CreateInstanceResponse,
@@ -26,9 +26,7 @@ async function obtainRunProject({
 
   if (!project) {
     if (!remoteOrigin) {
-      throw new BadRequestError({
-        "commit.remoteOrigin": "Empty Git remote url",
-      });
+      throw new ValidationError("commit.remoteOrigin", "Empty Git remote url");
     }
 
     const { resource, name: repo, organization: org } = parseGitUrl(
@@ -36,17 +34,16 @@ async function obtainRunProject({
     );
 
     if (!org || !repo || !resource) {
-      throw new BadRequestError({
-        "commit.remoteOrigin": "Invalid Git remote url",
-      });
+      throw new ValidationError(
+        "commit.remoteOrigin",
+        "Invalid Git remote url"
+      );
     }
 
     const providerId = resourceProviderMap.get(resource);
 
     if (!providerId) {
-      throw new BadRequestError({
-        "commit.remoteOrigin": "Unknown provider ID",
-      });
+      throw new ValidationError("commit.remoteOrigin", "Unknown provider ID");
     }
 
     try {
