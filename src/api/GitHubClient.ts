@@ -1,13 +1,12 @@
 import { prisma } from "@/api/db";
 import { BadRequestError } from "@/api/HTTPError";
-import { SecurityContext } from "@/api/SecurityContext";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types/generated/types";
 
 export class GitHubClient {
-  static async create({ user }: SecurityContext): Promise<GitHubClient> {
+  static async create(userId: string): Promise<GitHubClient> {
     const account = await prisma.userAccount.findUnique({
-      where: { userId_providerId: { userId: user.id, providerId: "github" } },
+      where: { userId_providerId: { userId, providerId: "github" } },
     });
 
     if (!account) {

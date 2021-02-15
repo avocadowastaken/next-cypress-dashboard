@@ -1,19 +1,24 @@
-import { prisma } from "@/api/db";
-import { User } from "@prisma/client";
+import { env } from "@/api/env";
 import { parse as parseCookie } from "cookie";
 import { IncomingHttpHeaders, IncomingMessage } from "http";
+import { decode } from "next-auth/jwt";
 import { UnauthorizedError } from "./HTTPError";
 
 export const SESSION_TOKEN_COOKIE = "ncd.auth.session-token";
 
-function parseSessionTokenCookie({
+async function parseJWT({
   cookie,
-}: IncomingHttpHeaders): null | string {
+}: IncomingHttpHeaders): Promise<null | { sub: string }> {
   if (cookie) {
-    const { [SESSION_TOKEN_COOKIE]: sessionToken } = parseCookie(cookie);
+    const { [SESSION_TOKEN_COOKIE]: token } = parseCookie(cookie);
 
-    if (sessionToken) {
-      return sessionToken;
+    if (token) {
+      const session = await decode({
+        token,
+        secret: env("JWT_SECRET"),
+      });
+
+      return { sub: session["sub"] };
     }
   }
 
@@ -27,35 +32,23 @@ export class SecurityContext {
     let ctx = this.cache.get(req);
 
     if (!ctx) {
-      const sessionToken = parseSessionTokenCookie(req.headers);
+      const session = await parseJWT(req.headers);
 
-      if (!sessionToken) {
+      if (!session) {
         throw new UnauthorizedError("Empty token");
       }
 
-      const userSession = await prisma.userSession.findUnique({
-        where: { sessionToken },
-        include: { user: true },
-      });
+      ctx = new SecurityContext(session.sub);
 
-      if (!userSession) {
-        throw new UnauthorizedError("Invalid token");
-      }
-
-      if (userSession.expires < new Date()) {
-        throw new UnauthorizedError("Expired token");
-      }
-
-      ctx = new SecurityContext(userSession.user);
       this.cache.set(req, ctx);
     }
 
     return ctx;
   }
 
-  readonly user: User;
+  readonly userId: string;
 
-  constructor(user: User) {
-    this.user = user;
+  constructor(userId: string) {
+    this.userId = userId;
   }
 }

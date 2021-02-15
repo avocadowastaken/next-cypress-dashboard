@@ -39,7 +39,7 @@ export function SignOutDialog({ open, onClose }: SignOutDialogProps) {
           </DialogContent>
 
           <DialogActions>
-            <Button color="secondary" onClick={onClose} disabled={isSubmitting}>
+            <Button color="primary" onClick={onClose} disabled={isSubmitting}>
               Dismiss
             </Button>
 

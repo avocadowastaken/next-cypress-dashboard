@@ -11,8 +11,8 @@ export default createApiHandler((app) => {
   app.post<{ Body: { owner: string; repo: string } }>(
     "/api/user/projects",
     async ({ raw, body: { repo, owner } }, reply) => {
-      const ctx = await SecurityContext.create(raw);
-      const client = await GitHubClient.create(ctx);
+      const { userId } = await SecurityContext.create(raw);
+      const client = await GitHubClient.create(userId);
 
       await client.getRepo(owner, repo);
 
@@ -32,19 +32,19 @@ export default createApiHandler((app) => {
             repo,
             org: owner,
             providerId: "github",
-            userProjects: { create: { userId: ctx.user.id } },
+            userProjects: { create: { userId } },
           },
         });
       } else {
         const userProject = prisma.userProject.findUnique({
           where: {
-            userId_projectId: { userId: ctx.user.id, projectId: project.id },
+            userId_projectId: { userId, projectId: project.id },
           },
         });
 
         if (!userProject) {
           await prisma.userProject.create({
-            data: { projectId: project.id, userId: ctx.user.id },
+            data: { projectId: project.id, userId },
           });
         }
       }
