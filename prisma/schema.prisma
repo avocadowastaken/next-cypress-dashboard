@@ -18,6 +18,7 @@ model User {
   emailVerified DateTime?
 
   accounts UserAccount[]
+  projects UserProject[]
   sessions UserSession[]
 }
 
@@ -38,6 +39,7 @@ model UserAccount {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
+  @@unique([userId, providerId])
   @@unique([userId, providerId, providerAccountId])
 }
 
@@ -62,6 +64,19 @@ model UserVerificationRequest {
   token      String   @unique
 }
 
+model UserProject {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  @@unique([userId, projectId])
+}
+
 model Project {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -72,7 +87,8 @@ model Project {
 
   recordKey String @default(cuid())
 
-  runs Run[]
+  runs         Run[]
+  userProjects UserProject[]
 
   @@unique([org, repo, providerId])
 }
