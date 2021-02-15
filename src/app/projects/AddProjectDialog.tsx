@@ -57,13 +57,13 @@ export function AddProjectDialog({
     },
   });
 
-  const { dirty, values, resetForm, isSubmitting } = formik;
+  const { values, resetForm, isSubmitting } = formik;
 
   useEffect(() => {
-    if (!open && dirty) {
+    if (!open) {
       resetForm();
     }
-  }, [open, dirty, resetForm]);
+  }, [open, resetForm]);
 
   return (
     <Dialog
