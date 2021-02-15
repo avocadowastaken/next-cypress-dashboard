@@ -23,8 +23,8 @@ export default createApiHandler((app) => {
       },
     },
     async ({ raw, query: { q } }, reply) => {
-      const ctx = await SecurityContext.create(raw);
-      const client = await GitHubClient.create(ctx);
+      const { userId } = await SecurityContext.create(raw);
+      const client = await GitHubClient.create(userId);
       const users = await client.searchUser(q);
 
       reply.send(users.map((user) => user.login));
@@ -48,8 +48,8 @@ export default createApiHandler((app) => {
       },
     },
     async ({ raw, query: { q, owner } }, reply) => {
-      const ctx = await SecurityContext.create(raw);
-      const client = await GitHubClient.create(ctx);
+      const { userId } = await SecurityContext.create(raw);
+      const client = await GitHubClient.create(userId);
       const repos = await client.searchRepo(owner, q);
 
       reply.send(repos.map((repo) => repo.name));

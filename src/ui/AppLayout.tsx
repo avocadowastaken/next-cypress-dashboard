@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import { signIn, useSession } from "next-auth/client";
-import { useRouter } from "next/router";
 import React, { ReactNode, useEffect, useState } from "react";
 
 export interface LayoutProps {
@@ -28,7 +27,6 @@ export function AppLayout({
   backButton,
   actions,
 }: LayoutProps) {
-  const route = useRouter();
   const [session, isSessionLoading] = useSession();
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
 
