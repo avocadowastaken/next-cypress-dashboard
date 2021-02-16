@@ -49,15 +49,7 @@ export const getServerSideProps = createServerSideProps<ProjectsPageProps>(
       }),
     ]);
 
-    return {
-      props: {
-        page,
-        count,
-        rowsPerPage,
-
-        projects,
-      },
-    };
+    return { props: { page, count, projects, rowsPerPage } };
   }
 );
 
