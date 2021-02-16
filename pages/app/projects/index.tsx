@@ -116,6 +116,7 @@ export default function ProjectsPage({
                   void router.replace({
                     query: {
                       ...router.query,
+                      page: 0,
                       per_page: event.target.value,
                     },
                   });
