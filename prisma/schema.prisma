@@ -72,12 +72,22 @@ model Project {
   repo       String
   providerId String
 
-  recordKey String @default(cuid())
+  secrets ProjectSecrets?
 
   runs         Run[]
   userProjects UserProject[]
 
   @@unique([org, repo, providerId])
+}
+
+model ProjectSecrets {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  recordKey String
+
+  projectId String  @unique
+  project   Project @relation(fields: [projectId], references: [id])
 }
 
 model RunInstance {
