@@ -1,6 +1,5 @@
 import { AppBar, Container, Grid, Toolbar } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
-import { useSession } from "next-auth/client";
 import NextLink from "next/link";
 import { ReactElement, ReactNode } from "react";
 
@@ -9,8 +8,6 @@ export interface PublicLayoutProps {
 }
 
 export function PublicLayout({ children }: PublicLayoutProps): ReactElement {
-  const [, isSessionLoading] = useSession();
-
   return (
     <>
       <AppBar position="sticky">
@@ -18,9 +15,7 @@ export function PublicLayout({ children }: PublicLayoutProps): ReactElement {
           <Grid container={true} justifyContent="flex-end">
             <Grid item={true}>
               <NextLink href="/app" passHref={true}>
-                <LoadingButton color="inherit" pending={isSessionLoading}>
-                  Dashboard
-                </LoadingButton>
+                <LoadingButton color="inherit">Dashboard</LoadingButton>
               </NextLink>
             </Grid>
           </Grid>
