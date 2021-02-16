@@ -119,7 +119,7 @@ export default function AddProjectPage({
                 void router.push({ search: "" });
               }}
             >
-              Reset
+              Retry
             </Button>
           }
         >
