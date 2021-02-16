@@ -17,11 +17,31 @@ import NextLink from "next/link";
 import { Router } from "next/router";
 import React, { ReactNode, useEffect, useMemo, useState } from "react";
 
-export interface LayoutProps {
+interface AppTitleProps {
+  breadcrumbs: Array<string | [label: string, href: string]>;
+}
+
+export function AppTitle({ breadcrumbs }: AppTitleProps) {
+  const documentTitle = useMemo(
+    () =>
+      [
+        "Dashboard",
+        ...breadcrumbs.map(([breadcrumbTitle]) => breadcrumbTitle),
+      ].join(" - "),
+    [breadcrumbs]
+  );
+
+  return (
+    <Head>
+      <title>{documentTitle}</title>
+    </Head>
+  );
+}
+
+export interface LayoutProps extends AppTitleProps {
   actions?: ReactNode;
   children?: ReactNode;
   maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
-  breadcrumbs?: Array<string | [label: string, href: string]>;
 }
 
 export function AppLayout({
@@ -32,14 +52,6 @@ export function AppLayout({
 }: LayoutProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
-  const documentTitle = useMemo(
-    () =>
-      [
-        "Dashboard",
-        ...breadcrumbs.map(([breadcrumbTitle]) => breadcrumbTitle),
-      ].join(" - "),
-    [breadcrumbs]
-  );
 
   useEffect(() => {
     function startAnimation() {
@@ -63,9 +75,7 @@ export function AppLayout({
 
   return (
     <>
-      <Head>
-        <title>{documentTitle}</title>
-      </Head>
+      <AppTitle breadcrumbs={breadcrumbs} />
 
       <SignOutDialog
         open={isSignOutDialogOpen}

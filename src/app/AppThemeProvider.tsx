@@ -12,6 +12,12 @@ const theme = createMuiTheme({
   },
 
   components: {
+    MuiAlert: {
+      defaultProps: {
+        variant: "filled",
+      },
+    },
+
     MuiAppBar: {
       defaultProps: {
         elevation: 0,
@@ -28,6 +34,12 @@ const theme = createMuiTheme({
     MuiTextField: {
       defaultProps: {
         size: "small",
+      },
+    },
+
+    MuiTypography: {
+      defaultProps: {
+        display: "inline",
       },
     },
   },
