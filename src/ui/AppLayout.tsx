@@ -1,4 +1,3 @@
-import { SignOutDialog } from "@/ui/SignOutDialog";
 import {
   AppBar,
   Box,
@@ -51,7 +50,6 @@ export function AppLayout({
   breadcrumbs = [],
 }: LayoutProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
 
   useEffect(() => {
     function startAnimation() {
@@ -77,25 +75,19 @@ export function AppLayout({
     <>
       <AppTitle breadcrumbs={breadcrumbs} />
 
-      <SignOutDialog
-        open={isSignOutDialogOpen}
-        onClose={() => {
-          setIsSignOutDialogOpen(false);
-        }}
-      />
-
       <AppBar position="sticky">
         <Toolbar>
           <Grid container={true} justifyContent="flex-end">
             <Grid item={true}>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  setIsSignOutDialogOpen(true);
+              <NextLink
+                href={{
+                  pathname: "/api/auth/signout",
+                  query: { callbackUrl: "/" },
                 }}
+                passHref={true}
               >
-                Sign Out
-              </Button>
+                <Button color="inherit">Sign Out</Button>
+              </NextLink>
             </Grid>
           </Grid>
         </Toolbar>
