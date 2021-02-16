@@ -2,16 +2,20 @@ import { prisma } from "@/api/db";
 import { GitHubClient } from "@/api/GitHubClient";
 import { createServerSideProps } from "@/data/ServerSideProps";
 import { parseGitUrl } from "@/shared/GitUrl";
-import { AppLayout } from "@/ui/AppLayout";
-import { Alert, Button } from "@material-ui/core";
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@material-ui/core";
+import { Add } from "@material-ui/icons";
 import { RequestError } from "@octokit/request-error";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
+import NextLink from "next/link";
 import React, { ReactElement } from "react";
-
-const AddProjectForm = dynamic(() => import("@/app/projects/AddProjectForm"), {
-  ssr: false,
-});
 
 interface AddProjectPageProps {
   error?: string;
@@ -87,30 +91,58 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
 export default function AddProjectPage({
   error,
 }: AddProjectPageProps): ReactElement {
-  const router = useRouter();
+  // const router = useRouter();
+
+  // return (
+  //   <AppLayout breadcrumbs={[["Projects", "/app/projects"], "Add"]}>
+
+  //   </AppLayout>
+  // );
 
   return (
-    <AppLayout breadcrumbs={[["Projects", "/app/projects"], "Add"]}>
+    <Dialog open={true} fullWidth={true} maxWidth="xs">
       {error ? (
         <Alert
-          variant="filled"
           severity="error"
           action={
-            <Button
-              color="inherit"
-              onClick={() => {
-                void router.push({ search: "" });
-              }}
-            >
-              Retry
-            </Button>
+            <NextLink replace={true} passHref={true} href="/app/projects/add">
+              <Button color="inherit">Retry</Button>
+            </NextLink>
           }
         >
           {error}
         </Alert>
       ) : (
-        <AddProjectForm />
+        <form method="get">
+          <DialogContent>
+            <TextField
+              name="repo"
+              label="Repo URL"
+              required={true}
+              fullWidth={true}
+              autoFocus={true}
+              placeholder="https://github.com/umidbekk/next-cypress-dashboard"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton size="small" type="submit">
+                      <Add color="action" />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </DialogContent>
+
+          <DialogActions>
+            <NextLink replace={true} passHref={true} href="/app/projects">
+              <Button>Dismiss</Button>
+            </NextLink>
+
+            <Button>Confirm</Button>
+          </DialogActions>
+        </form>
       )}
-    </AppLayout>
+    </Dialog>
   );
 }
