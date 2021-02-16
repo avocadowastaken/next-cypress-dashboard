@@ -1,5 +1,4 @@
 import { prisma } from "@/api/db";
-import { AddProjectDialog } from "@/app/projects/AddProjectDialog";
 import { toPageParam, toRowsPerPageParam } from "@/data/PaginationParams";
 import { createServerSideProps } from "@/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
@@ -74,25 +73,13 @@ export default function ProjectsPage({
     <AppLayout
       title="Projects"
       actions={
-        <Button size="small" endIcon={<Add />}>
-          Add
-        </Button>
+        <NextLink passHref={true} href="/app/projects/add">
+          <Button size="small" endIcon={<Add />}>
+            Add
+          </Button>
+        </NextLink>
       }
     >
-      <AddProjectDialog
-        open={router.query.project === "add"}
-        onClose={() => {
-          void router.replace({
-            query: { ...router.query, project: [] },
-          });
-        }}
-        onSubmitSuccess={(owner, repo) => {
-          void router.replace({
-            query: { ...router.query, project: `${owner}/${repo}` },
-          });
-        }}
-      />
-
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
