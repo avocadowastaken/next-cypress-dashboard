@@ -37,29 +37,4 @@ export class GitHubClient {
 
     return response.data;
   }
-
-  async searchUser(
-    login: string
-  ): Promise<components["schemas"]["user-search-result-item"][]> {
-    const response = await this.octokit.request("GET /search/users", {
-      page: 1,
-      per_page: 20,
-      q: `${login} in:login`,
-    });
-
-    return response.data.items;
-  }
-
-  async searchRepo(
-    owner: string,
-    name: string
-  ): Promise<components["schemas"]["repository"][]> {
-    const response = await this.octokit.request("GET /search/repositories", {
-      page: 1,
-      per_page: 20,
-      q: `${name} in:name,description org:${owner}`,
-    });
-
-    return response.data.items;
-  }
 }
