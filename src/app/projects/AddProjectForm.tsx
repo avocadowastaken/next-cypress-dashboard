@@ -3,57 +3,22 @@ import {
   Card,
   CardActions,
   CardContent,
-  Grid,
   TextField,
 } from "@material-ui/core";
 import React, { ReactElement } from "react";
 
-export interface AddProjectFormProps {
-  onSubmit: (data: URLSearchParams) => void;
-}
-
-export default function AddProjectForm({
-  onSubmit,
-}: AddProjectFormProps): ReactElement {
+export default function AddProjectForm(): ReactElement {
   return (
-    <form
-      method="get"
-      onSubmit={(event) => {
-        event.preventDefault();
-
-        const data = new FormData(event.currentTarget);
-
-        const repo = data.get("repo");
-        const owner = data.get("owner");
-
-        if (typeof repo != "string" || typeof owner != "string") {
-          window.alert("Invalid Input");
-        } else {
-          onSubmit(new URLSearchParams({ repo, owner }));
-        }
-      }}
-    >
+    <form method="get">
       <Card>
         <CardContent>
-          <Grid container={true} spacing={2}>
-            <Grid item={true} xs={12}>
-              <TextField
-                name="owner"
-                label="Owner"
-                fullWidth={true}
-                required={true}
-              />
-            </Grid>
-
-            <Grid item={true} xs={12}>
-              <TextField
-                name="repo"
-                label="Repo"
-                fullWidth={true}
-                required={true}
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            name="repo"
+            label="Repo URL"
+            required={true}
+            fullWidth={true}
+            placeholder="https://github.com/umidbekk/next-cypress-dashboard"
+          />
         </CardContent>
 
         <CardActions>

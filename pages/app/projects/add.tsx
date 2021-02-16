@@ -1,6 +1,7 @@
 import { prisma } from "@/api/db";
 import { GitHubClient } from "@/api/GitHubClient";
 import { createServerSideProps } from "@/data/ServerSideProps";
+import { parseGitUrl } from "@/shared/GitUrl";
 import { AppLayout } from "@/ui/AppLayout";
 import { Alert, Button, IconButton } from "@material-ui/core";
 import { ArrowBack } from "@material-ui/icons";
@@ -20,17 +21,23 @@ interface AddProjectPageProps {
 
 export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
   async ({ userId }, { query }) => {
-    const { owner, repo } = query;
+    const { repo } = query;
 
-    if (owner && repo) {
+    if (repo) {
       try {
-        if (typeof owner != "string" || typeof repo != "string") {
+        if (typeof repo != "string") {
           throw new Error("Invalid Input");
+        }
+
+        const [providerId, org, name] = parseGitUrl(repo);
+
+        if (!org || !name) {
+          throw new Error("Invalid repository URL");
         }
 
         const client = await GitHubClient.create(userId);
         const repository = await client
-          .getRepo(owner, repo)
+          .getRepo(org, name)
           .catch((error: unknown) => {
             if (error instanceof RequestError && error.status === 404) {
               throw new Error("Repository not found.");
@@ -46,12 +53,12 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
         const project = await prisma.project.upsert({
           select: { id: true },
           where: {
-            org_repo_providerId: { repo, org: owner, providerId: "github" },
+            org_repo_providerId: { org, repo, providerId },
           },
           create: {
+            org,
             repo,
-            org: owner,
-            providerId: "github",
+            providerId,
             users: { connect: { id: userId } },
           },
           update: {
@@ -74,18 +81,6 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
         };
       }
     }
-
-    // if (typeof owner == "string" && typeof repo == "string") {
-    //   // app.post<{ Body: { owner: string; repo: string } }>(
-    //   //   "/api/user/projects",
-    //   //   async ({ raw, body: { repo, owner } }, reply) => {
-    //   //     const { userId } = await SecurityContext.create(raw);
-
-    //   //
-    //   //     reply.send(project);
-    //   //   }
-    //   // );
-    // }
 
     return { props: {} };
   }
@@ -126,13 +121,7 @@ export default function AddProjectPage({
           {error}
         </Alert>
       ) : (
-        <AddProjectForm
-          onSubmit={(data) => {
-            void router.push({
-              search: new URLSearchParams(data).toString(),
-            });
-          }}
-        />
+        <AddProjectForm />
       )}
     </AppLayout>
   );
