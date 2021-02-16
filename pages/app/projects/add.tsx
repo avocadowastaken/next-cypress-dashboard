@@ -3,11 +3,10 @@ import { GitHubClient } from "@/api/GitHubClient";
 import { createServerSideProps } from "@/data/ServerSideProps";
 import { parseGitUrl } from "@/shared/GitUrl";
 import { AppLayout } from "@/ui/AppLayout";
-import { Alert, Button, IconButton } from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
+import { BackButton } from "@/ui/BackButton";
+import { Alert, Button } from "@material-ui/core";
 import { RequestError } from "@octokit/request-error";
 import dynamic from "next/dynamic";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 
@@ -95,13 +94,7 @@ export default function AddProjectPage({
     <AppLayout
       maxWidth="xs"
       title="Add Project"
-      backButton={
-        <NextLink replace={true} passHref={true} href="/app/projects">
-          <IconButton>
-            <ArrowBack />
-          </IconButton>
-        </NextLink>
-      }
+      backButton={<BackButton href="/app/projects" />}
     >
       {error ? (
         <Alert
