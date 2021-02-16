@@ -9,7 +9,7 @@ function createPrisma(): PrismaClient {
   }
 
   // Ensure the previous prisma instance is disconnected.
-  if (globalThis["prisma"] instanceof PrismaClient) {
+  if ("prisma" in globalThis && "$disconnect" in globalThis["prisma"]) {
     void globalThis["prisma"].$disconnect();
   }
 

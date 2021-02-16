@@ -29,15 +29,15 @@ async function getUserSession(
 
 export function createServerSideProps<
   TProps,
-  TQuery extends ParsedUrlQuery = ParsedUrlQuery
+  TParams extends ParsedUrlQuery = ParsedUrlQuery
 >(
   fn: (
     session: UserSession,
-    context: GetServerSidePropsContext<TQuery>
+    context: GetServerSidePropsContext<TParams>
   ) =>
     | GetServerSidePropsResult<TProps>
     | Promise<GetServerSidePropsResult<TProps>>
-): GetServerSideProps<TProps, TQuery> {
+): GetServerSideProps<TProps, TParams> {
   return async (context) => {
     const session = await getUserSession(context);
 

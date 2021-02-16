@@ -4,12 +4,15 @@ import {
   Box,
   Button,
   Container,
+  Fade,
   Grid,
+  LinearProgress,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import Head from "next/head";
-import React, { ReactNode, useState } from "react";
+import { Router } from "next/router";
+import React, { ReactNode, useEffect, useState } from "react";
 
 export interface LayoutProps {
   title?: string;
@@ -24,7 +27,28 @@ export function AppLayout({
   backButton,
   actions,
 }: LayoutProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
+
+  useEffect(() => {
+    function startAnimation() {
+      setIsLoading(true);
+    }
+
+    function finishAnimation() {
+      setIsLoading(false);
+    }
+
+    Router.events.on("routeChangeStart", startAnimation);
+    Router.events.on("routeChangeComplete", finishAnimation);
+    Router.events.on("routeChangeError", finishAnimation);
+
+    return () => {
+      Router.events.off("routeChangeStart", startAnimation);
+      Router.events.off("routeChangeComplete", finishAnimation);
+      Router.events.off("routeChangeError", finishAnimation);
+    };
+  }, []);
 
   return (
     <>
@@ -55,6 +79,10 @@ export function AppLayout({
           </Grid>
         </Toolbar>
       </AppBar>
+
+      <Fade in={isLoading}>
+        <LinearProgress color="secondary" />
+      </Fade>
 
       <Container maxWidth="md">
         <Box paddingY={2}>
