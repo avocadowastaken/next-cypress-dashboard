@@ -17,8 +17,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
 
+  projects Project[]
   accounts UserAccount[]
-  projects UserProject[]
 }
 
 model UserAccount {
@@ -51,19 +51,6 @@ model UserVerificationRequest {
   token      String   @unique
 }
 
-model UserProject {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  projectId String
-  project   Project @relation(fields: [projectId], references: [id])
-
-  @@unique([userId, projectId])
-}
-
 model Project {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -74,8 +61,8 @@ model Project {
 
   secrets ProjectSecrets?
 
-  runs         Run[]
-  userProjects UserProject[]
+  runs  Run[]
+  users User[]
 
   @@unique([org, repo, providerId])
 }

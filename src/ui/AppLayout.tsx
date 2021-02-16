@@ -3,21 +3,17 @@ import {
   AppBar,
   Box,
   Button,
-  Collapse,
   Container,
   Grid,
-  LinearProgress,
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { signIn, useSession } from "next-auth/client";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useState } from "react";
 
 export interface LayoutProps {
   title?: ReactNode;
   backButton?: ReactNode;
   actions?: ReactNode;
-
   children?: ReactNode;
 }
 
@@ -27,14 +23,7 @@ export function AppLayout({
   backButton,
   actions,
 }: LayoutProps) {
-  const [session, isSessionLoading] = useSession();
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
-
-  useEffect(() => {
-    if (!session && !isSessionLoading) {
-      void signIn();
-    }
-  }, [session, isSessionLoading]);
 
   return (
     <>
@@ -51,7 +40,6 @@ export function AppLayout({
             <Grid item={true}>
               <Button
                 color="inherit"
-                disabled={isSessionLoading}
                 onClick={() => {
                   setIsSignOutDialogOpen(true);
                 }}
@@ -63,30 +51,24 @@ export function AppLayout({
         </Toolbar>
       </AppBar>
 
-      <Collapse in={!session}>
-        <LinearProgress color="secondary" />
-      </Collapse>
+      <Container maxWidth="md">
+        <Box paddingY={2}>
+          <Grid container={true} spacing={1} alignItems="center">
+            {!!backButton && <Grid item={true}>{backButton}</Grid>}
+            {!!title && (
+              <Grid item={true}>
+                <Typography variant="h5">{title}</Typography>
+              </Grid>
+            )}
 
-      {!!session && (
-        <Container maxWidth="md">
-          <Box paddingY={2}>
-            <Grid container={true} spacing={1} alignItems="center">
-              {!!backButton && <Grid item={true}>{backButton}</Grid>}
-              {!!title && (
-                <Grid item={true}>
-                  <Typography variant="h5">Add Project</Typography>
-                </Grid>
-              )}
+            <Grid item={true} xs={true} />
 
-              <Grid item={true} xs={true} />
+            {!!actions && <Grid item={true}>{actions}</Grid>}
+          </Grid>
+        </Box>
 
-              {!!actions && <Grid item={true}>{actions}</Grid>}
-            </Grid>
-          </Box>
-
-          {children}
-        </Container>
-      )}
+        {children}
+      </Container>
     </>
   );
 }

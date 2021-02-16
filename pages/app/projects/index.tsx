@@ -1,4 +1,6 @@
+import { prisma } from "@/api/db";
 import { AddProjectDialog } from "@/app/projects/AddProjectDialog";
+import { createServerSideProps } from "@/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
 import {
   Button,
@@ -12,11 +14,32 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 
-export default function Projects(): ReactElement {
+interface ProjectsPageProps {
+  projects: Project[];
+}
+
+export const getServerSideProps = createServerSideProps<ProjectsPageProps>(
+  async ({ userId }) => {
+    const projects = await prisma.project.findMany({
+      skip: 0,
+      take: 10,
+      where: { users: { some: { id: userId } } },
+    });
+
+    return {
+      props: { projects },
+    };
+  }
+);
+
+export default function ProjectsPage({
+  projects,
+}: ProjectsPageProps): ReactElement {
   const router = useRouter();
 
   return (
@@ -48,7 +71,7 @@ export default function Projects(): ReactElement {
       />
 
       <TableContainer component={Paper}>
-        <Table aria-label="simple table">
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>Provider</TableCell>
@@ -57,17 +80,22 @@ export default function Projects(): ReactElement {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell component="th" scope="row">
-                github
-              </TableCell>
-              <TableCell>umidbekkarimov</TableCell>
-              <TableCell>
-                <NextLink passHref={true} prefetch={true} href="/app/projects">
-                  <Link>next-cypress-dashboard</Link>
-                </NextLink>
-              </TableCell>
-            </TableRow>
+            {projects.map((project) => (
+              <TableRow key={project.id}>
+                <TableCell component="th" scope="row">
+                  {project.providerId}
+                </TableCell>
+                <TableCell>{project.org}</TableCell>
+                <TableCell>
+                  <NextLink
+                    passHref={true}
+                    href={`/app/projects/${project.id}`}
+                  >
+                    <Link>{project.repo}</Link>
+                  </NextLink>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

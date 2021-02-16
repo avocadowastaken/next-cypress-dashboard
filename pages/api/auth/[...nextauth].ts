@@ -1,6 +1,5 @@
 import { prisma } from "@/api/db";
 import { env } from "@/api/env";
-import { SESSION_TOKEN_COOKIE } from "@/api/SecurityContext";
 import { NextApiRequest, NextApiResponse } from "next";
 import nextAuth, { User } from "next-auth";
 import Adapters from "next-auth/adapters";
@@ -13,7 +12,6 @@ export default function nextAuthApi(
   return nextAuth(req, res, {
     session: { jwt: true },
     jwt: { secret: env("JWT_SECRET") },
-    cookies: { sessionToken: { name: SESSION_TOKEN_COOKIE } },
 
     adapter: Adapters.Prisma.Adapter({
       prisma,
