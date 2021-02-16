@@ -8,6 +8,7 @@ module.exports = (api) => {
   return {
     presets: ["next/babel"],
     plugins: [
+      "babel-plugin-superjson-next",
       target === "web" && [
         "babel-plugin-direct-import",
         {

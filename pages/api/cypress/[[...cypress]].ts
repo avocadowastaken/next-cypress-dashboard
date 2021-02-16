@@ -10,13 +10,8 @@ import {
   UpdateInstanceInput,
   UpdateInstanceResponse,
 } from "@/shared/cypress-types";
+import { parseGitUrl } from "@/shared/GitUrl";
 import { Prisma, Project, Run } from "@prisma/client";
-import parseGitUrl from "git-url-parse";
-
-const resourceProviderMap = new Map<string, string>().set(
-  "github.com",
-  "github"
-);
 
 async function obtainRunProject({
   projectId,
@@ -29,22 +24,7 @@ async function obtainRunProject({
       throw new ValidationError("commit.remoteOrigin", "Empty Git remote url");
     }
 
-    const { resource, name: repo, organization: org } = parseGitUrl(
-      remoteOrigin
-    );
-
-    if (!org || !repo || !resource) {
-      throw new ValidationError(
-        "commit.remoteOrigin",
-        "Invalid Git remote url"
-      );
-    }
-
-    const providerId = resourceProviderMap.get(resource);
-
-    if (!providerId) {
-      throw new ValidationError("commit.remoteOrigin", "Unknown provider ID");
-    }
+    const [providerId, repo, org] = parseGitUrl(remoteOrigin);
 
     try {
       project = await prisma.project.create({
