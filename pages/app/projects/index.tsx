@@ -1,10 +1,12 @@
 import { prisma } from "@/api/db";
-import { toPageParam, toRowsPerPageParam } from "@/data/PaginationParams";
+import { toPageParam } from "@/data/PaginationParams";
 import { createServerSideProps } from "@/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
 import {
   Button,
   Link,
+  Pagination,
+  PaginationItem,
   Paper,
   Table,
   TableBody,
@@ -12,7 +14,6 @@ import {
   TableContainer,
   TableFooter,
   TableHead,
-  TablePagination,
   TableRow,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
@@ -21,42 +22,34 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 
-const ROWS_PER_PAGE = [5, 10, 25];
-
 interface ProjectsPageProps {
   page: number;
-  count: number;
-  rowsPerPage: number;
-
+  maxPage: number;
   projects: Project[];
 }
 
 export const getServerSideProps = createServerSideProps<ProjectsPageProps>(
   async ({ userId }, { query }) => {
+    const take = 10;
     const page = toPageParam(query.page);
-    const rowsPerPage = toRowsPerPageParam(query.per_page, ROWS_PER_PAGE);
-
     const where: Prisma.ProjectWhereInput = {
       users: { some: { id: userId } },
     };
 
     const [count, projects] = await Promise.all([
       prisma.project.count({ where }),
-      prisma.project.findMany({
-        where,
-        take: rowsPerPage,
-        skip: page * rowsPerPage,
-      }),
+      prisma.project.findMany({ where, take, skip: (page - 1) * take }),
     ]);
 
-    return { props: { page, count, projects, rowsPerPage } };
+    const maxPage = Math.ceil(count / take);
+
+    return { props: { page, maxPage, projects } };
   }
 );
 
 export default function ProjectsPage({
   page,
-  count,
-  rowsPerPage,
+  maxPage,
   projects,
 }: ProjectsPageProps): ReactElement {
   const router = useRouter();
@@ -102,26 +95,23 @@ export default function ProjectsPage({
 
           <TableFooter>
             <TableRow>
-              <TablePagination
-                page={page}
-                count={count}
-                rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={ROWS_PER_PAGE}
-                onPageChange={(_, nextPage) => {
-                  void router.replace({
-                    query: { ...router.query, page: nextPage },
-                  });
-                }}
-                onRowsPerPageChange={(event) => {
-                  void router.replace({
-                    query: {
-                      ...router.query,
-                      page: 0,
-                      per_page: event.target.value,
-                    },
-                  });
-                }}
-              />
+              <TableCell colSpan={3}>
+                <Pagination
+                  page={page}
+                  count={maxPage}
+                  renderItem={(item) => (
+                    <NextLink
+                      passHref={true}
+                      href={{
+                        pathname: "/app/projects",
+                        query: { ...router.query, page: item.page },
+                      }}
+                    >
+                      <PaginationItem {...item} />
+                    </NextLink>
+                  )}
+                />
+              </TableCell>
             </TableRow>
           </TableFooter>
         </Table>

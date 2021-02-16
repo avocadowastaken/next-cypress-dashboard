@@ -25,7 +25,9 @@ export function AppTitle({ breadcrumbs }: AppTitleProps) {
     () =>
       [
         "Dashboard",
-        ...breadcrumbs.map(([breadcrumbTitle]) => breadcrumbTitle),
+        ...breadcrumbs.map((breadcrumb) =>
+          typeof breadcrumb == "string" ? breadcrumb : breadcrumb[0]
+        ),
       ].join(" - "),
     [breadcrumbs]
   );
@@ -102,10 +104,6 @@ export function AppLayout({
           <Grid container={true} spacing={1} alignItems="center">
             <Grid item={true}>
               <Breadcrumbs maxItems={3}>
-                <NextLink href="/" passHref={true}>
-                  <Link color="inherit">Home</Link>
-                </NextLink>
-
                 {breadcrumbs.map((breadcrumb) => {
                   if (typeof breadcrumb == "string") {
                     return (

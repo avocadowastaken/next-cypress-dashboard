@@ -42,6 +42,15 @@ const theme = createMuiTheme({
         display: "inline",
       },
     },
+
+    MuiPagination: {
+      defaultProps: {
+        siblingCount: 1,
+        boundaryCount: 1,
+        color: "primary",
+        variant: "outlined",
+      },
+    },
   },
 });
 

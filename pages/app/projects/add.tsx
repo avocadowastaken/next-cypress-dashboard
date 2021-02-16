@@ -8,11 +8,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  IconButton,
-  InputAdornment,
   TextField,
 } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
 import { RequestError } from "@octokit/request-error";
 import NextLink from "next/link";
 import React, { ReactElement } from "react";
@@ -122,15 +119,6 @@ export default function AddProjectPage({
               fullWidth={true}
               autoFocus={true}
               placeholder="https://github.com/umidbekk/next-cypress-dashboard"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton size="small" type="submit">
-                      <Add color="action" />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
             />
           </DialogContent>
 

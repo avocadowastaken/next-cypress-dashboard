@@ -1,5 +1,5 @@
 import { prisma } from "@/api/db";
-import { toPageParam, toRowsPerPageParam } from "@/data/PaginationParams";
+import { toPageParam } from "@/data/PaginationParams";
 import { createServerSideProps } from "@/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
 import { Button } from "@material-ui/core";
@@ -11,8 +11,7 @@ const ROWS_PER_PAGE = [5, 10];
 
 interface ProjectPageProps {
   page: number;
-  count: number;
-  rowsPerPage: number;
+  maxPage: number;
   project: Project & { runs: Run[] };
 }
 
@@ -23,19 +22,21 @@ export const getServerSideProps = createServerSideProps<
   const projectId = params?.projectId;
 
   if (projectId) {
+    const take = 10;
     const page = toPageParam(query.page);
-    const rowsPerPage = toRowsPerPageParam(query.per_page, ROWS_PER_PAGE);
 
     const [count, project] = await Promise.all([
       prisma.run.count({ where: { projectId } }),
       prisma.project.findFirst({
         where: { id: projectId, users: { some: { id: userId } } },
-        include: { runs: { take: rowsPerPage, skip: page * rowsPerPage } },
+        include: { runs: { take, skip: (page - 1) * take } },
       }),
     ]);
 
     if (project) {
-      return { props: { project, page, count, rowsPerPage } };
+      const maxPage = Math.ceil(count / take);
+
+      return { props: { project, page, maxPage } };
     }
   }
 
