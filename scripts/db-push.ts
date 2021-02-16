@@ -19,11 +19,7 @@ function getDatabaseURL(): URL {
   return new URL(DATABASE_URL);
 }
 
-interface DBPushOptions {
-  force?: boolean;
-}
-
-export function dbPush(schema: string, { force = false }: DBPushOptions = {}) {
+export function dbPush(schema: string, ...args: string[]) {
   if (!schema) {
     throw new Error("Schema is empty.");
   }
@@ -31,13 +27,7 @@ export function dbPush(schema: string, { force = false }: DBPushOptions = {}) {
   const databaseURL = getDatabaseURL();
   databaseURL.searchParams.set("schema", schema);
 
-  const args = ["prisma", "db", "push", "--preview-feature"];
-
-  if (force) {
-    args.push("--force");
-  }
-
-  spawnSync("yarn", args, {
+  spawnSync("yarn", ["prisma", "db", "push", "--preview-feature", ...args], {
     stdio: "inherit",
     encoding: "utf8",
     env: { ...process.env, DATABASE_URL: databaseURL.toString() },
@@ -47,5 +37,5 @@ export function dbPush(schema: string, { force = false }: DBPushOptions = {}) {
 if (require.main === module) {
   const [schema, ...args] = process.argv.slice(2);
 
-  dbPush(schema, { force: args.includes("--force") });
+  dbPush(schema, ...args);
 }
