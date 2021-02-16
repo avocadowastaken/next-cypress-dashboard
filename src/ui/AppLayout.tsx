@@ -3,22 +3,23 @@ import {
   AppBar,
   Box,
   Button,
-  Collapse,
   Container,
+  Fade,
   Grid,
   LinearProgress,
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { signIn, useSession } from "next-auth/client";
+import Head from "next/head";
+import { Router } from "next/router";
 import React, { ReactNode, useEffect, useState } from "react";
 
 export interface LayoutProps {
-  title?: ReactNode;
+  title?: string;
   backButton?: ReactNode;
   actions?: ReactNode;
-
   children?: ReactNode;
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
 }
 
 export function AppLayout({
@@ -26,18 +27,37 @@ export function AppLayout({
   title,
   backButton,
   actions,
+  maxWidth = "md",
 }: LayoutProps) {
-  const [session, isSessionLoading] = useSession();
+  const [isLoading, setIsLoading] = useState(false);
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (!session && !isSessionLoading) {
-      void signIn();
+    function startAnimation() {
+      setIsLoading(true);
     }
-  }, [session, isSessionLoading]);
+
+    function finishAnimation() {
+      setIsLoading(false);
+    }
+
+    Router.events.on("routeChangeStart", startAnimation);
+    Router.events.on("routeChangeComplete", finishAnimation);
+    Router.events.on("routeChangeError", finishAnimation);
+
+    return () => {
+      Router.events.off("routeChangeStart", startAnimation);
+      Router.events.off("routeChangeComplete", finishAnimation);
+      Router.events.off("routeChangeError", finishAnimation);
+    };
+  }, []);
 
   return (
     <>
+      <Head>
+        {!title ? <title>Dashboard</title> : <title>Dashboard - {title}</title>}
+      </Head>
+
       <SignOutDialog
         open={isSignOutDialogOpen}
         onClose={() => {
@@ -51,7 +71,6 @@ export function AppLayout({
             <Grid item={true}>
               <Button
                 color="inherit"
-                disabled={isSessionLoading}
                 onClick={() => {
                   setIsSignOutDialogOpen(true);
                 }}
@@ -63,30 +82,28 @@ export function AppLayout({
         </Toolbar>
       </AppBar>
 
-      <Collapse in={!session}>
+      <Fade in={isLoading}>
         <LinearProgress color="secondary" />
-      </Collapse>
+      </Fade>
 
-      {!!session && (
-        <Container maxWidth="md">
-          <Box paddingY={2}>
-            <Grid container={true} spacing={1} alignItems="center">
-              {!!backButton && <Grid item={true}>{backButton}</Grid>}
-              {!!title && (
-                <Grid item={true}>
-                  <Typography variant="h5">Add Project</Typography>
-                </Grid>
-              )}
+      <Container maxWidth={maxWidth}>
+        <Box paddingY={2}>
+          <Grid container={true} spacing={1} alignItems="center">
+            {!!backButton && <Grid item={true}>{backButton}</Grid>}
+            {!!title && (
+              <Grid item={true}>
+                <Typography variant="h5">{title}</Typography>
+              </Grid>
+            )}
 
-              <Grid item={true} xs={true} />
+            <Grid item={true} xs={true} />
 
-              {!!actions && <Grid item={true}>{actions}</Grid>}
-            </Grid>
-          </Box>
+            {!!actions && <Grid item={true}>{actions}</Grid>}
+          </Grid>
+        </Box>
 
-          {children}
-        </Container>
-      )}
+        {children}
+      </Container>
     </>
   );
 }
