@@ -2,35 +2,44 @@ import { SignOutDialog } from "@/ui/SignOutDialog";
 import {
   AppBar,
   Box,
+  Breadcrumbs,
   Button,
   Container,
   Fade,
   Grid,
   LinearProgress,
+  Link,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import Head from "next/head";
+import NextLink from "next/link";
 import { Router } from "next/router";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 
 export interface LayoutProps {
-  title?: string;
-  backButton?: ReactNode;
   actions?: ReactNode;
   children?: ReactNode;
   maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
+  breadcrumbs?: Array<string | [label: string, href: string]>;
 }
 
 export function AppLayout({
-  children,
-  title,
-  backButton,
   actions,
+  children,
   maxWidth = "md",
+  breadcrumbs = [],
 }: LayoutProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
+  const documentTitle = useMemo(
+    () =>
+      [
+        "Dashboard",
+        ...breadcrumbs.map(([breadcrumbTitle]) => breadcrumbTitle),
+      ].join(" - "),
+    [breadcrumbs]
+  );
 
   useEffect(() => {
     function startAnimation() {
@@ -55,7 +64,7 @@ export function AppLayout({
   return (
     <>
       <Head>
-        {!title ? <title>Dashboard</title> : <title>Dashboard - {title}</title>}
+        <title>{documentTitle}</title>
       </Head>
 
       <SignOutDialog
@@ -89,12 +98,31 @@ export function AppLayout({
       <Container maxWidth={maxWidth}>
         <Box paddingY={2}>
           <Grid container={true} spacing={1} alignItems="center">
-            {!!backButton && <Grid item={true}>{backButton}</Grid>}
-            {!!title && (
-              <Grid item={true}>
-                <Typography variant="h5">{title}</Typography>
-              </Grid>
-            )}
+            <Grid item={true}>
+              <Breadcrumbs maxItems={3}>
+                <NextLink href="/" passHref={true}>
+                  <Link color="inherit">Home</Link>
+                </NextLink>
+
+                {breadcrumbs.map((breadcrumb) => {
+                  if (typeof breadcrumb == "string") {
+                    return (
+                      <Typography key={breadcrumb} color="textPrimary">
+                        {breadcrumb}
+                      </Typography>
+                    );
+                  }
+
+                  const [title, href] = breadcrumb;
+
+                  return (
+                    <NextLink key={title} href={href} passHref={true}>
+                      <Link color="inherit">{title}</Link>
+                    </NextLink>
+                  );
+                })}
+              </Breadcrumbs>
+            </Grid>
 
             <Grid item={true} xs={true} />
 

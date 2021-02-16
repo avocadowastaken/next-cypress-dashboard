@@ -3,7 +3,6 @@ import { GitHubClient } from "@/api/GitHubClient";
 import { createServerSideProps } from "@/data/ServerSideProps";
 import { parseGitUrl } from "@/shared/GitUrl";
 import { AppLayout } from "@/ui/AppLayout";
-import { BackButton } from "@/ui/BackButton";
 import { Alert, Button } from "@material-ui/core";
 import { RequestError } from "@octokit/request-error";
 import dynamic from "next/dynamic";
@@ -20,23 +19,23 @@ interface AddProjectPageProps {
 
 export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
   async ({ userId }, { query }) => {
-    const { repo } = query;
+    const { repo: repoUrl } = query;
 
-    if (repo) {
+    if (repoUrl) {
       try {
-        if (typeof repo != "string") {
+        if (typeof repoUrl != "string") {
           throw new Error("Invalid Input");
         }
 
-        const [providerId, org, name] = parseGitUrl(repo);
+        const [providerId, org, repo] = parseGitUrl(repoUrl);
 
-        if (!org || !name) {
+        if (!org || !repo) {
           throw new Error("Invalid repository URL");
         }
 
         const client = await GitHubClient.create(userId);
         const repository = await client
-          .getRepo(org, name)
+          .getRepo(org, repo)
           .catch((error: unknown) => {
             if (error instanceof RequestError && error.status === 404) {
               throw new Error("Repository not found.");
@@ -91,11 +90,7 @@ export default function AddProjectPage({
   const router = useRouter();
 
   return (
-    <AppLayout
-      maxWidth="xs"
-      title="Add Project"
-      backButton={<BackButton href="/app/projects" />}
-    >
+    <AppLayout breadcrumbs={[["Projects", "/app/projects"], "Add"]}>
       {error ? (
         <Alert
           variant="filled"

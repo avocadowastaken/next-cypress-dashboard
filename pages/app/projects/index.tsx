@@ -63,7 +63,7 @@ export default function ProjectsPage({
 
   return (
     <AppLayout
-      title="Projects"
+      breadcrumbs={["Projects"]}
       actions={
         <NextLink passHref={true} href="/app/projects/add">
           <Button size="small" endIcon={<Add />}>

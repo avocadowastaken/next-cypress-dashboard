@@ -2,7 +2,6 @@ import { prisma } from "@/api/db";
 import { toPageParam, toRowsPerPageParam } from "@/data/PaginationParams";
 import { createServerSideProps } from "@/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
-import { BackButton } from "@/ui/BackButton";
 import { Button } from "@material-ui/core";
 import { Project, Run } from "@prisma/client";
 import NextLink from "next/link";
@@ -48,15 +47,22 @@ export default function ProjectPage({
 }: ProjectPageProps): ReactElement {
   return (
     <AppLayout
-      title={`${project.org}/${project.repo}`}
-      backButton={<BackButton href="/app/projects" />}
+      breadcrumbs={[
+        ["Projects", "/app/projects"],
+        project.providerId,
+        project.org,
+        project.repo,
+      ]}
       actions={
         <>
-          <NextLink passHref={true} href={`/app/project/${project.id}/secrets`}>
+          <NextLink
+            passHref={true}
+            href={`/app/projects/${project.id}/secrets`}
+          >
             <Button>Secrets</Button>
           </NextLink>
 
-          <NextLink passHref={true} href={`/app/project/${project.id}/delete`}>
+          <NextLink passHref={true} href={`/app/projects/${project.id}/delete`}>
             <Button>Delete</Button>
           </NextLink>
         </>
