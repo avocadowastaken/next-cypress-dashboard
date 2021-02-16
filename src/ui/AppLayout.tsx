@@ -8,10 +8,11 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
+import Head from "next/head";
 import React, { ReactNode, useState } from "react";
 
 export interface LayoutProps {
-  title?: ReactNode;
+  title?: string;
   backButton?: ReactNode;
   actions?: ReactNode;
   children?: ReactNode;
@@ -27,6 +28,10 @@ export function AppLayout({
 
   return (
     <>
+      <Head>
+        {!title ? <title>Dashboard</title> : <title>Dashboard - {title}</title>}
+      </Head>
+
       <SignOutDialog
         open={isSignOutDialogOpen}
         onClose={() => {
