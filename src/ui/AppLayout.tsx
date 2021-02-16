@@ -19,6 +19,7 @@ export interface LayoutProps {
   backButton?: ReactNode;
   actions?: ReactNode;
   children?: ReactNode;
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
 }
 
 export function AppLayout({
@@ -26,6 +27,7 @@ export function AppLayout({
   title,
   backButton,
   actions,
+  maxWidth = "md",
 }: LayoutProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignOutDialogOpen, setIsSignOutDialogOpen] = useState(false);
@@ -84,7 +86,7 @@ export function AppLayout({
         <LinearProgress color="secondary" />
       </Fade>
 
-      <Container maxWidth="md">
+      <Container maxWidth={maxWidth}>
         <Box paddingY={2}>
           <Grid container={true} spacing={1} alignItems="center">
             {!!backButton && <Grid item={true}>{backButton}</Grid>}
