@@ -1,5 +1,5 @@
 import { prisma } from "@/api/db";
-import { env } from "@/api/env";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, JWT_SECRET } from "@/api/env";
 import { NextApiRequest, NextApiResponse } from "next";
 import nextAuth, { User } from "next-auth";
 import Adapters from "next-auth/adapters";
@@ -11,7 +11,7 @@ export default function nextAuthApi(
 ): Promise<void> {
   return nextAuth(req, res, {
     session: { jwt: true },
-    jwt: { secret: env("JWT_SECRET") },
+    jwt: { secret: JWT_SECRET },
 
     adapter: Adapters.Prisma.Adapter({
       prisma,
@@ -26,8 +26,8 @@ export default function nextAuthApi(
     providers: [
       Providers.GitHub({
         scope: "user read:org",
-        clientId: env("GITHUB_ID"),
-        clientSecret: env("GITHUB_SECRET"),
+        clientId: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_CLIENT_SECRET,
       }),
     ],
 

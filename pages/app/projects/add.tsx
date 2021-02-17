@@ -1,4 +1,5 @@
 import { prisma } from "@/api/db";
+import { GITHUB_CLIENT_SLUG } from "@/api/env";
 import { GitHubClient } from "@/api/GitHubClient";
 import { SignInButton } from "@/app/auth/SignInButton";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
@@ -15,6 +16,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Link,
   TextField,
 } from "@material-ui/core";
 import NextLink from "next/link";
@@ -80,12 +82,29 @@ export default function AddProjectPage({
           <Alert severity="error" action={<SignInButton />}>
             Failed to establish connection with GitHub
           </Alert>
+        ) : error === "GITHUB_REPO_NOT_FOUND" ? (
+          <Alert
+            severity="error"
+            action={
+              <NextLink replace={true} passHref={true} href="/app/projects/add">
+                <Button color="inherit">Close</Button>
+              </NextLink>
+            }
+          >
+            Repository not found, did you grant access for the{" "}
+            <Link
+              href={`https://github.com/apps/${GITHUB_CLIENT_SLUG}/installations/new`}
+            >
+              {GITHUB_CLIENT_SLUG}
+            </Link>{" "}
+            app?
+          </Alert>
         ) : (
           <Alert
             severity="error"
             action={
               <NextLink replace={true} passHref={true} href="/app/projects/add">
-                <Button color="inherit">Retry</Button>
+                <Button color="inherit">Close</Button>
               </NextLink>
             }
           >

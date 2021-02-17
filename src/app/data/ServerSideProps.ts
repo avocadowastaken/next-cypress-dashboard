@@ -1,4 +1,4 @@
-import { env } from "@/api/env";
+import { JWT_SECRET } from "@/api/env";
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -17,7 +17,7 @@ async function getUserSession(
 ): Promise<null | UserSession> {
   try {
     const session = await getToken({
-      secret: env("JWT_SECRET"),
+      secret: JWT_SECRET,
       req: context.req as NextApiRequest,
     });
 
