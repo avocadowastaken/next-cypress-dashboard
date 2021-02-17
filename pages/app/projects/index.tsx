@@ -3,7 +3,9 @@ import { AppLayout } from "@/app/AppLayout";
 import { toPageParam } from "@/app/data/PaginationParams";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import {
+  Alert,
   Button,
+  Grid,
   Link,
   Pagination,
   PaginationItem,
@@ -65,59 +67,82 @@ export default function ProjectsPage({
         </NextLink>
       }
     >
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Provider</TableCell>
-              <TableCell>Organization</TableCell>
-              <TableCell>Repo</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {projects.map((project) => (
-              <TableRow key={project.id}>
-                <TableCell component="th" scope="row">
-                  {project.providerId}
-                </TableCell>
-                <TableCell>{project.org}</TableCell>
-                <TableCell>
-                  <NextLink
-                    passHref={true}
-                    href={`/app/projects/${project.id}`}
-                  >
-                    <Link>{project.repo}</Link>
-                  </NextLink>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+      <Grid container={true} spacing={2}>
+        {!!router.query.success && (
+          <Grid item={true} xs={12}>
+            <Alert
+              action={
+                <NextLink
+                  href={{
+                    pathname: "/app/projects",
+                    query: { ...router.query, success: [] },
+                  }}
+                >
+                  <Button color="inherit">Close</Button>
+                </NextLink>
+              }
+            >
+              {router.query.success}
+            </Alert>
+          </Grid>
+        )}
 
-          {maxPage > 1 && (
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <Pagination
-                    page={page}
-                    count={maxPage}
-                    renderItem={(item) => (
+        <Grid item={true} xs={12}>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Provider</TableCell>
+                  <TableCell>Organization</TableCell>
+                  <TableCell>Repo</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {projects.map((project) => (
+                  <TableRow key={project.id}>
+                    <TableCell component="th" scope="row">
+                      {project.providerId}
+                    </TableCell>
+                    <TableCell>{project.org}</TableCell>
+                    <TableCell>
                       <NextLink
                         passHref={true}
-                        href={{
-                          pathname: "/app/projects",
-                          query: { ...router.query, page: item.page },
-                        }}
+                        href={`/app/projects/${project.id}`}
                       >
-                        <PaginationItem {...item} />
+                        <Link>{project.repo}</Link>
                       </NextLink>
-                    )}
-                  />
-                </TableCell>
-              </TableRow>
-            </TableFooter>
-          )}
-        </Table>
-      </TableContainer>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+
+              {maxPage > 1 && (
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={3}>
+                      <Pagination
+                        page={page}
+                        count={maxPage}
+                        renderItem={(item) => (
+                          <NextLink
+                            passHref={true}
+                            href={{
+                              pathname: "/app/projects",
+                              query: { ...router.query, page: item.page },
+                            }}
+                          >
+                            <PaginationItem {...item} />
+                          </NextLink>
+                        )}
+                      />
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              )}
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Grid>
     </AppLayout>
   );
 }
