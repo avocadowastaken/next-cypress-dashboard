@@ -1,7 +1,7 @@
 import { prisma } from "@/api/db";
-import { toPageParam } from "@/data/PaginationParams";
-import { createServerSideProps } from "@/data/ServerSideProps";
-import { AppLayout } from "@/ui/AppLayout";
+import { AppLayout } from "@/app/AppLayout";
+import { toPageParam } from "@/app/data/PaginationParams";
+import { createServerSideProps } from "@/app/data/ServerSideProps";
 import {
   Button,
   Link,
@@ -93,27 +93,29 @@ export default function ProjectsPage({
             ))}
           </TableBody>
 
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={3}>
-                <Pagination
-                  page={page}
-                  count={maxPage}
-                  renderItem={(item) => (
-                    <NextLink
-                      passHref={true}
-                      href={{
-                        pathname: "/app/projects",
-                        query: { ...router.query, page: item.page },
-                      }}
-                    >
-                      <PaginationItem {...item} />
-                    </NextLink>
-                  )}
-                />
-              </TableCell>
-            </TableRow>
-          </TableFooter>
+          {maxPage > 1 && (
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Pagination
+                    page={page}
+                    count={maxPage}
+                    renderItem={(item) => (
+                      <NextLink
+                        passHref={true}
+                        href={{
+                          pathname: "/app/projects",
+                          query: { ...router.query, page: item.page },
+                        }}
+                      >
+                        <PaginationItem {...item} />
+                      </NextLink>
+                    )}
+                  />
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
       </TableContainer>
     </AppLayout>
