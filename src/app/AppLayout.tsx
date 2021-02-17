@@ -1,20 +1,18 @@
+import { AppRouterProgressIndicator } from "@/app/AppRouterState";
 import {
   AppBar,
   Box,
   Breadcrumbs,
   Button,
   Container,
-  Fade,
   Grid,
-  LinearProgress,
   Link,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import Head from "next/head";
 import NextLink from "next/link";
-import { Router } from "next/router";
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import React, { ReactNode, useMemo } from "react";
 
 interface AppTitleProps {
   breadcrumbs: Array<string | [label: string, href: string]>;
@@ -51,28 +49,6 @@ export function AppLayout({
   maxWidth = "md",
   breadcrumbs = [],
 }: LayoutProps) {
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    function startAnimation() {
-      setIsLoading(true);
-    }
-
-    function finishAnimation() {
-      setIsLoading(false);
-    }
-
-    Router.events.on("routeChangeStart", startAnimation);
-    Router.events.on("routeChangeComplete", finishAnimation);
-    Router.events.on("routeChangeError", finishAnimation);
-
-    return () => {
-      Router.events.off("routeChangeStart", startAnimation);
-      Router.events.off("routeChangeComplete", finishAnimation);
-      Router.events.off("routeChangeError", finishAnimation);
-    };
-  }, []);
-
   return (
     <>
       <AppTitle breadcrumbs={breadcrumbs} />
@@ -95,9 +71,7 @@ export function AppLayout({
         </Toolbar>
       </AppBar>
 
-      <Fade in={isLoading}>
-        <LinearProgress color="secondary" />
-      </Fade>
+      <AppRouterProgressIndicator />
 
       <Container maxWidth={maxWidth}>
         <Box paddingY={2}>
