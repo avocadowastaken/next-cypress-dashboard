@@ -1,7 +1,8 @@
 import { prisma } from "@/api/db";
-import { BadRequestError } from "@/api/HTTPError";
+import { createAppError } from "@/shared/AppError";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types/generated/types";
+import { RequestError } from "@octokit/request-error";
 
 export class GitHubClient {
   static async create(userId: string): Promise<GitHubClient> {
@@ -10,11 +11,11 @@ export class GitHubClient {
     });
 
     if (!account) {
-      throw new BadRequestError("User is not linked with any GitHub account");
+      throw createAppError("GITHUB_ACCOUNT_NOT_LINKED");
     }
 
     if (!account.accessToken) {
-      throw new BadRequestError("GitHub access token is empty");
+      throw createAppError("GITHUB_ACCOUNT_INVALID_ACCESS_TOKEN");
     }
 
     return new GitHubClient(account.accessToken);
@@ -28,13 +29,29 @@ export class GitHubClient {
 
   async getRepo(
     owner: string,
-    repo: string
+    name: string
   ): Promise<components["schemas"]["full-repository"]> {
-    const response = await this.octokit.request("GET /repos/{owner}/{repo}", {
-      repo,
-      owner,
-    });
+    try {
+      const response = await this.octokit.request("GET /repos/{owner}/{repo}", {
+        repo: name,
+        owner,
+      });
 
-    return response.data;
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof RequestError && error.status === 404) {
+        throw createAppError("GITHUB_REPO_NOT_FOUND");
+      }
+
+      throw error;
+    }
+  }
+
+  async verifyRepoAccess(owner: string, name: string): Promise<void> {
+    const repo = await this.getRepo(owner, name);
+
+    if (!repo.permissions?.push) {
+      throw createAppError("GITHUB_REPO_ACCESS_DENIED");
+    }
   }
 }

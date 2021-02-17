@@ -19,6 +19,7 @@ model User {
 
   projects Project[]
   accounts UserAccount[]
+  sessions UserSession[]
 }
 
 model UserAccount {
@@ -40,6 +41,18 @@ model UserAccount {
 
   @@unique([userId, providerId])
   @@unique([userId, providerId, providerAccountId])
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  expires      DateTime
+  accessToken  String   @unique
+  sessionToken String   @unique
 }
 
 model UserVerificationRequest {

@@ -1,6 +1,12 @@
 import { prisma } from "@/api/db";
 import { GitHubClient } from "@/api/GitHubClient";
 import { createServerSideProps } from "@/data/ServerSideProps";
+import {
+  AppErrorCode,
+  extractErrorCode,
+  formatErrorCode,
+  isGitHubIntegrationError,
+} from "@/shared/AppError";
 import { parseGitUrl } from "@/shared/GitUrl";
 import {
   Alert,
@@ -10,12 +16,11 @@ import {
   DialogContent,
   TextField,
 } from "@material-ui/core";
-import { RequestError } from "@octokit/request-error";
 import NextLink from "next/link";
 import React, { ReactElement } from "react";
 
 interface AddProjectPageProps {
-  error?: string;
+  error?: AppErrorCode;
 }
 
 export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
@@ -23,31 +28,15 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
     const { repo: repoUrl } = query;
 
     if (repoUrl) {
+      if (typeof repoUrl != "string") {
+        return { props: { error: "BAD_REQUEST" } };
+      }
+
       try {
-        if (typeof repoUrl != "string") {
-          throw new Error("Invalid Input");
-        }
-
         const [providerId, org, repo] = parseGitUrl(repoUrl);
-
-        if (!org || !repo) {
-          throw new Error("Invalid repository URL");
-        }
-
         const client = await GitHubClient.create(userId);
-        const repository = await client
-          .getRepo(org, repo)
-          .catch((error: unknown) => {
-            if (error instanceof RequestError && error.status === 404) {
-              throw new Error("Repository not found.");
-            }
 
-            throw error;
-          });
-
-        if (!repository.permissions?.push) {
-          throw new Error("Can not add repository without push permission.");
-        }
+        await client.verifyRepoAccess(org, repo);
 
         const project = await prisma.project.upsert({
           select: { id: true },
@@ -72,12 +61,7 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
           },
         };
       } catch (error: unknown) {
-        return {
-          props: {
-            error:
-              error instanceof Error ? error.message : "Failed to add project",
-          },
-        };
+        return { props: { error: extractErrorCode(error) } };
       }
     }
 
@@ -88,17 +72,31 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
 export default function AddProjectPage({
   error,
 }: AddProjectPageProps): ReactElement {
-  // const router = useRouter();
-
-  // return (
-  //   <AppLayout breadcrumbs={[["Projects", "/app/projects"], "Add"]}>
-
-  //   </AppLayout>
-  // );
-
   return (
     <Dialog open={true} fullWidth={true} maxWidth="xs">
-      {error ? (
+      {error && isGitHubIntegrationError(error) ? (
+        <Alert
+          severity="error"
+          action={
+            <NextLink
+              replace={true}
+              passHref={true}
+              href={{
+                pathname: "/api/auth/signin",
+                query: {
+                  callbackUrl: process.browser
+                    ? window.location.href
+                    : undefined,
+                },
+              }}
+            >
+              <Button color="inherit">Sign In</Button>
+            </NextLink>
+          }
+        >
+          Failed to establish connection with GitHub
+        </Alert>
+      ) : error ? (
         <Alert
           severity="error"
           action={
@@ -107,7 +105,7 @@ export default function AddProjectPage({
             </NextLink>
           }
         >
-          {error}
+          {formatErrorCode(error)}
         </Alert>
       ) : (
         <form method="get">
