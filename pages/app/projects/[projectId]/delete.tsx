@@ -37,31 +37,31 @@ export const getServerSideProps = createServerSideProps<
     if (project) {
       const deleteConfirmation = query.confirmation;
 
-      if (typeof deleteConfirmation == "string") {
-        if (deleteConfirmation != `${project.org}/${project.repo}`) {
-          return { props: { project, error: "BAD_REQUEST" } };
-        }
-
-        try {
-          await prisma.project.update({
-            where: { id: projectId },
-            data: { users: { disconnect: { id: userId } } },
-          });
-
-          return {
-            redirect: {
-              permanent: false,
-              destination: `/app/projects?success=${encodeURIComponent(
-                `${project.org}/${project.repo} removed`
-              )}`,
-            },
-          };
-        } catch (error) {
-          return { props: { project, error: extractErrorCode(error) } };
-        }
+      if (!deleteConfirmation) {
+        return { props: { project } };
       }
 
-      return { props: { project } };
+      if (deleteConfirmation != `${project.org}/${project.repo}`) {
+        return { props: { project, error: "BAD_REQUEST" } };
+      }
+
+      try {
+        await prisma.project.update({
+          where: { id: projectId },
+          data: { users: { disconnect: { id: userId } } },
+        });
+
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/app/projects?success=${encodeURIComponent(
+              `${project.org}/${project.repo} removed`
+            )}`,
+          },
+        };
+      } catch (error) {
+        return { props: { project, error: extractErrorCode(error) } };
+      }
     }
   }
 
@@ -102,10 +102,10 @@ export default function DeleteProjectPage({
                 fullWidth={true}
                 error={!!error}
                 name="confirmation"
-                label="Please type project name"
+                label="Type project name to confirm"
                 helperText={
                   error === "BAD_REQUEST"
-                    ? `Please type ${project.org}/${project.repo} to confirm`
+                    ? "Invalid project name"
                     : error && formatErrorCode(error)
                 }
               />

@@ -14,8 +14,11 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  IconButton,
+  InputAdornment,
   TextField,
 } from "@material-ui/core";
+import { Refresh } from "@material-ui/icons";
 import { Project, ProjectSecrets } from "@prisma/client";
 import NextLink from "next/link";
 import React, { ReactElement } from "react";
@@ -110,7 +113,21 @@ export default function ProjectSecretsPage({
               fullWidth={true}
               label="Record Key"
               value={secrets.recordKey}
-              InputProps={{ readOnly: true }}
+              InputProps={{
+                readOnly: true,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <NextLink
+                      passHref={true}
+                      href={`/app/projects/${project.id}/secrets/${secrets.id}/revoke`}
+                    >
+                      <IconButton>
+                        <Refresh />
+                      </IconButton>
+                    </NextLink>
+                  </InputAdornment>
+                ),
+              }}
             />
           </DialogContent>
 
