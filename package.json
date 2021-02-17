@@ -76,6 +76,7 @@
     "babel-plugin-direct-import": "0.6.3",
     "babel-plugin-superjson-next": "0.2.1",
     "cypress": "6.5.0",
+    "cypress-esbuild-preprocessor": "1.0.2",
     "dotenv": "8.2.0",
     "esbuild": "0.8.46",
     "esbuild-jest": "0.4.0",
