@@ -1,7 +1,8 @@
+import { AppRouterProgressIndicator } from "@/app/AppRouterState";
 import { AppBar, Container, Grid, Toolbar } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
 import NextLink from "next/link";
-import { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 export interface PublicLayoutProps {
   children?: ReactNode;
@@ -21,6 +22,8 @@ export function PublicLayout({ children }: PublicLayoutProps): ReactElement {
           </Grid>
         </Toolbar>
       </AppBar>
+
+      <AppRouterProgressIndicator />
 
       <Container maxWidth="sm">{children}</Container>
     </>

@@ -1,3 +1,4 @@
+import { AppRouterStateProvider } from "@/app/AppRouterState";
 import { AppThemeProvider } from "@/app/AppThemeProvider";
 import { ReactElement, ReactNode } from "react";
 
@@ -6,5 +7,9 @@ export interface AppContainerProps {
 }
 
 export function AppContainer({ children }: AppContainerProps): ReactElement {
-  return <AppThemeProvider>{children}</AppThemeProvider>;
+  return (
+    <AppThemeProvider>
+      <AppRouterStateProvider>{children}</AppRouterStateProvider>
+    </AppThemeProvider>
+  );
 }
