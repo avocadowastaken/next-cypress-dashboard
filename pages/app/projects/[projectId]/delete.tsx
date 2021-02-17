@@ -1,6 +1,6 @@
 import { prisma } from "@/api/db";
-import { createServerSideProps } from "@/data/ServerSideProps";
-import { AppTitle } from "@/ui/AppLayout";
+import { AppTitle } from "@/app/AppLayout";
+import { createServerSideProps } from "@/app/data/ServerSideProps";
 import {
   Alert,
   Button,

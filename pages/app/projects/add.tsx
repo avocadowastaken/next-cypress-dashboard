@@ -1,6 +1,7 @@
 import { prisma } from "@/api/db";
 import { GitHubClient } from "@/api/GitHubClient";
-import { createServerSideProps } from "@/data/ServerSideProps";
+import { SignInButton } from "@/app/auth/SignInButton";
+import { createServerSideProps } from "@/app/data/ServerSideProps";
 import {
   AppErrorCode,
   extractErrorCode,
@@ -74,39 +75,23 @@ export default function AddProjectPage({
 }: AddProjectPageProps): ReactElement {
   return (
     <Dialog open={true} fullWidth={true} maxWidth="xs">
-      {error && isGitHubIntegrationError(error) ? (
-        <Alert
-          severity="error"
-          action={
-            <NextLink
-              replace={true}
-              passHref={true}
-              href={{
-                pathname: "/api/auth/signin",
-                query: {
-                  callbackUrl: process.browser
-                    ? window.location.href
-                    : undefined,
-                },
-              }}
-            >
-              <Button color="inherit">Sign In</Button>
-            </NextLink>
-          }
-        >
-          Failed to establish connection with GitHub
-        </Alert>
-      ) : error ? (
-        <Alert
-          severity="error"
-          action={
-            <NextLink replace={true} passHref={true} href="/app/projects/add">
-              <Button color="inherit">Retry</Button>
-            </NextLink>
-          }
-        >
-          {formatErrorCode(error)}
-        </Alert>
+      {error ? (
+        isGitHubIntegrationError(error) ? (
+          <Alert severity="error" action={<SignInButton />}>
+            Failed to establish connection with GitHub
+          </Alert>
+        ) : (
+          <Alert
+            severity="error"
+            action={
+              <NextLink replace={true} passHref={true} href="/app/projects/add">
+                <Button color="inherit">Retry</Button>
+              </NextLink>
+            }
+          >
+            {formatErrorCode(error)}
+          </Alert>
+        )
       ) : (
         <form method="get">
           <DialogContent>

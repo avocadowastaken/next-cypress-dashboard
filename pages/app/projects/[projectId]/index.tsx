@@ -1,7 +1,7 @@
 import { prisma } from "@/api/db";
-import { toPageParam } from "@/data/PaginationParams";
-import { createServerSideProps } from "@/data/ServerSideProps";
-import { AppLayout } from "@/ui/AppLayout";
+import { AppLayout } from "@/app/AppLayout";
+import { toPageParam } from "@/app/data/PaginationParams";
+import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { Button } from "@material-ui/core";
 import { Project, Run } from "@prisma/client";
 import NextLink from "next/link";
