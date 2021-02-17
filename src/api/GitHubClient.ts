@@ -1,7 +1,7 @@
 import { prisma } from "@/api/db";
 import { createAppError } from "@/shared/AppError";
 import { Octokit } from "@octokit/core";
-import { components } from "@octokit/openapi-types/generated/types";
+import { components } from "@octokit/openapi-types";
 import { RequestError } from "@octokit/request-error";
 
 export class GitHubClient {
