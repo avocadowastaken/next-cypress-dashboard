@@ -24,56 +24,61 @@ import React, { ReactElement } from "react";
 
 interface AddProjectPageProps {
   error?: AppErrorCode;
+  gitHubClientSlug: string;
 }
 
 export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
   async ({ userId }, { query }) => {
     const { repo: repoUrl } = query;
+    const props: AddProjectPageProps = {
+      gitHubClientSlug: GITHUB_CLIENT_SLUG,
+    };
 
-    if (repoUrl) {
-      if (typeof repoUrl != "string") {
-        return { props: { error: "BAD_REQUEST" } };
-      }
-
-      try {
-        const [providerId, org, repo] = parseGitUrl(repoUrl);
-        const client = await GitHubClient.create(userId);
-
-        await client.verifyRepoAccess(org, repo);
-
-        const project = await prisma.project.upsert({
-          select: { id: true },
-          where: {
-            org_repo_providerId: { org, repo, providerId },
-          },
-          create: {
-            org,
-            repo,
-            providerId,
-            users: { connect: { id: userId } },
-          },
-          update: {
-            users: { connect: { id: userId } },
-          },
-        });
-
-        return {
-          redirect: {
-            permanent: false,
-            destination: `/app/projects/${project.id}`,
-          },
-        };
-      } catch (error: unknown) {
-        return { props: { error: extractErrorCode(error) } };
-      }
+    if (!repoUrl) {
+      return { props };
     }
 
-    return { props: {} };
+    if (typeof repoUrl != "string") {
+      return { props: { ...props, error: "BAD_REQUEST" } };
+    }
+
+    try {
+      const [providerId, org, repo] = parseGitUrl(repoUrl);
+      const client = await GitHubClient.create(userId);
+
+      await client.verifyRepoAccess(org, repo);
+
+      const project = await prisma.project.upsert({
+        select: { id: true },
+        where: {
+          org_repo_providerId: { org, repo, providerId },
+        },
+        create: {
+          org,
+          repo,
+          providerId,
+          users: { connect: { id: userId } },
+        },
+        update: {
+          users: { connect: { id: userId } },
+        },
+      });
+
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/app/projects/${project.id}`,
+        },
+      };
+    } catch (error: unknown) {
+      return { props: { ...props, error: extractErrorCode(error) } };
+    }
   }
 );
 
 export default function AddProjectPage({
   error,
+  gitHubClientSlug,
 }: AddProjectPageProps): ReactElement {
   return (
     <Dialog open={true} fullWidth={true} maxWidth="xs">
@@ -93,9 +98,11 @@ export default function AddProjectPage({
           >
             Repository not found, did you grant access for the{" "}
             <Link
-              href={`https://github.com/apps/${GITHUB_CLIENT_SLUG}/installations/new`}
+              color="inherit"
+              underline="always"
+              href={`https://github.com/apps/${gitHubClientSlug}/installations/new`}
             >
-              {GITHUB_CLIENT_SLUG}
+              {gitHubClientSlug}
             </Link>{" "}
             app?
           </Alert>

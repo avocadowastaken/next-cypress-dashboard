@@ -1,15 +1,7 @@
-export const JWT_SECRET = env("JWT_SECRET");
-
-export const CYPRESS_RECORD_KEY = resolveEnv("CYPRESS_RECORD_KEY", null);
-
-export const GITHUB_CLIENT_ID = env("GITHUB_ID");
-export const GITHUB_CLIENT_SECRET = env("GITHUB_SECRET");
-export const GITHUB_CLIENT_SLUG = resolveEnv(
-  "GITHUB_SLUG",
-  "next-cypress-dashboard"
-);
-
-function resolveEnv<T extends string | null>(key: string, defaultValue: T): T {
+function resolveOptional<T extends string | null>(
+  key: string,
+  defaultValue: T
+): T {
   const value = process.env[key];
 
   if (value) {
@@ -19,11 +11,7 @@ function resolveEnv<T extends string | null>(key: string, defaultValue: T): T {
   return defaultValue;
 }
 
-export function env(key: string): string {
-  if (!(key in process.env)) {
-    throw new Error(`env: '${key}' is not defined`);
-  }
-
+function resolveRequired(key: string): string {
   const value = process.env[key];
 
   if (!value) {
@@ -32,3 +20,14 @@ export function env(key: string): string {
 
   return value;
 }
+
+export const JWT_SECRET = resolveRequired("JWT_SECRET");
+
+export const CYPRESS_RECORD_KEY = resolveOptional("CYPRESS_RECORD_KEY", null);
+
+export const GITHUB_CLIENT_ID = resolveRequired("GITHUB_ID");
+export const GITHUB_CLIENT_SECRET = resolveRequired("GITHUB_SECRET");
+export const GITHUB_CLIENT_SLUG = resolveOptional(
+  "GITHUB_SLUG",
+  "next-cypress-dashboard"
+);
