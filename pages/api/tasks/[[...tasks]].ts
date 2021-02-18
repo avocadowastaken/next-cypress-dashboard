@@ -1,17 +1,13 @@
 import { createApiHandler } from "@/api/ApiHandler";
 import { prisma } from "@/api/db";
-import { CYPRESS_RECORD_KEY } from "@/api/env";
+import { TASKS_API_SECRET } from "@/api/env";
 import { createAppError } from "@/shared/AppError";
 
 export default createApiHandler((app) => {
   app.addHook("preHandler", (request, reply, done) => {
     const { authorization } = request.headers;
 
-    if (
-      !authorization ||
-      CYPRESS_RECORD_KEY == null ||
-      authorization !== `Token ${CYPRESS_RECORD_KEY}`
-    ) {
+    if (authorization !== `Token ${TASKS_API_SECRET}`) {
       throw createAppError("FORBIDDEN");
     }
 

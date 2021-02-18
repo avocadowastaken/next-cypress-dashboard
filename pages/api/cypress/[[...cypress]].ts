@@ -1,5 +1,6 @@
 import { createApiHandler } from "@/api/ApiHandler";
 import { isUniqueConstraintError, prisma } from "@/api/db";
+import { TASKS_API_SECRET } from "@/api/env";
 import { createAppError } from "@/shared/AppError";
 import {
   CreateInstanceInput,
@@ -9,6 +10,7 @@ import {
   UpdateInstanceInput,
   UpdateInstanceResponse,
 } from "@/shared/cypress-types";
+import { parseGitUrl } from "@/shared/GitUrl";
 import { Prisma, Run } from "@prisma/client";
 
 async function obtainRun(
@@ -48,48 +50,66 @@ export default createApiHandler((app) => {
   app.post<{
     Body: CreateRunInput;
     Reply: CreateRunResponse;
-  }>("/runs", async ({ body, headers }, reply) => {
-    const {
-      group,
-      specs,
-      recordKey,
-      ciBuildId,
-      projectId,
-      commit: { defaultBranch, ...commit },
-      platform: { osCpus, osMemory, ...platform },
-    } = body;
-
-    if (!recordKey || !projectId) {
-      throw createAppError("FORBIDDEN");
-    }
-
-    const groupId = group || ciBuildId;
-    const project = await prisma.project.findFirst({
-      rejectOnNotFound: true,
-      where: { id: projectId, secrets: { recordKey } },
-    });
-
-    const [run, isNewRun] = await obtainRun({
-      groupId,
-      ciBuildId,
-      commit: { ...commit },
-      platform: { ...platform },
-      projectId: project.id,
-      instances: {
-        create: specs.map((spec) => ({ spec, groupId })),
+  }>(
+    "/runs",
+    async (
+      {
+        headers,
+        body: {
+          group,
+          specs,
+          recordKey,
+          ciBuildId,
+          projectId,
+          commit: { defaultBranch, ...commit },
+          platform: { osCpus, osMemory, ...platform },
+        },
       },
-    });
+      reply
+    ) => {
+      if (!recordKey || !projectId) {
+        throw createAppError("FORBIDDEN");
+      }
 
-    const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+      if (recordKey === TASKS_API_SECRET) {
+        const [providerId, org, repo] = parseGitUrl(commit.remoteOrigin);
 
-    reply.send({
-      groupId,
-      isNewRun,
-      runId: run.id,
-      machineId: run.machineId,
-      runUrl: `${protocol}://${headers.host}/projects/${project.id}/runs/${run.id}`,
-    });
-  });
+        ({ id: projectId } = await prisma.project.findUnique({
+          select: { id: true },
+          rejectOnNotFound: true,
+          where: { org_repo_providerId: { providerId, org, repo } },
+        }));
+      }
+
+      const groupId = group || ciBuildId;
+      const project = await prisma.project.findFirst({
+        rejectOnNotFound: true,
+        where: { id: projectId, secrets: { recordKey } },
+      });
+
+      const [run, isNewRun] = await obtainRun({
+        groupId,
+        ciBuildId,
+        commit: { ...commit },
+        platform: { ...platform },
+        projectId: project.id,
+        instances: {
+          create: specs.map((spec) => ({ spec, groupId })),
+        },
+      });
+
+      const protocol =
+        process.env.NODE_ENV === "development" ? "http" : "https";
+
+      reply.send({
+        groupId,
+        isNewRun,
+        runId: run.id,
+        machineId: run.machineId,
+        runUrl: `${protocol}://${headers.host}/r/${run.id}`,
+      });
+    }
+  );
 
   //
   // Claim Instance for Run

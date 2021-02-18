@@ -13,7 +13,7 @@ jobs:
 
       - uses: ./actions/exec-task
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
+          TASKS_API_SECRET: ${{ secrets.TASKS_API_SECRET }}
         with:
           environment: Preview
           ignore_errors: true
@@ -21,7 +21,7 @@ jobs:
 
       - uses: ./actions/exec-task
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
+          TASKS_API_SECRET: ${{ secrets.TASKS_API_SECRET }}
         with:
           environment: Production
           name: "cleanup-runs"

@@ -2,7 +2,7 @@ import { getInput, info, setFailed, warning } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 import fetch, { RequestInit } from "node-fetch";
 
-const { CYPRESS_RECORD_KEY } = process.env;
+const { TASKS_API_SECRET } = process.env;
 const token = getInput("token", { required: true });
 const name = getInput("name", { required: true });
 const payload = getInput("payload", { required: false });
@@ -52,8 +52,8 @@ async function main(): Promise<void> {
     "Content-Type": "application/json",
   };
 
-  if (CYPRESS_RECORD_KEY) {
-    headers["Authorization"] = `Token ${CYPRESS_RECORD_KEY}`;
+  if (TASKS_API_SECRET) {
+    headers["Authorization"] = `Token ${TASKS_API_SECRET}`;
   }
 
   info(`Making request to: '${deploymentURL}' with '${name}'…`);

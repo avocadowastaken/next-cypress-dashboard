@@ -19,7 +19,7 @@ jobs:
           api_url: ${{ github.event.deployment_status.target_url }}
       - run: npx cypress run --record --parallel --ci-build-id=e2e-${{ github.event.deployment_status.id }}
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_KEY }}
+          CYPRESS_RECORD_KEY: ${{ secrets.TASKS_API_SECRET }}
       - if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:

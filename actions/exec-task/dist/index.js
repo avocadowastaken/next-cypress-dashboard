@@ -2321,7 +2321,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       unfollow: ["DELETE /user/following/{username}"],
       updateAuthenticated: ["PATCH /user"]
     }
-  }, VERSION4 = "4.10.2";
+  }, VERSION4 = "4.10.3";
   function endpointsToMethods(octokit2, endpointsMap) {
     let newMethods = {};
     for (let [scope, endpoints] of Object.entries(endpointsMap))
@@ -2513,7 +2513,7 @@ function getUserAgent() {
 }
 __name(getUserAgent, "getUserAgent");
 
-// node_modules/@octokit/endpoint/node_modules/is-plain-object/dist/is-plain-object.mjs
+// node_modules/is-plain-object/dist/is-plain-object.mjs
 /*!
  * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
  *
@@ -2697,23 +2697,6 @@ var VERSION = "6.0.11", userAgent = `octokit-endpoint.js/${VERSION} ${getUserAge
     previews: []
   }
 }, endpoint = withDefaults(null, DEFAULTS);
-
-// node_modules/@octokit/request/node_modules/is-plain-object/dist/is-plain-object.mjs
-/*!
- * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-function isObject2(o) {
-  return Object.prototype.toString.call(o) === "[object Object]";
-}
-__name(isObject2, "isObject");
-function isPlainObject2(o) {
-  var ctor, prot;
-  return isObject2(o) === !1 ? !1 : (ctor = o.constructor, ctor === void 0 ? !0 : (prot = ctor.prototype, !(isObject2(prot) === !1 || prot.hasOwnProperty("isPrototypeOf") === !1)));
-}
-__name(isPlainObject2, "isPlainObject");
 
 // node_modules/node-fetch/lib/index.mjs
 var import_stream = __toModule(require("stream")), import_http = __toModule(require("http")), import_url = __toModule(require("url")), import_https = __toModule(require("https")), import_zlib = __toModule(require("zlib")), Readable = import_stream.default.Readable, BUFFER = Symbol("buffer"), TYPE = Symbol("type"), Blob = class {
@@ -3427,7 +3410,7 @@ function getBufferResponse(response) {
 }
 __name(getBufferResponse, "getBufferResponse");
 function fetchWrapper(requestOptions) {
-  (isPlainObject2(requestOptions.body) || Array.isArray(requestOptions.body)) && (requestOptions.body = JSON.stringify(requestOptions.body));
+  (isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) && (requestOptions.body = JSON.stringify(requestOptions.body));
   let headers = {}, status, url;
   return (requestOptions.request && requestOptions.request.fetch || lib_default)(requestOptions.url, Object.assign({
     method: requestOptions.method,
@@ -3596,7 +3579,7 @@ var createTokenAuth = /* @__PURE__ */ __name(function(token2) {
 
 // actions/exec-task/index.ts
 var import_github = __toModule(require_github());
-var {CYPRESS_RECORD_KEY} = process.env, token = import_core.getInput("token", {required: !0}), name = import_core.getInput("name", {required: !0}), payload = import_core.getInput("payload", {required: !1}), environment = import_core.getInput("environment", {required: !0}), ignoreErrors = import_core.getInput("ignore_errors", {required: !1}) === "true", octokit = import_github.getOctokit(token);
+var {TASKS_API_SECRET} = process.env, token = import_core.getInput("token", {required: !0}), name = import_core.getInput("name", {required: !0}), payload = import_core.getInput("payload", {required: !1}), environment = import_core.getInput("environment", {required: !0}), ignoreErrors = import_core.getInput("ignore_errors", {required: !1}) === "true", octokit = import_github.getOctokit(token);
 async function findDeploymentURL() {
   for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", {
     ...import_github.context.repo,
@@ -3622,7 +3605,7 @@ async function main() {
     Accept: "application/json",
     "Content-Type": "application/json"
   };
-  CYPRESS_RECORD_KEY && (headers.Authorization = `Token ${CYPRESS_RECORD_KEY}`), import_core.info(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
+  TASKS_API_SECRET && (headers.Authorization = `Token ${TASKS_API_SECRET}`), import_core.info(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
   let requestInit = {
     headers,
     method: "POST"
