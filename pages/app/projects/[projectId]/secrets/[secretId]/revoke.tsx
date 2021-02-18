@@ -1,6 +1,5 @@
 import { prisma } from "@/api/db";
 import { GitHubClient } from "@/api/GitHubClient";
-import { createProjectRecordKey } from "@/api/ProjectService";
 import { AppTitle } from "@/app/AppLayout";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { AppErrorCode, formatErrorCode } from "@/shared/AppError";
@@ -75,11 +74,9 @@ export const getServerSideProps = createServerSideProps<
         where: { id: secretId },
       });
 
-      const recordKey = await createProjectRecordKey();
-
       await prisma.projectSecrets.create({
         select: null,
-        data: { projectId, recordKey },
+        data: { projectId },
       });
 
       return {

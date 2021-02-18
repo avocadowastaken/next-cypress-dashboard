@@ -1,7 +1,6 @@
 import { prisma } from "@/api/db";
 import { GITHUB_CLIENT_SLUG } from "@/api/env";
 import { GitHubClient } from "@/api/GitHubClient";
-import { createProjectRecordKey } from "@/api/ProjectService";
 import { SignInButton } from "@/app/auth/SignInButton";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import {
@@ -49,20 +48,15 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
 
       await client.verifyRepoAccess(org, repo);
 
-      const recordKey = await createProjectRecordKey();
       const project = await prisma.project.upsert({
         select: { id: true },
-        where: {
-          org_repo_providerId: { org, repo, providerId },
-        },
+        update: { users: { connect: { id: userId } } },
+        where: { org_repo_providerId: { org, repo, providerId } },
         create: {
           org,
           repo,
           providerId,
-          users: { connect: { id: userId } },
-          secrets: { create: { recordKey } },
-        },
-        update: {
+          secrets: { create: {} },
           users: { connect: { id: userId } },
         },
       });

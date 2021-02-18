@@ -1,5 +1,4 @@
 import { prisma } from "@/api/db";
-import { createProjectRecordKey } from "@/api/ProjectService";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 
 export const getServerSideProps = createServerSideProps<
@@ -10,12 +9,7 @@ export const getServerSideProps = createServerSideProps<
 
   if (projectId) {
     try {
-      const recordKey = await createProjectRecordKey();
-
-      await prisma.projectSecrets.create({
-        select: null,
-        data: { projectId, recordKey },
-      });
+      await prisma.projectSecrets.create({ select: null, data: { projectId } });
     } catch {}
 
     return {
