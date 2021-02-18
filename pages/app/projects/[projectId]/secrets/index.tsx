@@ -1,5 +1,6 @@
 import { prisma } from "@/api/db";
 import { GitHubClient } from "@/api/GitHubClient";
+import { AppTitle } from "@/app/AppLayout";
 import { SignInButton } from "@/app/auth/SignInButton";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import {
@@ -17,6 +18,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Tooltip,
 } from "@material-ui/core";
 import { Refresh } from "@material-ui/icons";
 import { Project, ProjectSecrets } from "@prisma/client";
@@ -67,6 +69,10 @@ export default function ProjectSecretsPage({
 }: ProjectSecretsPageProps): ReactElement {
   return (
     <Dialog open={true} maxWidth="xs" fullWidth={true}>
+      <AppTitle
+        breadcrumbs={["Projects", `${project.org}/${project.repo}`, "Secrets"]}
+      />
+
       {error ? (
         isGitHubIntegrationError(error) ? (
           <Alert severity="error" action={<SignInButton />}>
@@ -121,9 +127,11 @@ export default function ProjectSecretsPage({
                       passHref={true}
                       href={`/app/projects/${project.id}/secrets/${secrets.id}/revoke`}
                     >
-                      <IconButton>
-                        <Refresh />
-                      </IconButton>
+                      <Tooltip title="Revoke">
+                        <IconButton>
+                          <Refresh />
+                        </IconButton>
+                      </Tooltip>
                     </NextLink>
                   </InputAdornment>
                 ),

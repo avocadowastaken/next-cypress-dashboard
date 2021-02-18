@@ -50,9 +50,7 @@ export default function ProjectPage({
     <AppLayout
       breadcrumbs={[
         ["Projects", "/app/projects"],
-        project.providerId,
-        project.org,
-        project.repo,
+        `${project.org}/${project.repo}`,
       ]}
       actions={
         <>

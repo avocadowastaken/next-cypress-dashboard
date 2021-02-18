@@ -37,6 +37,12 @@ const theme = createMuiTheme({
       },
     },
 
+    MuiTooltip: {
+      defaultProps: {
+        arrow: true,
+      },
+    },
+
     MuiTypography: {
       defaultProps: {
         display: "inline",

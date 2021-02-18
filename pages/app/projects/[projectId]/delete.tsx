@@ -74,14 +74,7 @@ export default function DeleteProjectPage({
 }: DeleteProjectPageProps) {
   return (
     <Dialog open={true}>
-      <AppTitle
-        breadcrumbs={[
-          "Projects",
-          project.providerId,
-          project.org,
-          project.repo,
-        ]}
-      />
+      <AppTitle breadcrumbs={["Projects", `${project.org}/${project.repo}`]} />
 
       <form>
         <DialogContent>

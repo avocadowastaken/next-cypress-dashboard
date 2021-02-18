@@ -110,9 +110,9 @@ export default function RevokeProjectSecretsKey({
       <AppTitle
         breadcrumbs={[
           "Projects",
-          project.providerId,
-          project.org,
-          project.repo,
+          `${project.org}/${project.repo}`,
+          "Secrets",
+          "Revoke",
         ]}
       />
 
@@ -150,7 +150,7 @@ export default function RevokeProjectSecretsKey({
           <NextLink
             replace={true}
             passHref={true}
-            href={`/app/projects/${project.id}`}
+            href={`/app/projects/${project.id}/secrets`}
           >
             <Button>Dismiss</Button>
           </NextLink>
