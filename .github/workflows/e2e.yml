@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: umidbekk/actions/npm/install@v1
-      - run: npx cypress install
       - uses: ./actions/patch-cypress-config
         with:
           api_url: ${{ github.event.deployment_status.target_url }}

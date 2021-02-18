@@ -11,6 +11,8 @@ async function resolveCachePath(): Promise<string> {
   let version = "";
   let cachePath = "";
 
+  await exec("npx", ["cypress", "install"]);
+
   await exec("npx", ["cypress", "cache", "path"], {
     listeners: {
       stdout: (data) => {
