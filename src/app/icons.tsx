@@ -1,5 +1,5 @@
 import { SvgIcon, SvgIconProps } from "@material-ui/core";
-import { mdiLockReset } from "@mdi/js";
+import { mdiLockReset, mdiSourceBranch } from "@mdi/js";
 import { forwardRef, memo, NamedExoticComponent } from "react";
 
 function toSvgIcon(
@@ -20,3 +20,4 @@ function toSvgIcon(
 }
 
 export const LockReset = toSvgIcon("LockReset", mdiLockReset);
+export const SourceBranch = toSvgIcon("SourceBranch", mdiSourceBranch);

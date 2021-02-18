@@ -5,6 +5,7 @@ import {
   createServerSideProps,
   redirectToSignIn,
 } from "@/app/data/ServerSideProps";
+import { Pre } from "@/app/ui/Pre";
 import {
   AppErrorCode,
   extractErrorCode,
@@ -128,11 +129,9 @@ export default function ProjectSecretsPage({
                 </TableCell>
 
                 <TableCell>
-                  <pre>
-                    <code>
-                      {JSON.stringify({ projectId: project.id }, null, 2)}
-                    </code>
-                  </pre>
+                  <Pre>
+                    {JSON.stringify({ projectId: project.id }, null, 2)}
+                  </Pre>
                 </TableCell>
               </TableRow>
 
@@ -172,11 +171,7 @@ export default function ProjectSecretsPage({
                   </TableCell>
 
                   <TableCell>
-                    <pre>
-                      <code>
-                        cypress run --record --key {secrets.recordKey}
-                      </code>
-                    </pre>
+                    <Pre>cypress run --record --key {secrets.recordKey}</Pre>
                   </TableCell>
                 </TableRow>
               )}

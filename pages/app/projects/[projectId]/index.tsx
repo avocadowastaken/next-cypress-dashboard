@@ -2,12 +2,30 @@ import { prisma } from "@/api/db";
 import { AppLayout } from "@/app/AppLayout";
 import { toPageParam } from "@/app/data/PaginationParams";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
-import { Button } from "@material-ui/core";
+import { SourceBranch } from "@/app/icons";
+import { CreateRunInput } from "@/shared/cypress-types";
+import {
+  Avatar,
+  Button,
+  Grid,
+  Link,
+  Pagination,
+  PaginationItem,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableRow,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import { Project, Run } from "@prisma/client";
+import { formatDistanceToNow } from "date-fns";
 import NextLink from "next/link";
-import { ReactElement } from "react";
-
-const ROWS_PER_PAGE = [5, 10];
+import { useRouter } from "next/router";
+import React, { ReactElement, useMemo } from "react";
 
 interface ProjectPageProps {
   page: number;
@@ -29,12 +47,27 @@ export const getServerSideProps = createServerSideProps<
       prisma.run.count({ where: { projectId } }),
       prisma.project.findFirst({
         where: { id: projectId, users: { some: { id: userId } } },
-        include: { runs: { take, skip: (page - 1) * take } },
+        include: {
+          runs: {
+            take,
+            skip: (page - 1) * take,
+            orderBy: { createdAt: "desc" },
+          },
+        },
       }),
     ]);
 
     if (project) {
       const maxPage = Math.ceil(count / take);
+
+      if (page > maxPage) {
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/app/projects/${projectId}?page=${maxPage}`,
+          },
+        };
+      }
 
       return { props: { project, page, maxPage } };
     }
@@ -44,8 +77,13 @@ export const getServerSideProps = createServerSideProps<
 });
 
 export default function ProjectPage({
+  page,
+  maxPage,
   project,
 }: ProjectPageProps): ReactElement {
+  const router = useRouter();
+  const rtf = useMemo(() => new Intl.RelativeTimeFormat(), []);
+
   return (
     <AppLayout
       breadcrumbs={[
@@ -63,7 +101,105 @@ export default function ProjectPage({
         </>
       }
     >
-      <pre>{JSON.stringify(project, null, 2)}</pre>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {project.runs.map((run) => {
+              const commit = run.commit as CreateRunInput["commit"];
+
+              return (
+                <TableRow key={run.id}>
+                  <TableCell variant="head">
+                    <NextLink
+                      passHref={true}
+                      href={`/app/projects/${run.projectId}/runs/${run.id}`}
+                    >
+                      <Link variant="subtitle1">{commit.message}</Link>
+                    </NextLink>
+
+                    <Grid container={true} spacing={1} alignItems="center">
+                      <Grid item={true}>
+                        <Avatar
+                          sx={{ height: "18px", width: "18px" }}
+                          alt={commit.authorName}
+                          src={`/avatar?email=${encodeURIComponent(
+                            commit.authorEmail
+                          )}`}
+                        />
+                      </Grid>
+
+                      <Grid item={true}>
+                        <Typography variant="caption">
+                          {commit.authorName}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item={true}>•</Grid>
+
+                      <Grid item={true}>
+                        <Link
+                          variant="caption"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={`https://github.com/${project.org}/${project.repo}/commit/${commit.sha}`}
+                        >
+                          <SourceBranch
+                            color="action"
+                            sx={{
+                              fontSize: "1rem",
+                              marginRight: "4px",
+                              verticalAlign: "middle",
+                            }}
+                          />
+
+                          {commit.branch}
+                        </Link>
+                      </Grid>
+
+                      <Grid item={true}>•</Grid>
+
+                      <Grid item={true}>
+                        <Tooltip title={run.createdAt.toLocaleString()}>
+                          <Typography variant="caption">
+                            Ran{" "}
+                            {formatDistanceToNow(run.createdAt, {
+                              addSuffix: true,
+                            })}
+                          </Typography>
+                        </Tooltip>
+                      </Grid>
+                    </Grid>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+
+          {maxPage > 1 && (
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Pagination
+                    page={page}
+                    count={maxPage}
+                    renderItem={(item) => (
+                      <NextLink
+                        passHref={true}
+                        href={{
+                          pathname: `/app/projects/${project.id}`,
+                          query: { ...router.query, page: item.page },
+                        }}
+                      >
+                        <PaginationItem {...item} />
+                      </NextLink>
+                    )}
+                  />
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          )}
+        </Table>
+      </TableContainer>
     </AppLayout>
   );
 }

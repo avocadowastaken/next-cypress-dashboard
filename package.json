@@ -33,6 +33,7 @@
     "@mdi/js": "5.9.55",
     "@octokit/core": "3.2.5",
     "@prisma/client": "2.17.0",
+    "date-fns": "2.17.0",
     "fastify": "3.12.0",
     "git-url-parse": "11.4.4",
     "next": "10.0.7",
