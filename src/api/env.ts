@@ -23,7 +23,7 @@ function resolveRequired(key: string): string {
 
 export const JWT_SECRET = resolveRequired("JWT_SECRET");
 
-export const CYPRESS_RECORD_KEY = resolveOptional("CYPRESS_RECORD_KEY", null);
+export const CYPRESS_RECORD_KEY = resolveRequired("CYPRESS_RECORD_KEY");
 
 export const GITHUB_CLIENT_ID = resolveRequired("GITHUB_ID");
 export const GITHUB_CLIENT_SECRET = resolveRequired("GITHUB_SECRET");

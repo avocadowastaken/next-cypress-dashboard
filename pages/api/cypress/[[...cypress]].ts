@@ -1,7 +1,7 @@
 import { createApiHandler } from "@/api/ApiHandler";
 import { isUniqueConstraintError, prisma } from "@/api/db";
 import { CYPRESS_RECORD_KEY } from "@/api/env";
-import { ForbiddenError, ValidationError } from "@/api/HTTPError";
+import { createAppError } from "@/shared/AppError";
 import {
   CreateInstanceInput,
   CreateInstanceResponse,
@@ -20,10 +20,6 @@ async function obtainRunProject({
   let project = await prisma.project.findUnique({ where: { id: projectId } });
 
   if (!project) {
-    if (!remoteOrigin) {
-      throw new ValidationError("commit.remoteOrigin", "Empty Git remote url");
-    }
-
     const [providerId, repo, org] = parseGitUrl(remoteOrigin);
 
     try {
@@ -88,16 +84,23 @@ export default createApiHandler((app) => {
       specs,
       recordKey,
       ciBuildId,
+      projectId,
       commit: { defaultBranch, ...commit },
       platform: { osCpus, osMemory, ...platform },
     } = body;
 
-    if (CYPRESS_RECORD_KEY != null && CYPRESS_RECORD_KEY !== recordKey) {
-      throw new ForbiddenError();
+    if (!recordKey) {
+      throw createAppError("FORBIDDEN");
     }
 
     const groupId = group || ciBuildId;
-    const project = await obtainRunProject(body);
+    const project =
+      CYPRESS_RECORD_KEY === recordKey
+        ? await obtainRunProject(body)
+        : await prisma.project.findFirst({
+            rejectOnNotFound: true,
+            where: { id: projectId, secrets: { recordKey } },
+          });
 
     const [run, isNewRun] = await obtainRun({
       groupId,

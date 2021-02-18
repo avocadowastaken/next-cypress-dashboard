@@ -4,6 +4,7 @@ export const APP_ERROR_CODES = [
 
   // HTTP Errors
 
+  "FORBIDDEN",
   "BAD_REQUEST",
 
   // Git Integration Errors

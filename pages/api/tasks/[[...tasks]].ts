@@ -1,7 +1,7 @@
 import { createApiHandler } from "@/api/ApiHandler";
 import { prisma } from "@/api/db";
 import { CYPRESS_RECORD_KEY } from "@/api/env";
-import { ForbiddenError } from "@/api/HTTPError";
+import { createAppError } from "@/shared/AppError";
 
 export default createApiHandler((app) => {
   app.addHook("preHandler", (request, reply, done) => {
@@ -12,7 +12,7 @@ export default createApiHandler((app) => {
       CYPRESS_RECORD_KEY == null ||
       authorization !== `Token ${CYPRESS_RECORD_KEY}`
     ) {
-      throw new ForbiddenError();
+      throw createAppError("FORBIDDEN");
     }
 
     done();
