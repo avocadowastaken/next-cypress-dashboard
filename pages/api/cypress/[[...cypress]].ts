@@ -1,6 +1,5 @@
 import { createApiHandler } from "@/api/ApiHandler";
 import { isUniqueConstraintError, prisma } from "@/api/db";
-import { CYPRESS_RECORD_KEY } from "@/api/env";
 import { createAppError } from "@/shared/AppError";
 import {
   CreateInstanceInput,
@@ -10,36 +9,7 @@ import {
   UpdateInstanceInput,
   UpdateInstanceResponse,
 } from "@/shared/cypress-types";
-import { parseGitUrl } from "@/shared/GitUrl";
-import { Prisma, Project, Run } from "@prisma/client";
-
-async function obtainRunProject({
-  projectId,
-  commit: { remoteOrigin },
-}: CreateRunInput): Promise<Project> {
-  let project = await prisma.project.findUnique({ where: { id: projectId } });
-
-  if (!project) {
-    const [providerId, repo, org] = parseGitUrl(remoteOrigin);
-
-    try {
-      project = await prisma.project.create({
-        data: { org, repo, providerId },
-      });
-    } catch (error: unknown) {
-      if (!isUniqueConstraintError(error)) {
-        throw error;
-      }
-
-      project = await prisma.project.findUnique({
-        rejectOnNotFound: true,
-        where: { org_repo_providerId: { org, repo, providerId } },
-      });
-    }
-  }
-
-  return project;
-}
+import { Prisma, Run } from "@prisma/client";
 
 async function obtainRun(
   input: Prisma.RunUncheckedCreateInput
@@ -89,18 +59,15 @@ export default createApiHandler((app) => {
       platform: { osCpus, osMemory, ...platform },
     } = body;
 
-    if (!recordKey) {
+    if (!recordKey || !projectId) {
       throw createAppError("FORBIDDEN");
     }
 
     const groupId = group || ciBuildId;
-    const project =
-      CYPRESS_RECORD_KEY === recordKey
-        ? await obtainRunProject(body)
-        : await prisma.project.findFirst({
-            rejectOnNotFound: true,
-            where: { id: projectId, secrets: { recordKey } },
-          });
+    const project = await prisma.project.findFirst({
+      rejectOnNotFound: true,
+      where: { id: projectId, secrets: { recordKey } },
+    });
 
     const [run, isNewRun] = await obtainRun({
       groupId,
