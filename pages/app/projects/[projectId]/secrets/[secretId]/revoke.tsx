@@ -53,7 +53,7 @@ export const getServerSideProps = createServerSideProps<
       return {
         redirect: {
           permanent: false,
-          destination: `/app/projects/${projectId}/secrets`,
+          destination: `/app/projects/${projectId}/settings`,
         },
       };
     }
@@ -82,14 +82,14 @@ export const getServerSideProps = createServerSideProps<
       return {
         redirect: {
           permanent: true,
-          destination: `/app/projects/${projectId}/secrets`,
+          destination: `/app/projects/${projectId}/settings`,
         },
       };
     } catch {
       return {
         redirect: {
           permanent: false,
-          destination: `/app/projects/${projectId}/secrets`,
+          destination: `/app/projects/${projectId}/settings`,
         },
       };
     }
@@ -147,7 +147,7 @@ export default function RevokeProjectSecretsKey({
           <NextLink
             replace={true}
             passHref={true}
-            href={`/app/projects/${project.id}/secrets`}
+            href={`/app/projects/${project.id}/settings`}
           >
             <Button>Dismiss</Button>
           </NextLink>

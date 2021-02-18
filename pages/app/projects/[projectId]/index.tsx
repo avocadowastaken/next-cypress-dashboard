@@ -50,19 +50,15 @@ export default function ProjectPage({
     <AppLayout
       breadcrumbs={[
         ["Projects", "/app/projects"],
-        `${project.org}/${project.repo}`,
+        `${project.org} / ${project.repo}`,
       ]}
       actions={
         <>
           <NextLink
             passHref={true}
-            href={`/app/projects/${project.id}/secrets`}
+            href={`/app/projects/${project.id}/settings`}
           >
-            <Button>Secrets</Button>
-          </NextLink>
-
-          <NextLink passHref={true} href={`/app/projects/${project.id}/delete`}>
-            <Button>Delete</Button>
+            <Button>Settings</Button>
           </NextLink>
         </>
       }

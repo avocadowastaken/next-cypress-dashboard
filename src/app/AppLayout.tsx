@@ -1,4 +1,3 @@
-import { AppRouterProgressIndicator } from "@/app/AppRouterState";
 import {
   AppBar,
   Box,
@@ -70,8 +69,6 @@ export function AppLayout({
           </Grid>
         </Toolbar>
       </AppBar>
-
-      <AppRouterProgressIndicator />
 
       <Container maxWidth={maxWidth}>
         <Box paddingY={2}>

@@ -1,4 +1,4 @@
-import { Fade, LinearProgress } from "@material-ui/core";
+import { Collapse, LinearProgress } from "@material-ui/core";
 import { Router } from "next/router";
 import React, {
   createContext,
@@ -53,8 +53,8 @@ export function AppRouterProgressIndicator() {
   const routerState = useAppRouterState();
 
   return (
-    <Fade in={routerState === "navigating"}>
-      <LinearProgress color="secondary" />
-    </Fade>
+    <Collapse in={routerState === "navigating"} unmountOnExit={true}>
+      <LinearProgress color="primary" />
+    </Collapse>
   );
 }

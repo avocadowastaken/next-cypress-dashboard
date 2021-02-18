@@ -1,8 +1,10 @@
 import { prisma } from "@/api/db";
 import { GITHUB_CLIENT_SLUG } from "@/api/env";
 import { GitHubClient } from "@/api/GitHubClient";
-import { SignInButton } from "@/app/auth/SignInButton";
-import { createServerSideProps } from "@/app/data/ServerSideProps";
+import {
+  createServerSideProps,
+  redirectToSignIn,
+} from "@/app/data/ServerSideProps";
 import {
   AppErrorCode,
   extractErrorCode,
@@ -23,23 +25,21 @@ import NextLink from "next/link";
 import React, { ReactElement } from "react";
 
 interface AddProjectPageProps {
-  error?: AppErrorCode;
+  errorCode?: AppErrorCode;
   gitHubClientSlug: string;
 }
 
 export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
-  async ({ userId }, { query }) => {
-    const { repo: repoUrl } = query;
-    const props: AddProjectPageProps = {
-      gitHubClientSlug: GITHUB_CLIENT_SLUG,
-    };
+  async ({ userId }, context) => {
+    const { repo: repoUrl } = context.query;
+    const props: AddProjectPageProps = { gitHubClientSlug: GITHUB_CLIENT_SLUG };
 
     if (!repoUrl) {
       return { props };
     }
 
     if (typeof repoUrl != "string") {
-      return { props: { ...props, error: "BAD_REQUEST" } };
+      return { props: { ...props, errorCode: "BAD_REQUEST" } };
     }
 
     try {
@@ -68,23 +68,25 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
         },
       };
     } catch (error: unknown) {
-      return { props: { ...props, error: extractErrorCode(error) } };
+      const errorCode = extractErrorCode(error);
+
+      if (isGitHubIntegrationError(errorCode)) {
+        return redirectToSignIn(context);
+      }
+
+      return { props: { ...props, errorCode } };
     }
   }
 );
 
 export default function AddProjectPage({
-  error,
+  errorCode,
   gitHubClientSlug,
 }: AddProjectPageProps): ReactElement {
   return (
     <Dialog open={true} fullWidth={true} maxWidth="xs">
-      {error ? (
-        isGitHubIntegrationError(error) ? (
-          <Alert severity="error" action={<SignInButton />}>
-            Failed to establish connection with GitHub
-          </Alert>
-        ) : error === "GITHUB_REPO_NOT_FOUND" ? (
+      {errorCode ? (
+        errorCode === "GITHUB_REPO_NOT_FOUND" ? (
           <Alert
             severity="error"
             action={
@@ -112,7 +114,7 @@ export default function AddProjectPage({
               </NextLink>
             }
           >
-            {formatErrorCode(error)}
+            {formatErrorCode(errorCode)}
           </Alert>
         )
       ) : (

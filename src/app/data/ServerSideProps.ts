@@ -27,6 +27,22 @@ async function getUserSession(
   }
 }
 
+export function redirectToSignIn<TProps>(
+  context: GetServerSidePropsContext
+): GetServerSidePropsResult<TProps> {
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+  const callbackUrl = encodeURIComponent(
+    `${protocol}://${context.req.headers.host}${context.resolvedUrl}`
+  );
+
+  return {
+    redirect: {
+      statusCode: 307,
+      destination: `/api/auth/signin?callbackUrl=${callbackUrl}`,
+    },
+  };
+}
+
 export function createServerSideProps<
   TProps,
   TParams extends ParsedUrlQuery = ParsedUrlQuery
@@ -42,18 +58,7 @@ export function createServerSideProps<
     const session = await getUserSession(context);
 
     if (!session) {
-      const protocol =
-        process.env.NODE_ENV === "development" ? "http" : "https";
-      const callbackUrl = encodeURIComponent(
-        `${protocol}://${context.req.headers.host}${context.resolvedUrl}`
-      );
-
-      return {
-        redirect: {
-          statusCode: 307,
-          destination: `/api/auth/signin?callbackUrl=${callbackUrl}`,
-        },
-      };
+      return redirectToSignIn(context);
     }
 
     return fn(session, context);

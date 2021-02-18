@@ -15,7 +15,8 @@ export const getServerSideProps = createServerSideProps<
     return {
       redirect: {
         permanent: false,
-        destination: req.headers.referer || `/app/projects/${projectId}`,
+        destination:
+          req.headers.referer || `/app/projects/${projectId}/settings`,
       },
     };
   }

@@ -30,6 +30,7 @@
     "@material-ui/core": "5.0.0-alpha.25",
     "@material-ui/icons": "5.0.0-alpha.24",
     "@material-ui/lab": "5.0.0-alpha.25",
+    "@mdi/js": "5.9.55",
     "@octokit/core": "3.2.5",
     "@prisma/client": "2.17.0",
     "fastify": "3.12.0",

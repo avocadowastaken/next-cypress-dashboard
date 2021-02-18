@@ -12,6 +12,38 @@ const theme = createMuiTheme({
   },
 
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        code: {
+          margin: 0,
+          fontSize: ".85em",
+          padding: ".2em .4em",
+          borderRadius: "4px",
+          backgroundColor: "#616161",
+          fontFamily: "SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace",
+        },
+
+        pre: {
+          margin: 0,
+          padding: "16px",
+          overflow: "auto",
+          borderRadius: "4px",
+          backgroundColor: "#616161",
+
+          "& > code": {
+            padding: 0,
+          },
+
+          //           padding: 16px;
+          //           overflow: auto;
+          //           font-size: 85%;
+          // line-height: 1.45;
+          // background-color: var(--color-bg-tertiary);
+          // border-radius: 6px;
+        },
+      },
+    },
+
     MuiAlert: {
       defaultProps: {
         variant: "filled",

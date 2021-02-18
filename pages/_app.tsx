@@ -1,7 +1,9 @@
 import { AppContainer } from "@/app/AppContainer";
+import { AppRouterProgressIndicator } from "@/app/AppRouterState";
 import { CssBaseline } from "@material-ui/core";
 import { AppProps } from "next/app";
 import Head from "next/head";
+import React from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -18,6 +20,8 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
 
       <CssBaseline />
+
+      <AppRouterProgressIndicator />
 
       <Component {...pageProps} />
     </AppContainer>

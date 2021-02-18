@@ -20,7 +20,7 @@ import NextLink from "next/link";
 
 interface DeleteProjectPageProps {
   project: Project;
-  error?: AppErrorCode;
+  errorCode?: AppErrorCode;
 }
 
 export const getServerSideProps = createServerSideProps<
@@ -28,49 +28,42 @@ export const getServerSideProps = createServerSideProps<
   { projectId: string }
 >(async ({ userId }, { query, params }) => {
   const projectId = params?.projectId;
+  if (!projectId) return { notFound: true };
 
-  if (projectId) {
-    const project = await prisma.project.findFirst({
-      where: { id: projectId, users: { some: { id: userId } } },
-    });
+  const project = await prisma.project.findFirst({
+    where: { id: projectId, users: { some: { id: userId } } },
+  });
 
-    if (project) {
-      const deleteConfirmation = query.confirmation;
+  if (!project) return { notFound: true };
+  const deleteConfirmation = query.confirmation;
+  if (!deleteConfirmation) return { props: { project } };
 
-      if (!deleteConfirmation) {
-        return { props: { project } };
-      }
-
-      if (deleteConfirmation != `${project.org}/${project.repo}`) {
-        return { props: { project, error: "BAD_REQUEST" } };
-      }
-
-      try {
-        await prisma.project.update({
-          where: { id: projectId },
-          data: { users: { disconnect: { id: userId } } },
-        });
-
-        return {
-          redirect: {
-            permanent: false,
-            destination: `/app/projects?success=${encodeURIComponent(
-              `${project.org}/${project.repo} removed`
-            )}`,
-          },
-        };
-      } catch (error) {
-        return { props: { project, error: extractErrorCode(error) } };
-      }
-    }
+  if (deleteConfirmation != `${project.org}/${project.repo}`) {
+    return { props: { project, errorCode: "BAD_REQUEST" } };
   }
 
-  return { redirect: { permanent: false, destination: "/app/projects" } };
+  try {
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { users: { disconnect: { id: userId } } },
+    });
+
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/app/projects?success=${encodeURIComponent(
+          `${project.org}/${project.repo} removed`
+        )}`,
+      },
+    };
+  } catch (error) {
+    return { props: { project, errorCode: extractErrorCode(error) } };
+  }
 });
 
 export default function DeleteProjectPage({
-  error,
   project,
+  errorCode,
 }: DeleteProjectPageProps) {
   return (
     <Dialog open={true}>
@@ -93,13 +86,13 @@ export default function DeleteProjectPage({
                 required={true}
                 autoFocus={true}
                 fullWidth={true}
-                error={!!error}
+                error={!!errorCode}
                 name="confirmation"
                 label="Type project name to confirm"
                 helperText={
-                  error === "BAD_REQUEST"
+                  errorCode === "BAD_REQUEST"
                     ? "Invalid project name"
-                    : error && formatErrorCode(error)
+                    : errorCode && formatErrorCode(errorCode)
                 }
               />
             </Grid>
@@ -110,7 +103,7 @@ export default function DeleteProjectPage({
           <NextLink
             replace={true}
             passHref={true}
-            href={`/app/projects/${project.id}`}
+            href={`/app/projects/${project.id}/settings`}
           >
             <Button>Dismiss</Button>
           </NextLink>
