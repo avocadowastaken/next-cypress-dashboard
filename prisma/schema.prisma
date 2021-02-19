@@ -108,15 +108,41 @@ model RunInstance {
   @@index([runId, groupId, claimedAt])
 }
 
+enum OS {
+  unknown
+  darwin
+  linux
+  windows
+}
+
+enum Browser {
+  unknown
+  chrome
+  chromium
+  edge
+  electron
+  firefox
+}
+
 model Run {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  commit    Json
-  platform  Json
   groupId   String
   ciBuildId String
   machineId String @default(cuid())
+
+  commitSha         String @default("")
+  commitBranch      String @default("")
+  commitMessage     String @default("")
+  commitAuthorName  String @default("")
+  commitAuthorEmail String @default("")
+
+  os        OS     @default(unknown)
+  osVersion String @default("")
+
+  browser        Browser @default(unknown)
+  browserVersion String  @default("")
 
   projectId String
   project   Project @relation(fields: [projectId], references: [id])

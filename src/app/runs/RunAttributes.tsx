@@ -7,7 +7,6 @@ import {
   MicrosoftWindows,
   SourceBranch,
 } from "@/app/icons";
-import { CreateRunInput } from "@/shared/cypress-types";
 import { Avatar, Chip, Grid, Tooltip } from "@material-ui/core";
 import { AccessTime, Apple } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
@@ -23,9 +22,6 @@ export function RunAttributes({
   run,
   project,
 }: RunAttributesProps): ReactElement {
-  const commit = run.commit as CreateRunInput["commit"];
-  const platform = run.platform as CreateRunInput["platform"];
-
   return (
     <Grid container={true} spacing={1}>
       <Grid item={true}>
@@ -35,13 +31,13 @@ export function RunAttributes({
           target="_blank"
           rel="noopener noreferrer"
           href={`https://github.com/search?type=users&q=${encodeURIComponent(
-            commit.authorName
+            run.commitAuthorName
           )}`}
-          label={commit.authorName}
+          label={run.commitAuthorName}
           avatar={
             <Avatar
-              alt={commit.authorName}
-              src={`/avatar?email=${encodeURIComponent(commit.authorEmail)}`}
+              alt={run.commitAuthorName}
+              src={`/avatar?email=${encodeURIComponent(run.commitAuthorEmail)}`}
             />
           }
         />
@@ -54,9 +50,7 @@ export function RunAttributes({
             label={
               <>
                 Created{" "}
-                {formatDistanceToNow(run.createdAt, {
-                  addSuffix: true,
-                })}
+                {formatDistanceToNow(run.createdAt, { addSuffix: true })}
               </>
             }
           />
@@ -68,21 +62,21 @@ export function RunAttributes({
           component="a"
           target="_blank"
           clickable={true}
-          label={commit.branch}
+          label={run.commitBranch}
           icon={<SourceBranch />}
           rel="noopener noreferrer"
-          href={`https://github.com/${project.org}/${project.repo}/commit/${commit.sha}`}
+          href={`https://github.com/${project.org}/${project.repo}/commit/${run.commitSha}`}
         />
       </Grid>
 
       <Grid item={true}>
-        <Tooltip title={`${platform.osName} ${platform.osVersion}`}>
+        <Tooltip title={`${run.os} ${run.osVersion}`}>
           <Chip
-            label={platform.osVersion}
+            label={run.osVersion}
             icon={
-              platform.osName === "darwin" ? (
+              run.os === "darwin" ? (
                 <Apple viewBox="0 0 24 26" />
-              ) : platform.osName === "windows" ? (
+              ) : run.os === "windows" ? (
                 <MicrosoftWindows />
               ) : (
                 <Linux />
@@ -93,16 +87,15 @@ export function RunAttributes({
       </Grid>
 
       <Grid item={true}>
-        <Tooltip title={`${platform.browserName} ${platform.browserVersion}`}>
+        <Tooltip title={`${run.browser} ${run.browserVersion}`}>
           <Chip
-            label={platform.browserVersion}
+            label={run.browserVersion}
             icon={
-              platform.browserName === "Chrome" ||
-              platform.browserName === "Chromium" ? (
+              run.browser === "chrome" || run.browser === "chromium" ? (
                 <GoogleChrome />
-              ) : platform.browserName === "Edge" ? (
+              ) : run.browser === "edge" ? (
                 <MicrosoftEdge />
-              ) : platform.browserName === "Firefox" ? (
+              ) : run.browser === "firefox" ? (
                 <Firefox />
               ) : (
                 <ElectronFramework />

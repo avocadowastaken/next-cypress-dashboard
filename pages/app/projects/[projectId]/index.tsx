@@ -3,7 +3,6 @@ import { AppLayout } from "@/app/AppLayout";
 import { toPageParam } from "@/app/data/PaginationParams";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { RunAttributes } from "@/app/runs/RunAttributes";
-import { CreateRunInput } from "@/shared/cypress-types";
 import {
   Button,
   Grid,
@@ -98,30 +97,28 @@ export default function ProjectPage({
       <TableContainer>
         <Table>
           <TableBody>
-            {project.runs.map((run) => {
-              const commit = run.commit as CreateRunInput["commit"];
-
-              return (
-                <TableRow key={run.id}>
-                  <TableCell>
-                    <Grid container={true} spacing={1}>
-                      <Grid item={true} xs={12}>
-                        <NextLink
-                          passHref={true}
-                          href={`/app/projects/${run.projectId}/runs/${run.id}`}
-                        >
-                          <Link variant="subtitle1">{commit.message}</Link>
-                        </NextLink>
-                      </Grid>
-
-                      <Grid item={true} xs={12}>
-                        <RunAttributes run={run} project={project} />
-                      </Grid>
+            {project.runs.map((run) => (
+              <TableRow key={run.id}>
+                <TableCell>
+                  <Grid container={true} spacing={1}>
+                    <Grid item={true} xs={12}>
+                      <NextLink
+                        passHref={true}
+                        href={`/app/projects/${run.projectId}/runs/${run.id}`}
+                      >
+                        <Link variant="subtitle1">
+                          {run.commitMessage || run.ciBuildId}
+                        </Link>
+                      </NextLink>
                     </Grid>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+
+                    <Grid item={true} xs={12}>
+                      <RunAttributes run={run} project={project} />
+                    </Grid>
+                  </Grid>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
 
           {maxPage > 1 && (

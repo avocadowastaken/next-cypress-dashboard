@@ -11,7 +11,43 @@ import {
   UpdateInstanceResponse,
 } from "@/shared/cypress-types";
 import { parseGitUrl } from "@/shared/GitUrl";
-import { Prisma, Run } from "@prisma/client";
+import { Browser, OS, Prisma, Run } from "@prisma/client";
+
+function trim(input: unknown): string {
+  if (typeof input == "string") {
+    return input.trim();
+  }
+
+  return "";
+}
+
+function toOS(input: unknown): OS {
+  const os = trim(input).toLocaleLowerCase() as OS;
+
+  switch (os) {
+    case "linux":
+    case "darwin":
+    case "windows":
+      return os;
+  }
+
+  return "unknown";
+}
+
+function toBrowser(input: unknown): Browser {
+  const browser = trim(input).toLocaleLowerCase() as Browser;
+
+  switch (browser) {
+    case "chrome":
+    case "chromium":
+    case "edge":
+    case "electron":
+    case "firefox":
+      return browser;
+  }
+
+  return "unknown";
+}
 
 async function obtainRun(
   input: Prisma.RunUncheckedCreateInput
@@ -58,11 +94,11 @@ export default createApiHandler((app) => {
         body: {
           group,
           specs,
+          commit,
+          platform,
           recordKey,
           ciBuildId,
           projectId,
-          commit: { defaultBranch, ...commit },
-          platform: { osCpus, osMemory, ...platform },
         },
       },
       reply
@@ -71,7 +107,7 @@ export default createApiHandler((app) => {
         throw createAppError("FORBIDDEN");
       }
 
-      const groupId = group || ciBuildId;
+      const groupId = trim(group || ciBuildId);
 
       if (recordKey === TASKS_API_SECRET) {
         const [providerId, org, repo] = parseGitUrl(commit.remoteOrigin);
@@ -93,8 +129,19 @@ export default createApiHandler((app) => {
         groupId,
         ciBuildId,
         projectId,
-        commit: { ...commit },
-        platform: { ...platform },
+
+        os: toOS(platform.osName),
+        osVersion: trim(platform.osVersion),
+
+        browser: toBrowser(platform.browserName),
+        browserVersion: trim(platform.browserVersion),
+
+        commitSha: trim(commit.sha),
+        commitBranch: trim(commit.branch),
+        commitMessage: trim(commit.message),
+        commitAuthorName: trim(commit.authorName),
+        commitAuthorEmail: trim(commit.authorEmail),
+
         instances: {
           create: specs.map((spec) => ({ spec, groupId })),
         },

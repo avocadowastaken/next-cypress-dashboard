@@ -3,7 +3,6 @@ import { AppLayout } from "@/app/AppLayout";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { RunAttributes } from "@/app/runs/RunAttributes";
 import { Pre } from "@/app/ui/Pre";
-import { CreateRunInput } from "@/shared/cypress-types";
 import { Grid } from "@material-ui/core";
 import { Project, Run, RunInstance } from "@prisma/client";
 import React, { ReactElement } from "react";
@@ -37,8 +36,6 @@ export const getServerSideProps = createServerSideProps<
 });
 
 export default function RunPage({ run }: RunPageProps): ReactElement {
-  const commit = run.commit as CreateRunInput["commit"];
-
   return (
     <AppLayout
       breadcrumbs={[
@@ -47,7 +44,10 @@ export default function RunPage({ run }: RunPageProps): ReactElement {
           `${run.project.org} / ${run.project.repo}`,
           `/app/projects/${run.project.id}`,
         ],
-        [commit.message, `/app/projects/${run.project.id}/runs/${run.id}`],
+        [
+          run.commitMessage || run.ciBuildId,
+          `/app/projects/${run.project.id}/runs/${run.id}`,
+        ],
       ]}
     >
       <Grid container={true} spacing={2}>
