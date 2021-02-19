@@ -2,6 +2,7 @@ import { createApiHandler } from "@/api/ApiHandler";
 import { prisma } from "@/api/db";
 import { TASKS_API_SECRET } from "@/api/env";
 import { createAppError } from "@/shared/AppError";
+import { startOfYesterday } from "date-fns";
 
 export default createApiHandler((app) => {
   app.addHook("preHandler", (request, reply, done) => {
@@ -14,28 +15,23 @@ export default createApiHandler((app) => {
     done();
   });
 
-  app.post<{ Reply: { runs: number; runInstances: number } }>(
-    "/api/tasks/cleanup-runs",
-    async (_, reply) => {
-      const oneDay = 24 * 60 * 60 * 1000;
-      const oneDayAgo = new Date(Date.now() - oneDay);
-      const response = { runs: 0, runInstances: 0 };
+  app.post<{
+    Reply: { runs: number; runInstances: number; testResults: number };
+  }>("/api/tasks/cleanup-runs", async (_, reply) => {
+    const oneDayAgo = startOfYesterday();
 
-      for (const { id } of await prisma.run.findMany({
-        take: 100,
-        orderBy: { createdAt: "asc" },
-        where: { createdAt: { lte: oneDayAgo } },
-      })) {
-        const { count } = await prisma.runInstance.deleteMany({
-          where: { runId: id },
-        });
-        await prisma.run.delete({ where: { id } });
+    const { count: testResults } = await prisma.testResult.deleteMany({
+      where: { createdAt: { lte: oneDayAgo } },
+    });
 
-        response.runs += 1;
-        response.runInstances += count;
-      }
+    const { count: runInstances } = await prisma.runInstance.deleteMany({
+      where: { createdAt: { lte: oneDayAgo } },
+    });
 
-      reply.send(response);
-    }
-  );
+    const { count: runs } = await prisma.run.deleteMany({
+      where: { createdAt: { lte: oneDayAgo } },
+    });
+
+    reply.send({ runs, runInstances, testResults });
+  });
 });
