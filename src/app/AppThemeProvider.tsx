@@ -1,4 +1,5 @@
 import { createMuiTheme, Link, ThemeProvider } from "@material-ui/core";
+import { blue, blueGrey, grey, red } from "@material-ui/core/colors";
 import { Components, MDXProvider } from "@mdx-js/react";
 import NextLink from "next/link";
 import {
@@ -12,9 +13,9 @@ const theme = createMuiTheme({
   palette: {
     mode: "dark",
 
-    primary: { main: "#2196f3", dark: "#0d47a1" },
-    secondary: { main: "#78909c" },
-    error: { main: "#f44336" },
+    primary: { main: blue[500], dark: blue[900] },
+    secondary: { main: blueGrey[400] },
+    error: { main: red[500] },
   },
 
   components: {
@@ -25,7 +26,7 @@ const theme = createMuiTheme({
           fontSize: ".85em",
           padding: ".2em .4em",
           borderRadius: "4px",
-          backgroundColor: "#616161",
+          backgroundColor: grey[800],
           fontFamily: "SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace",
         },
 
@@ -34,7 +35,7 @@ const theme = createMuiTheme({
           padding: "16px",
           overflow: "auto",
           borderRadius: "4px",
-          backgroundColor: "#616161",
+          backgroundColor: grey[800],
 
           "& > code": {
             padding: 0,
@@ -72,6 +73,11 @@ const theme = createMuiTheme({
     MuiChip: {
       defaultProps: {
         size: "small",
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: grey[800],
+        },
       },
     },
 

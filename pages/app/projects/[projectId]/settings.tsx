@@ -16,7 +16,6 @@ import {
   Alert,
   Button,
   Link,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -116,7 +115,7 @@ export default function ProjectSecretsPage({
           {formatErrorCode(errorCode)}
         </Alert>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer>
           <Table>
             <TableBody>
               <TableRow>

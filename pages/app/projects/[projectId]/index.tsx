@@ -20,7 +20,6 @@ import {
   Link,
   Pagination,
   PaginationItem,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -100,14 +99,12 @@ export default function ProjectPage({
         </>
       }
     >
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table>
           <TableBody>
             {project.runs.map((run) => {
               const commit = run.commit as CreateRunInput["commit"];
               const platform = run.platform as CreateRunInput["platform"];
-
-              const OSIcon = platform.osName === "darwin" ? Apple : Linux;
 
               return (
                 <TableRow key={run.id}>

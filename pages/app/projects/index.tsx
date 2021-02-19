@@ -9,7 +9,6 @@ import {
   Link,
   Pagination,
   PaginationItem,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -88,7 +87,7 @@ export default function ProjectsPage({
         )}
 
         <Grid item={true} xs={12}>
-          <TableContainer component={Paper}>
+          <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
