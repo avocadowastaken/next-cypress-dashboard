@@ -1,7 +1,11 @@
 import { prisma } from "@/api/db";
 import { GitHubClient } from "@/api/GitHubClient";
 import { AppTitle } from "@/app/AppLayout";
-import { createServerSideProps } from "@/app/data/ServerSideProps";
+import {
+  createServerSideProps,
+  getRequestBody,
+  redirectToSignIn,
+} from "@/app/data/ServerSideProps";
 import { AppErrorCode, formatErrorCode } from "@/shared/AppError";
 import {
   Button,
@@ -13,59 +17,55 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Project } from "@prisma/client";
+import { getCsrfToken } from "next-auth/client";
 import NextLink from "next/link";
 
 interface RevokeProjectSecretsKeyProps {
   project: Project;
+  csrfToken: string;
   error?: AppErrorCode;
 }
 
 export const getServerSideProps = createServerSideProps<
   RevokeProjectSecretsKeyProps,
   { secretId: string; projectId: string }
->(async ({ userId }, { query, params }) => {
-  if (params) {
-    const { secretId, projectId } = params;
+>(async ({ userId }, context) => {
+  const csrfToken = await getCsrfToken(context);
+  if (!csrfToken) return redirectToSignIn(context);
 
-    const project = await prisma.project.findFirst({
-      include: { secrets: true },
-      where: {
-        id: projectId,
-        secrets: { id: secretId },
-        users: { some: { id: userId } },
-      },
-    });
+  const { secretId, projectId } = context.params || {};
+  if (!secretId || !projectId) return { notFound: true };
 
-    if (!project) {
-      return {
-        redirect: {
-          permanent: true,
-          destination: `/app/projects/${projectId}`,
-        },
-      };
-    }
+  const project = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      secrets: { id: secretId },
+      users: { some: { id: userId } },
+    },
+  });
 
-    try {
-      const gitHubClient = await GitHubClient.create(userId);
+  if (!project) return { notFound: true };
 
-      await gitHubClient.verifyRepoAccess(project.org, project.repo);
-    } catch {
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/app/projects/${projectId}/settings`,
-        },
-      };
-    }
+  const settingsUrl = `/app/projects/${project.id}/settings`;
 
-    const deleteConfirmation = query.confirmation;
+  try {
+    const gitHubClient = await GitHubClient.create(userId);
 
-    if (!deleteConfirmation) {
-      return { props: { project } };
-    }
+    await gitHubClient.verifyRepoAccess(project.org, project.repo);
+  } catch {
+    return { redirect: { permanent: false, destination: settingsUrl } };
+  }
 
-    if (deleteConfirmation !== `${project.org}/${project.repo}`) {
-      return { props: { project, error: "BAD_REQUEST" } };
+  const props: RevokeProjectSecretsKeyProps = { project, csrfToken };
+
+  if (context.req.method === "POST") {
+    const body = await getRequestBody(context);
+
+    if (
+      body.get("csrfToken") !== csrfToken ||
+      body.get("confirmation") !== `${project.org}/${project.repo}`
+    ) {
+      return { props: { ...props, error: "BAD_REQUEST" } };
     }
 
     try {
@@ -78,29 +78,20 @@ export const getServerSideProps = createServerSideProps<
         select: null,
         data: { projectId },
       });
-
-      return {
-        redirect: {
-          permanent: true,
-          destination: `/app/projects/${projectId}/settings`,
-        },
-      };
     } catch {
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/app/projects/${projectId}/settings`,
-        },
-      };
+      return { redirect: { permanent: false, destination: settingsUrl } };
     }
+
+    return { redirect: { permanent: true, destination: settingsUrl } };
   }
 
-  return { redirect: { permanent: false, destination: "/app/projects" } };
+  return { props };
 });
 
-export default function RevokeProjectSecretsKey({
+export default function RevokeProjectSecrets({
   error,
   project,
+  csrfToken,
 }: RevokeProjectSecretsKeyProps) {
   return (
     <Dialog open={true}>
@@ -113,7 +104,9 @@ export default function RevokeProjectSecretsKey({
         ]}
       />
 
-      <form>
+      <form method="POST">
+        <input type="hidden" name="csrfToken" value={csrfToken} />
+
         <DialogContent>
           <Grid container={true} spacing={2}>
             <Grid item={true} xs={12}>

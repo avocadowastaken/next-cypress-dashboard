@@ -50,12 +50,12 @@ export const getServerSideProps = createServerSideProps<
       const props: DeleteProjectPageProps = { project, csrfToken };
 
       if (context.req.method === "POST") {
-        const request = await getRequestBody(context);
+        const body = await getRequestBody(context);
         const projectName = `${project.org}/${project.repo}`;
 
         if (
-          request.get("csrfToken") !== csrfToken ||
-          request.get("confirmation") !== projectName
+          body.get("csrfToken") !== csrfToken ||
+          body.get("confirmation") !== projectName
         ) {
           return { props: { ...props, errorCode: "BAD_REQUEST" } };
         }

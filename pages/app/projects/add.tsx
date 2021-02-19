@@ -47,10 +47,10 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
     };
 
     if (context.req.method === "POST") {
-      const request = await getRequestBody(context);
-      const repoUrl = request.get("repo");
+      const body = await getRequestBody(context);
+      const repoUrl = body.get("repo");
 
-      if (!repoUrl || request.get("csrfToken") !== csrfToken) {
+      if (!repoUrl || body.get("csrfToken") !== csrfToken) {
         return { props: { ...props, errorCode: "BAD_REQUEST" } };
       }
 
