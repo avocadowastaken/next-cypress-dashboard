@@ -16,11 +16,11 @@ export interface CreateRunInput {
     defaultBranch: null | string;
   };
   platform: {
-    osName: string;
+    osName: "darwin" | "linux" | "windows";
     osVersion: string;
     osCpus: JsonObject[];
     osMemory: JsonObject;
-    browserName: string;
+    browserName: "Chrome" | "Chromium" | "Edge" | "Electron" | "Firefox";
     browserVersion: string;
   };
 }

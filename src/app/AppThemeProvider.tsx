@@ -69,6 +69,12 @@ const theme = createMuiTheme({
       },
     },
 
+    MuiChip: {
+      defaultProps: {
+        size: "small",
+      },
+    },
+
     MuiTextField: {
       defaultProps: {
         size: "small",

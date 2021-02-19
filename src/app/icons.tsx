@@ -1,5 +1,13 @@
 import { SvgIcon, SvgIconProps } from "@material-ui/core";
-import { mdiLockReset, mdiSourceBranch } from "@mdi/js";
+import {
+  mdiElectronFramework,
+  mdiFirefox,
+  mdiGoogleChrome,
+  mdiLinux,
+  mdiMicrosoftEdge,
+  mdiMicrosoftWindows,
+  mdiSourceBranch,
+} from "@mdi/js";
 import { forwardRef, memo, NamedExoticComponent } from "react";
 
 function toSvgIcon(
@@ -9,7 +17,7 @@ function toSvgIcon(
   const Component = memo(
     forwardRef<SVGElement, SvgIconProps>((props) => (
       <SvgIcon {...props}>
-        <path d={d} />
+        <path d={d} fill="currentColor" />
       </SvgIcon>
     ))
   );
@@ -19,5 +27,16 @@ function toSvgIcon(
   return Component;
 }
 
-export const LockReset = toSvgIcon("LockReset", mdiLockReset);
+export const Linux = toSvgIcon("Linux", mdiLinux);
+export const MicrosoftEdge = toSvgIcon("MicrosoftEdge", mdiMicrosoftEdge);
+export const MicrosoftWindows = toSvgIcon(
+  "MicrosoftWindows",
+  mdiMicrosoftWindows
+);
+export const ElectronFramework = toSvgIcon(
+  "ElectronFramework",
+  mdiElectronFramework
+);
+export const GoogleChrome = toSvgIcon("GoogleChrome", mdiGoogleChrome);
+export const Firefox = toSvgIcon("Firefox", mdiFirefox);
 export const SourceBranch = toSvgIcon("SourceBranch", mdiSourceBranch);
