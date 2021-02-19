@@ -19,7 +19,7 @@ function getDatabaseURL(): URL {
   return new URL(DATABASE_URL);
 }
 
-export function dbPush(schema: string, ...args: string[]) {
+export function migrate(schema: string, ...args: string[]) {
   if (!schema) {
     throw new Error("Schema is empty.");
   }
@@ -27,15 +27,19 @@ export function dbPush(schema: string, ...args: string[]) {
   const databaseURL = getDatabaseURL();
   databaseURL.searchParams.set("schema", schema);
 
-  spawnSync("yarn", ["prisma", "db", "push", "--preview-feature", ...args], {
-    stdio: "inherit",
-    encoding: "utf8",
-    env: { ...process.env, DATABASE_URL: databaseURL.toString() },
-  });
+  spawnSync(
+    "yarn",
+    ["prisma", "migrate", "deploy", "--preview-feature", ...args],
+    {
+      stdio: "inherit",
+      encoding: "utf8",
+      env: { ...process.env, DATABASE_URL: databaseURL.toString() },
+    }
+  );
 }
 
 if (require.main === module) {
   const [schema, ...args] = process.argv.slice(2);
 
-  dbPush(schema, ...args);
+  migrate(schema, ...args);
 }
