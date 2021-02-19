@@ -231,13 +231,17 @@ export default createApiHandler((app) => {
     await prisma.runInstance.update({
       where: { id: instanceId },
       data: {
-        result: {
-          error,
-          stats,
-          tests: tests.map(({ state, title, displayError }) => ({
+        error,
+        totalPassed: stats.passes,
+        totalFailed: stats.failures,
+        totalPending: stats.pending,
+        totalSkipped: stats.skipped,
+        completedAt: stats.wallClockEndedAt,
+        testResults: {
+          create: tests.map(({ state, title, displayError }) => ({
             state,
-            title,
             displayError,
+            titleParts: title,
           })),
         },
       },

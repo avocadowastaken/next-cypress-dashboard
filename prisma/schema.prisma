@@ -91,23 +91,6 @@ model ProjectSecrets {
   project   Project @relation(fields: [projectId], references: [id])
 }
 
-model RunInstance {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  claimedAt DateTime?
-
-  spec    String
-  groupId String
-  result  Json?
-
-  runId String
-  run   Run    @relation(fields: [runId], references: [id])
-
-  @@unique([spec, runId, groupId])
-  @@index([id, claimedAt])
-  @@index([runId, groupId, claimedAt])
-}
-
 enum OS {
   unknown
   darwin
@@ -150,4 +133,41 @@ model Run {
   instances RunInstance[]
 
   @@unique([groupId, ciBuildId, projectId])
+}
+
+model RunInstance {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  spec    String
+  groupId String
+
+  error        Json?
+  claimedAt    DateTime?
+  completedAt  DateTime?
+  totalPassed  Int       @default(0)
+  totalFailed  Int       @default(0)
+  totalPending Int       @default(0)
+  totalSkipped Int       @default(0)
+
+  runId String
+  run   Run    @relation(fields: [runId], references: [id])
+
+  testResults TestResult[]
+
+  @@unique([spec, runId, groupId])
+  @@index([id, claimedAt])
+  @@index([runId, groupId, claimedAt])
+}
+
+model TestResult {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  state        String
+  titleParts   String[]
+  displayError Json?
+
+  runInstanceId String
+  runInstance   RunInstance @relation(fields: [runInstanceId], references: [id])
 }

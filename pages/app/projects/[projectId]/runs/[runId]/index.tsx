@@ -2,10 +2,20 @@ import { prisma } from "@/api/db";
 import { AppLayout } from "@/app/AppLayout";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { RunAttributes } from "@/app/runs/RunAttributes";
-import { Pre } from "@/app/ui/Pre";
-import { Grid } from "@material-ui/core";
+import {
+  Chip,
+  Grid,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@material-ui/core";
+import { Check, Timer } from "@material-ui/icons";
 import { Project, Run, RunInstance } from "@prisma/client";
-import React, { ReactElement } from "react";
+import { format as formatDate, setMilliseconds, startOfToday } from "date-fns";
+import React, { ReactElement, useMemo } from "react";
 
 interface RunPageProps {
   run: Run & { project: Project; instances: RunInstance[] };
@@ -19,11 +29,14 @@ export const getServerSideProps = createServerSideProps<
 
   if (runId && projectId) {
     const run = await prisma.run.findFirst({
-      include: { project: true, instances: true },
       where: {
         id: runId,
         projectId,
         project: { users: { some: { id: userId } } },
+      },
+      include: {
+        project: true,
+        instances: { orderBy: { claimedAt: "asc" } },
       },
     });
 
@@ -34,6 +47,30 @@ export const getServerSideProps = createServerSideProps<
 
   return { notFound: true };
 });
+
+interface RunInstanceDurationProps {
+  instance: RunInstance;
+}
+
+function RunInstanceDuration({
+  instance: { claimedAt, completedAt },
+}: RunInstanceDurationProps): ReactElement {
+  const duration = useMemo(() => {
+    if (claimedAt && completedAt) {
+      const diff = completedAt.getTime() - claimedAt.getTime();
+
+      if (diff) {
+        return formatDate(setMilliseconds(startOfToday(), diff), "mm:ss");
+      }
+    }
+
+    return null;
+  }, [claimedAt, completedAt]);
+
+  return (
+    <Chip icon={<Timer />} label={duration || <Skeleton width="33px" />} />
+  );
+}
 
 export default function RunPage({ run }: RunPageProps): ReactElement {
   return (
@@ -56,7 +93,25 @@ export default function RunPage({ run }: RunPageProps): ReactElement {
         </Grid>
 
         <Grid item={true} xs={12}>
-          <Pre>{JSON.stringify(run.instances, null, 2)}</Pre>
+          <TableContainer>
+            <Table>
+              <TableBody>
+                {run.instances.map((instance: RunInstance) => (
+                  <TableRow key={instance.id}>
+                    <TableCell align="center" padding="checkbox">
+                      <Chip icon={<Check />} label={instance.totalPassed} />
+                    </TableCell>
+
+                    <TableCell align="center" padding="checkbox">
+                      <RunInstanceDuration instance={instance} />
+                    </TableCell>
+
+                    <TableCell>{instance.spec}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
       </Grid>
     </AppLayout>

@@ -6,13 +6,7 @@ async function main() {
 
   await exec(
     "cypress",
-    [
-      "run",
-      "--record",
-      "--parallel",
-      "--ci-build-id",
-      `ci-build-id-1-${new Date().toISOString().slice(0, 10)}`,
-    ],
+    ["run", "--record", "--parallel", "--ci-build-id", `ci-build-id-2`],
     {
       env: {
         ...process.env,
