@@ -15,8 +15,8 @@ function toSvgIcon(
   d: string
 ): NamedExoticComponent<SvgIconProps> {
   const Component = memo(
-    forwardRef<SVGElement, SvgIconProps>((props) => (
-      <SvgIcon {...props}>
+    forwardRef<SVGSVGElement, SvgIconProps>((props, ref) => (
+      <SvgIcon ref={ref} {...props}>
         <path d={d} fill="currentColor" />
       </SvgIcon>
     ))
