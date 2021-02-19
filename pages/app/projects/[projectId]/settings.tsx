@@ -156,11 +156,20 @@ export default function ProjectSecretsPage({
                     <Alert
                       severity="error"
                       action={
-                        <NextLink
-                          href={`/app/projects/${project.id}/secrets/restore`}
+                        <form
+                          method="POST"
+                          action={`/app/projects/${project.id}/secrets/generate`}
                         >
-                          <Button color="inherit">Regenerate</Button>
-                        </NextLink>
+                          <input
+                            type="hidden"
+                            name="csrfToken"
+                            value={csrfToken}
+                          />
+
+                          <Button type="submit" color="inherit">
+                            Regenerate
+                          </Button>
+                        </form>
                       }
                     >
                       Projects secrets not found
