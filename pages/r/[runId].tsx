@@ -5,6 +5,7 @@ import { RunAttributes } from "@/app/runs/RunAttributes";
 import {
   Chip,
   Grid,
+  Link,
   Skeleton,
   Table,
   TableBody,
@@ -15,6 +16,7 @@ import {
 import { Check, Timer } from "@material-ui/icons";
 import { Project, Run, RunInstance } from "@prisma/client";
 import { format as formatDate, setMilliseconds, startOfToday } from "date-fns";
+import NextLink from "next/link";
 import React, { ReactElement, useMemo } from "react";
 
 interface RunPageProps {
@@ -99,7 +101,11 @@ export default function RunPage({ run }: RunPageProps): ReactElement {
                       <RunInstanceDuration instance={instance} />
                     </TableCell>
 
-                    <TableCell>{instance.spec}</TableCell>
+                    <TableCell>
+                      <NextLink passHref={true} href={`/i/${instance.id}`}>
+                        <Link>{instance.spec}</Link>
+                      </NextLink>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
