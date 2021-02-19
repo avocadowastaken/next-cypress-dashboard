@@ -62,9 +62,9 @@ export function RunAttributes({
           component="a"
           target="_blank"
           clickable={true}
-          label={run.commitBranch}
-          icon={<SourceBranch />}
           rel="noopener noreferrer"
+          icon={<SourceBranch viewBox="0 0 24 26" />}
+          label={run.commitBranch || run.commitSha.slice(0, 7)}
           href={`https://github.com/${project.org}/${project.repo}/commit/${run.commitSha}`}
         />
       </Grid>
