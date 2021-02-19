@@ -24,11 +24,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Project, ProjectSecrets } from "@prisma/client";
+import { getCsrfToken } from "next-auth/client";
 import NextLink from "next/link";
 import React, { ReactElement } from "react";
 
 export interface ProjectSecretsPageProps {
   project: Project;
+  csrfToken: string;
   errorCode?: AppErrorCode;
   secrets?: null | ProjectSecrets;
 }
@@ -37,6 +39,12 @@ export const getServerSideProps = createServerSideProps<
   ProjectSecretsPageProps,
   { projectId: string }
 >(async ({ userId }, context) => {
+  const csrfToken = await getCsrfToken(context);
+
+  if (!csrfToken) {
+    return redirectToSignIn(context);
+  }
+
   const projectId = context.params?.projectId;
 
   if (projectId) {
@@ -45,6 +53,8 @@ export const getServerSideProps = createServerSideProps<
     });
 
     if (project) {
+      const props: ProjectSecretsPageProps = { project, csrfToken };
+
       try {
         const client = await GitHubClient.create(userId);
 
@@ -54,7 +64,7 @@ export const getServerSideProps = createServerSideProps<
           where: { projectId: project.id },
         });
 
-        return { props: { project, secrets } };
+        return { props: { ...props, secrets } };
       } catch (error: unknown) {
         const errorCode = extractErrorCode(error);
 
@@ -62,7 +72,7 @@ export const getServerSideProps = createServerSideProps<
           return redirectToSignIn(context);
         }
 
-        return { props: { project, errorCode } };
+        return { props: { ...props, errorCode } };
       }
     }
   }
@@ -71,9 +81,10 @@ export const getServerSideProps = createServerSideProps<
 });
 
 export default function ProjectSecretsPage({
-  errorCode,
   project,
   secrets,
+  csrfToken,
+  errorCode,
 }: ProjectSecretsPageProps): ReactElement {
   return (
     <AppLayout
@@ -96,15 +107,18 @@ export default function ProjectSecretsPage({
           action={
             errorCode === "GITHUB_REPO_NOT_FOUND" ||
             errorCode === "GITHUB_REPO_ACCESS_DENIED" ? (
-              <NextLink
-                passHref={true}
-                href={{
-                  pathname: `/app/projects/${project.id}/delete`,
-                  query: { confirmation: `${project.org}/${project.repo}` },
-                }}
-              >
-                <Button color="inherit">Delete Project</Button>
-              </NextLink>
+              <form method="POST" action={`/app/projects/${project.id}/delete`}>
+                <input type="hidden" name="csrfToken" value={csrfToken} />
+                <input
+                  type="hidden"
+                  name="confirmation"
+                  value={`${project.org}/${project.repo}`}
+                />
+
+                <Button color="inherit" type="submit">
+                  Delete Project
+                </Button>
+              </form>
             ) : (
               <NextLink passHref={true} href={`/app/projects/${project.id}`}>
                 <Button color="inherit">Close</Button>
