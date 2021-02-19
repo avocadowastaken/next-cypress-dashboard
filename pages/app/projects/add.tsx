@@ -3,6 +3,7 @@ import { GITHUB_CLIENT_SLUG } from "@/api/env";
 import { GitHubClient } from "@/api/GitHubClient";
 import {
   createServerSideProps,
+  getRequestBody,
   redirectToSignIn,
 } from "@/app/data/ServerSideProps";
 import {
@@ -21,68 +22,85 @@ import {
   Link,
   TextField,
 } from "@material-ui/core";
+import { getCsrfToken } from "next-auth/client";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 
 interface AddProjectPageProps {
+  csrfToken: string;
   errorCode?: AppErrorCode;
   gitHubClientSlug: string;
 }
 
 export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
   async ({ userId }, context) => {
-    const { repo: repoUrl } = context.query;
-    const props: AddProjectPageProps = { gitHubClientSlug: GITHUB_CLIENT_SLUG };
+    const csrfToken = await getCsrfToken(context);
 
-    if (!repoUrl) {
-      return { props };
+    if (!csrfToken) {
+      return redirectToSignIn(context);
     }
 
-    if (typeof repoUrl != "string") {
-      return { props: { ...props, errorCode: "BAD_REQUEST" } };
-    }
+    const props: AddProjectPageProps = {
+      csrfToken,
+      gitHubClientSlug: GITHUB_CLIENT_SLUG,
+    };
 
-    try {
-      const [providerId, org, repo] = parseGitUrl(repoUrl);
-      const client = await GitHubClient.create(userId);
+    if (context.req.method === "POST") {
+      const request = await getRequestBody(context);
+      const repoUrl = request.get("repo");
 
-      await client.verifyRepoAccess(org, repo);
-
-      const project = await prisma.project.upsert({
-        select: { id: true },
-        update: { users: { connect: { id: userId } } },
-        where: { org_repo_providerId: { org, repo, providerId } },
-        create: {
-          org,
-          repo,
-          providerId,
-          secrets: { create: {} },
-          users: { connect: { id: userId } },
-        },
-      });
-
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/app/projects/${project.id}`,
-        },
-      };
-    } catch (error: unknown) {
-      const errorCode = extractErrorCode(error);
-
-      if (isGitHubIntegrationError(errorCode)) {
-        return redirectToSignIn(context);
+      if (!repoUrl || request.get("csrfToken") !== csrfToken) {
+        return { props: { ...props, errorCode: "BAD_REQUEST" } };
       }
 
-      return { props: { ...props, errorCode } };
+      try {
+        const [providerId, org, repo] = parseGitUrl(repoUrl);
+        const client = await GitHubClient.create(userId);
+
+        await client.verifyRepoAccess(org, repo);
+
+        const project = await prisma.project.upsert({
+          select: { id: true },
+          update: { users: { connect: { id: userId } } },
+          where: { org_repo_providerId: { org, repo, providerId } },
+          create: {
+            org,
+            repo,
+            providerId,
+            secrets: { create: {} },
+            users: { connect: { id: userId } },
+          },
+        });
+
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/app/projects/${project.id}`,
+          },
+        };
+      } catch (error: unknown) {
+        const errorCode = extractErrorCode(error);
+
+        if (isGitHubIntegrationError(errorCode)) {
+          return redirectToSignIn(context);
+        }
+
+        return { props: { ...props, errorCode } };
+      }
     }
+
+    return { props };
   }
 );
 
 export default function AddProjectPage({
+  csrfToken,
   errorCode,
   gitHubClientSlug,
 }: AddProjectPageProps): ReactElement {
+  const router = useRouter();
+
   return (
     <Dialog open={true} fullWidth={true} maxWidth="xs">
       {errorCode ? (
@@ -118,7 +136,9 @@ export default function AddProjectPage({
           </Alert>
         )
       ) : (
-        <form method="get">
+        <form method="POST">
+          <input type="hidden" name="csrfToken" value={csrfToken} />
+
           <DialogContent>
             <TextField
               name="repo"
@@ -127,6 +147,9 @@ export default function AddProjectPage({
               fullWidth={true}
               autoFocus={true}
               placeholder="https://github.com/umidbekk/next-cypress-dashboard"
+              defaultValue={
+                typeof router.query.repo == "string" ? router.query.repo : ""
+              }
             />
           </DialogContent>
 

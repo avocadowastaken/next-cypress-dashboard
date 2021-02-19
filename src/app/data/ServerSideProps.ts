@@ -7,6 +7,7 @@ import {
 } from "next";
 import { getToken } from "next-auth/jwt";
 import { ParsedUrlQuery } from "querystring";
+import getRawBody from "raw-body";
 
 interface UserSession {
   userId: string;
@@ -41,6 +42,14 @@ export function redirectToSignIn<TProps>(
       destination: `/api/auth/signin?callbackUrl=${callbackUrl}`,
     },
   };
+}
+
+export async function getRequestBody(
+  context: GetServerSidePropsContext
+): Promise<URLSearchParams> {
+  const body = await getRawBody(context.req, { encoding: "utf8" });
+
+  return new URLSearchParams(body);
 }
 
 export function createServerSideProps<
