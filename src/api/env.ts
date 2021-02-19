@@ -22,6 +22,8 @@ function resolveRequired(key: string): string {
 }
 
 export const JWT_SECRET = resolveRequired("JWT_SECRET");
+export const JWT_SIGNING_KEY = resolveRequired("JWT_SIGNING_KEY");
+export const JWT_ENCRYPTION_KEY = resolveRequired("JWT_ENCRYPTION_KEY");
 
 export const TASKS_API_SECRET = resolveRequired("TASKS_API_SECRET");
 
