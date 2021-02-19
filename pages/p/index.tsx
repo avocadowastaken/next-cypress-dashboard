@@ -59,7 +59,7 @@ export default function ProjectsPage({
     <AppLayout
       breadcrumbs={["Projects"]}
       actions={
-        <NextLink passHref={true} href="/app/projects/add">
+        <NextLink passHref={true} href="/p/add">
           <Button size="small" endIcon={<Add />}>
             Add
           </Button>
@@ -73,7 +73,7 @@ export default function ProjectsPage({
               action={
                 <NextLink
                   href={{
-                    pathname: "/app/projects",
+                    pathname: "/p",
                     query: { ...router.query, success: [] },
                   }}
                 >
@@ -104,10 +104,7 @@ export default function ProjectsPage({
                     </TableCell>
                     <TableCell>{project.org}</TableCell>
                     <TableCell>
-                      <NextLink
-                        passHref={true}
-                        href={`/app/projects/${project.id}`}
-                      >
+                      <NextLink passHref={true} href={`/p/${project.id}`}>
                         <Link>{project.repo}</Link>
                       </NextLink>
                     </TableCell>
@@ -126,7 +123,7 @@ export default function ProjectsPage({
                           <NextLink
                             passHref={true}
                             href={{
-                              pathname: "/app/projects",
+                              pathname: "/p",
                               query: { ...router.query, page: item.page },
                             }}
                           >

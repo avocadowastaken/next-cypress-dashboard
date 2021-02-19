@@ -70,7 +70,7 @@ export const getServerSideProps = createServerSideProps<
           return {
             redirect: {
               permanent: false,
-              destination: `/app/projects?success=${encodeURIComponent(
+              destination: `/p?success=${encodeURIComponent(
                 `${projectName} removed`
               )}`,
             },
@@ -132,7 +132,7 @@ export default function DeleteProjectPage({
           <NextLink
             replace={true}
             passHref={true}
-            href={`/app/projects/${project.id}/settings`}
+            href={`/p/${project.id}/settings`}
           >
             <Button>Dismiss</Button>
           </NextLink>

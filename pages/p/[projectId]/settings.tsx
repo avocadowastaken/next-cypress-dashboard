@@ -89,13 +89,13 @@ export default function ProjectSecretsPage({
   return (
     <AppLayout
       breadcrumbs={[
-        ["Projects", "/app/projects"],
-        [`${project.org} / ${project.repo}`, `/app/projects/${project.id}`],
+        ["Projects", "/p"],
+        [`${project.org} / ${project.repo}`, `/p/${project.id}`],
         "Settings",
       ]}
       actions={
         !errorCode && (
-          <NextLink passHref={true} href={`/app/projects/${project.id}/delete`}>
+          <NextLink passHref={true} href={`/p/${project.id}/delete`}>
             <Button>Delete</Button>
           </NextLink>
         )
@@ -107,7 +107,7 @@ export default function ProjectSecretsPage({
           action={
             errorCode === "GITHUB_REPO_NOT_FOUND" ||
             errorCode === "GITHUB_REPO_ACCESS_DENIED" ? (
-              <form method="POST" action={`/app/projects/${project.id}/delete`}>
+              <form method="POST" action={`/p/${project.id}/delete`}>
                 <input type="hidden" name="csrfToken" value={csrfToken} />
                 <input
                   type="hidden"
@@ -120,7 +120,7 @@ export default function ProjectSecretsPage({
                 </Button>
               </form>
             ) : (
-              <NextLink passHref={true} href={`/app/projects/${project.id}`}>
+              <NextLink passHref={true} href={`/p/${project.id}`}>
                 <Button color="inherit">Close</Button>
               </NextLink>
             )
@@ -158,7 +158,7 @@ export default function ProjectSecretsPage({
                       action={
                         <form
                           method="POST"
-                          action={`/app/projects/${project.id}/secrets/generate`}
+                          action={`/p/${project.id}/secrets/generate`}
                         >
                           <input
                             type="hidden"
@@ -184,7 +184,7 @@ export default function ProjectSecretsPage({
                       Secret key, do not expose it, but if you did you can{" "}
                       <NextLink
                         passHref={true}
-                        href={`/app/projects/${project.id}/secrets/${secrets.id}/revoke`}
+                        href={`/p/${project.id}/secrets/${secrets.id}/revoke`}
                       >
                         <Link>revoke</Link>
                       </NextLink>{" "}

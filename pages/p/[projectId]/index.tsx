@@ -56,7 +56,7 @@ export const getServerSideProps = createServerSideProps<
         return {
           redirect: {
             permanent: false,
-            destination: `/app/projects/${projectId}/settings`,
+            destination: `/p/${projectId}/settings`,
           },
         };
       }
@@ -79,16 +79,10 @@ export default function ProjectPage({
 
   return (
     <AppLayout
-      breadcrumbs={[
-        ["Projects", "/app/projects"],
-        `${project.org} / ${project.repo}`,
-      ]}
+      breadcrumbs={[["Projects", "/p"], `${project.org} / ${project.repo}`]}
       actions={
         <>
-          <NextLink
-            passHref={true}
-            href={`/app/projects/${project.id}/settings`}
-          >
+          <NextLink passHref={true} href={`/p/${project.id}/settings`}>
             <Button>Settings</Button>
           </NextLink>
         </>
@@ -102,10 +96,7 @@ export default function ProjectPage({
                 <TableCell>
                   <Grid container={true} spacing={1}>
                     <Grid item={true} xs={12}>
-                      <NextLink
-                        passHref={true}
-                        href={`/app/projects/${run.projectId}/runs/${run.id}`}
-                      >
+                      <NextLink passHref={true} href={`/r/${run.id}`}>
                         <Link variant="subtitle1">
                           {run.commitMessage || run.ciBuildId}
                         </Link>
@@ -132,7 +123,7 @@ export default function ProjectPage({
                       <NextLink
                         passHref={true}
                         href={{
-                          pathname: `/app/projects/${project.id}`,
+                          pathname: `/p/${project.id}`,
                           query: { ...router.query, page: item.page },
                         }}
                       >

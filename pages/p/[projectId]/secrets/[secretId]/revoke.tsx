@@ -46,7 +46,7 @@ export const getServerSideProps = createServerSideProps<
 
   if (!project) return { notFound: true };
 
-  const settingsUrl = `/app/projects/${project.id}/settings`;
+  const settingsUrl = `/p/${project.id}/settings`;
 
   try {
     const gitHubClient = await GitHubClient.create(userId);
@@ -140,7 +140,7 @@ export default function RevokeProjectSecrets({
           <NextLink
             replace={true}
             passHref={true}
-            href={`/app/projects/${project.id}/settings`}
+            href={`/p/${project.id}/settings`}
           >
             <Button>Dismiss</Button>
           </NextLink>

@@ -23,15 +23,14 @@ interface RunPageProps {
 
 export const getServerSideProps = createServerSideProps<
   RunPageProps,
-  { runId: string; projectId: string }
+  { runId: string }
 >(async ({ userId }, { params }) => {
-  const { runId, projectId } = params || {};
+  const runId = params?.runId;
 
-  if (runId && projectId) {
+  if (runId) {
     const run = await prisma.run.findFirst({
       where: {
         id: runId,
-        projectId,
         project: { users: { some: { id: userId } } },
       },
       include: {
@@ -76,15 +75,9 @@ export default function RunPage({ run }: RunPageProps): ReactElement {
   return (
     <AppLayout
       breadcrumbs={[
-        ["Projects", "/app/projects"],
-        [
-          `${run.project.org} / ${run.project.repo}`,
-          `/app/projects/${run.project.id}`,
-        ],
-        [
-          run.commitMessage || run.ciBuildId,
-          `/app/projects/${run.project.id}/runs/${run.id}`,
-        ],
+        ["Projects", "/p"],
+        [`${run.project.org} / ${run.project.repo}`, `/p/${run.project.id}`],
+        [run.commitMessage || run.ciBuildId, `/r/${run.id}`],
       ]}
     >
       <Grid container={true} spacing={2}>

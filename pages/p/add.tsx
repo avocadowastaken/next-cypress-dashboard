@@ -76,7 +76,7 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
         return {
           redirect: {
             permanent: false,
-            destination: `/app/projects/${project.id}`,
+            destination: `/p/${project.id}`,
           },
         };
       } catch (error: unknown) {
@@ -108,7 +108,7 @@ export default function AddProjectPage({
           <Alert
             severity="error"
             action={
-              <NextLink replace={true} passHref={true} href="/app/projects/add">
+              <NextLink replace={true} passHref={true} href="/p/add">
                 <Button color="inherit">Close</Button>
               </NextLink>
             }
@@ -127,7 +127,7 @@ export default function AddProjectPage({
           <Alert
             severity="error"
             action={
-              <NextLink replace={true} passHref={true} href="/app/projects/add">
+              <NextLink replace={true} passHref={true} href="/p/add">
                 <Button color="inherit">Close</Button>
               </NextLink>
             }
@@ -154,7 +154,7 @@ export default function AddProjectPage({
           </DialogContent>
 
           <DialogActions>
-            <NextLink replace={true} passHref={true} href="/app/projects">
+            <NextLink replace={true} passHref={true} href="/p">
               <Button>Dismiss</Button>
             </NextLink>
 
