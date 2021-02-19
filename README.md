@@ -3,7 +3,7 @@
 ## Usage
 
 1. Sign In (only GitHub is supported now)
-2. Import a GitHub project
+2. Import a Git repo (again, only GitHub for now)
 3. Patch Cypress agent config (check [Sorry Cypress documentation](https://sorry-cypress.dev/quickstart#reconfigure-cypress-agent))
 4. Run Cypress
 
