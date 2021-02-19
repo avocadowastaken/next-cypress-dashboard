@@ -2,20 +2,10 @@ import { prisma } from "@/api/db";
 import { AppLayout } from "@/app/AppLayout";
 import { toPageParam } from "@/app/data/PaginationParams";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
-import {
-  ElectronFramework,
-  Firefox,
-  GoogleChrome,
-  Linux,
-  MicrosoftEdge,
-  MicrosoftWindows,
-  SourceBranch,
-} from "@/app/icons";
+import { RunAttributes } from "@/app/runs/RunAttributes";
 import { CreateRunInput } from "@/shared/cypress-types";
 import {
-  Avatar,
   Button,
-  Chip,
   Grid,
   Link,
   Pagination,
@@ -26,11 +16,8 @@ import {
   TableContainer,
   TableFooter,
   TableRow,
-  Tooltip,
 } from "@material-ui/core";
-import { AccessTime, Apple } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
-import { formatDistanceToNow } from "date-fns";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
@@ -113,11 +100,10 @@ export default function ProjectPage({
           <TableBody>
             {project.runs.map((run) => {
               const commit = run.commit as CreateRunInput["commit"];
-              const platform = run.platform as CreateRunInput["platform"];
 
               return (
                 <TableRow key={run.id}>
-                  <TableCell variant="head">
+                  <TableCell>
                     <Grid container={true} spacing={1}>
                       <Grid item={true} xs={12}>
                         <NextLink
@@ -128,94 +114,8 @@ export default function ProjectPage({
                         </NextLink>
                       </Grid>
 
-                      <Grid item={true}>
-                        <Chip
-                          component="a"
-                          clickable={true}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={`https://github.com/search?type=users&q=${encodeURIComponent(
-                            commit.authorName
-                          )}`}
-                          label={commit.authorName}
-                          avatar={
-                            <Avatar
-                              alt={commit.authorName}
-                              src={`/avatar?email=${encodeURIComponent(
-                                commit.authorEmail
-                              )}`}
-                            />
-                          }
-                        />
-                      </Grid>
-
-                      <Grid item={true}>
-                        <Tooltip title={run.createdAt.toLocaleString()}>
-                          <Chip
-                            icon={<AccessTime />}
-                            label={
-                              <>
-                                Started{" "}
-                                {formatDistanceToNow(run.createdAt, {
-                                  addSuffix: true,
-                                })}
-                              </>
-                            }
-                          />
-                        </Tooltip>
-                      </Grid>
-
-                      <Grid item={true}>
-                        <Chip
-                          component="a"
-                          target="_blank"
-                          clickable={true}
-                          label={commit.branch}
-                          icon={<SourceBranch />}
-                          rel="noopener noreferrer"
-                          href={`https://github.com/${project.org}/${project.repo}/commit/${commit.sha}`}
-                        />
-                      </Grid>
-
-                      <Grid item={true}>
-                        <Tooltip
-                          title={`${platform.osName} ${platform.osVersion}`}
-                        >
-                          <Chip
-                            label={platform.osVersion}
-                            icon={
-                              platform.osName === "darwin" ? (
-                                <Apple viewBox="0 0 24 26" />
-                              ) : platform.osName === "windows" ? (
-                                <MicrosoftWindows />
-                              ) : (
-                                <Linux />
-                              )
-                            }
-                          />
-                        </Tooltip>
-                      </Grid>
-
-                      <Grid item={true}>
-                        <Tooltip
-                          title={`${platform.browserName} ${platform.browserVersion}`}
-                        >
-                          <Chip
-                            label={platform.browserVersion}
-                            icon={
-                              platform.browserName === "Chrome" ||
-                              platform.browserName === "Chromium" ? (
-                                <GoogleChrome />
-                              ) : platform.browserName === "Edge" ? (
-                                <MicrosoftEdge />
-                              ) : platform.browserName === "Firefox" ? (
-                                <Firefox />
-                              ) : (
-                                <ElectronFramework />
-                              )
-                            }
-                          />
-                        </Tooltip>
+                      <Grid item={true} xs={12}>
+                        <RunAttributes run={run} project={project} />
                       </Grid>
                     </Grid>
                   </TableCell>

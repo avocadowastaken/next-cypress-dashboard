@@ -39,7 +39,7 @@ export function AppTitle({ breadcrumbs }: AppTitleProps) {
 export function AppBreadcrumb({ breadcrumbs }: AppTitleProps): ReactElement {
   return (
     <Breadcrumbs>
-      {breadcrumbs.map((breadcrumb) => {
+      {breadcrumbs.map((breadcrumb, idx) => {
         if (typeof breadcrumb == "string") {
           return (
             <Typography key={breadcrumb} color="textPrimary">
@@ -52,7 +52,11 @@ export function AppBreadcrumb({ breadcrumbs }: AppTitleProps): ReactElement {
 
         return (
           <NextLink key={title} href={href} passHref={true}>
-            <Link color="inherit">{title}</Link>
+            <Link
+              color={idx === breadcrumbs.length - 1 ? "primary" : "inherit"}
+            >
+              {title}
+            </Link>
           </NextLink>
         );
       })}
@@ -87,11 +91,11 @@ export function AppLayout({
 
             <Grid item={true}>
               <NextLink
+                passHref={true}
                 href={{
                   pathname: "/api/auth/signout",
                   query: { callbackUrl: "/" },
                 }}
-                passHref={true}
               >
                 <Button color="inherit">Sign Out</Button>
               </NextLink>
