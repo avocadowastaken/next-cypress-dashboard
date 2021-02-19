@@ -11,9 +11,9 @@ import {
 } from "@material-ui/core";
 import Head from "next/head";
 import NextLink from "next/link";
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactElement, ReactNode, useMemo } from "react";
 
-interface AppTitleProps {
+export interface AppTitleProps {
   breadcrumbs: Array<string | [label: string, href: string]>;
 }
 
@@ -36,6 +36,30 @@ export function AppTitle({ breadcrumbs }: AppTitleProps) {
   );
 }
 
+export function AppBreadcrumb({ breadcrumbs }: AppTitleProps): ReactElement {
+  return (
+    <Breadcrumbs>
+      {breadcrumbs.map((breadcrumb) => {
+        if (typeof breadcrumb == "string") {
+          return (
+            <Typography key={breadcrumb} color="textPrimary">
+              {breadcrumb}
+            </Typography>
+          );
+        }
+
+        const [title, href] = breadcrumb;
+
+        return (
+          <NextLink key={title} href={href} passHref={true}>
+            <Link color="inherit">{title}</Link>
+          </NextLink>
+        );
+      })}
+    </Breadcrumbs>
+  );
+}
+
 export interface LayoutProps extends AppTitleProps {
   actions?: ReactNode;
   children?: ReactNode;
@@ -54,7 +78,13 @@ export function AppLayout({
 
       <AppBar position="sticky">
         <Toolbar>
-          <Grid container={true} justifyContent="flex-end">
+          <Grid container={true} spacing={1} justifyContent="flex-end">
+            <Grid item={true}>
+              <NextLink passHref={true} href="/docs">
+                <Button color="inherit">Docs</Button>
+              </NextLink>
+            </Grid>
+
             <Grid item={true}>
               <NextLink
                 href={{
@@ -74,25 +104,7 @@ export function AppLayout({
         <Box paddingY={2}>
           <Grid container={true} spacing={1} alignItems="center">
             <Grid item={true}>
-              <Breadcrumbs maxItems={3} separator="–">
-                {breadcrumbs.map((breadcrumb) => {
-                  if (typeof breadcrumb == "string") {
-                    return (
-                      <Typography key={breadcrumb} color="textPrimary">
-                        {breadcrumb}
-                      </Typography>
-                    );
-                  }
-
-                  const [title, href] = breadcrumb;
-
-                  return (
-                    <NextLink key={title} href={href} passHref={true}>
-                      <Link color="inherit">{title}</Link>
-                    </NextLink>
-                  );
-                })}
-              </Breadcrumbs>
+              <AppBreadcrumb breadcrumbs={breadcrumbs} />
             </Grid>
 
             <Grid item={true} xs={true} />

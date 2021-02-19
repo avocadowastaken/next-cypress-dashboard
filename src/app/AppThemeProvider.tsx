@@ -1,6 +1,12 @@
 import { createMuiTheme, Link, ThemeProvider } from "@material-ui/core";
 import { Components, MDXProvider } from "@mdx-js/react";
-import { ReactElement, ReactNode } from "react";
+import NextLink from "next/link";
+import {
+  AnchorHTMLAttributes,
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+} from "react";
 
 const theme = createMuiTheme({
   palette: {
@@ -33,13 +39,6 @@ const theme = createMuiTheme({
           "& > code": {
             padding: 0,
           },
-
-          //           padding: 16px;
-          //           overflow: auto;
-          //           font-size: 85%;
-          // line-height: 1.45;
-          // background-color: var(--color-bg-tertiary);
-          // border-radius: 6px;
         },
       },
     },
@@ -54,6 +53,13 @@ const theme = createMuiTheme({
       defaultProps: {
         elevation: 0,
         color: "default",
+      },
+    },
+
+    MuiBreadcrumbs: {
+      defaultProps: {
+        maxItems: 3,
+        separator: "–",
       },
     },
 
@@ -92,8 +98,55 @@ const theme = createMuiTheme({
   },
 });
 
+function MDXAnchor({
+  href,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement>): ReactElement {
+  return !href || href.startsWith("#") ? (
+    <Link {...props} href={href} />
+  ) : !href.startsWith("/") ? (
+    <Link {...props} href={href} target="_blank" rel="noopener noreferrer" />
+  ) : (
+    <NextLink passHref={true} href={href}>
+      <Link {...props} />
+    </NextLink>
+  );
+}
+
+function MDXHeading({
+  as: Heading,
+  children,
+  ...props
+}: HTMLAttributes<HTMLHeadingElement> & {
+  as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+}) {
+  const anchor =
+    typeof children !== "string"
+      ? ""
+      : children.toLowerCase().replace(/\s/g, "_");
+
+  return (
+    <Heading {...props}>
+      {!!anchor && (
+        <Link
+          id={anchor}
+          sx={{ position: "absolute", marginTop: "calc(-63px - 1em)" }}
+        />
+      )}
+
+      {children}
+    </Heading>
+  );
+}
+
 const mdxComponents: Components = {
-  a: Link,
+  a: MDXAnchor,
+  h1: (props) => <MDXHeading {...props} as="h1" />,
+  h2: (props) => <MDXHeading {...props} as="h2" />,
+  h3: (props) => <MDXHeading {...props} as="h3" />,
+  h4: (props) => <MDXHeading {...props} as="h4" />,
+  h5: (props) => <MDXHeading {...props} as="h5" />,
+  h6: (props) => <MDXHeading {...props} as="h6" />,
 };
 
 export interface ThemeConfigProps {

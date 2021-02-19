@@ -1,0 +1,26 @@
+import { Button, Divider } from "@material-ui/core";
+import NextLink from "next/link";
+import { PublicLayout } from "../src/app/PublicLayout";
+import Deployment from "../docs/deployment.md";
+import Ci from "../docs/ci.md";
+
+<PublicLayout title="Docs" action={
+  <NextLink passHref={true} href="/">
+    <Button color="inherit">Home</Button>
+  </NextLink>
+}>
+
+### Table of content
+
+- [Deployment](#deployment)
+- [Continuous integration](#continuous_integration)
+
+<Divider />
+
+<Deployment />
+
+<Divider />
+
+<Ci />
+
+</PublicLayout>
