@@ -25,7 +25,7 @@ import { Project, Run } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 
 interface ProjectPageProps {
   page: number;
@@ -82,7 +82,6 @@ export default function ProjectPage({
   project,
 }: ProjectPageProps): ReactElement {
   const router = useRouter();
-  const rtf = useMemo(() => new Intl.RelativeTimeFormat(), []);
 
   return (
     <AppLayout
@@ -161,7 +160,7 @@ export default function ProjectPage({
                       <Grid item={true}>
                         <Tooltip title={run.createdAt.toLocaleString()}>
                           <Typography variant="caption">
-                            Ran{" "}
+                            Started{" "}
                             {formatDistanceToNow(run.createdAt, {
                               addSuffix: true,
                             })}

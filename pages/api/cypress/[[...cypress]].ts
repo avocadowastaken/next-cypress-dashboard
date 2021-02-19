@@ -71,6 +71,8 @@ export default createApiHandler((app) => {
         throw createAppError("FORBIDDEN");
       }
 
+      const groupId = group || ciBuildId;
+
       if (recordKey === TASKS_API_SECRET) {
         const [providerId, org, repo] = parseGitUrl(commit.remoteOrigin);
 
@@ -79,20 +81,20 @@ export default createApiHandler((app) => {
           rejectOnNotFound: true,
           where: { org_repo_providerId: { providerId, org, repo } },
         }));
+      } else {
+        await prisma.project.findFirst({
+          select: null,
+          rejectOnNotFound: true,
+          where: { id: projectId, secrets: { recordKey } },
+        });
       }
-
-      const groupId = group || ciBuildId;
-      const project = await prisma.project.findFirst({
-        rejectOnNotFound: true,
-        where: { id: projectId, secrets: { recordKey } },
-      });
 
       const [run, isNewRun] = await obtainRun({
         groupId,
         ciBuildId,
+        projectId,
         commit: { ...commit },
         platform: { ...platform },
-        projectId: project.id,
         instances: {
           create: specs.map((spec) => ({ spec, groupId })),
         },
