@@ -66,6 +66,15 @@ export const getServerSideProps = createServerSideProps<
     ]);
 
     if (project) {
+      if (count === 0) {
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/app/projects/${projectId}/settings`,
+          },
+        };
+      }
+
       const maxPage = Math.ceil(count / take);
 
       return { props: { project, page, maxPage } };
