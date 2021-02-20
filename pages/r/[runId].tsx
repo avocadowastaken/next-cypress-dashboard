@@ -5,6 +5,7 @@ import { RunAttributes } from "@/ui/RunAttributes";
 import { RunInstanceDurationChip } from "@/ui/RunInstanceDurationChip";
 import {
   Chip,
+  Divider,
   Grid,
   Link,
   Table,
@@ -54,12 +55,15 @@ export default function RunPage({ run }: RunPageProps): ReactElement {
       breadcrumbs={[
         ["Projects", "/p"],
         [`${run.project.org} / ${run.project.repo}`, `/p/${run.project.id}`],
-        [run.commitMessage || run.ciBuildId, `/r/${run.id}`],
       ]}
     >
       <Grid container={true} spacing={2}>
         <Grid item={true} xs={12}>
           <RunAttributes run={run} project={run.project} />
+        </Grid>
+
+        <Grid item={true} xs={12}>
+          <Divider />
         </Grid>
 
         <Grid item={true} xs={12}>

@@ -5,8 +5,6 @@ import { AppLayout } from "@/ui/AppLayout";
 import { RunAttributes } from "@/ui/RunAttributes";
 import {
   Button,
-  Grid,
-  Link,
   Pagination,
   PaginationItem,
   Table,
@@ -94,19 +92,7 @@ export default function ProjectPage({
             {project.runs.map((run) => (
               <TableRow key={run.id}>
                 <TableCell>
-                  <Grid container={true} spacing={1}>
-                    <Grid item={true} xs={12}>
-                      <NextLink passHref={true} href={`/r/${run.id}`}>
-                        <Link variant="subtitle1">
-                          {run.commitMessage || run.ciBuildId}
-                        </Link>
-                      </NextLink>
-                    </Grid>
-
-                    <Grid item={true} xs={12}>
-                      <RunAttributes run={run} project={project} />
-                    </Grid>
-                  </Grid>
+                  <RunAttributes run={run} project={project} />
                 </TableCell>
               </TableRow>
             ))}

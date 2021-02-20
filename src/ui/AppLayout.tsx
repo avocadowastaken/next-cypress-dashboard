@@ -52,11 +52,7 @@ export function AppBreadcrumb({ breadcrumbs }: AppTitleProps): ReactElement {
 
         return (
           <NextLink key={title} href={href} passHref={true}>
-            <Link
-              color={idx === breadcrumbs.length - 1 ? "primary" : "inherit"}
-            >
-              {title}
-            </Link>
+            <Link color="inherit">{title}</Link>
           </NextLink>
         );
       })}

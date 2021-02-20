@@ -7,57 +7,12 @@ import {
   MicrosoftWindows,
   SourceBranch,
 } from "@/ui/icons";
-import { Avatar, Chip, Grid, Tooltip } from "@material-ui/core";
+import { Avatar, Chip, Grid, Link, Tooltip } from "@material-ui/core";
 import { AccessTime, Apple } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
+import NextLink from "next/link";
 import React, { ReactElement } from "react";
-
-export function RunOSChip({
-  os,
-  osVersion,
-}: Pick<Run, "os" | "osVersion">): ReactElement {
-  return (
-    <Tooltip title={`${os} ${osVersion}`}>
-      <Chip
-        label={osVersion}
-        icon={
-          os === "darwin" ? (
-            <Apple viewBox="0 0 24 26" />
-          ) : os === "windows" ? (
-            <MicrosoftWindows />
-          ) : (
-            <Linux />
-          )
-        }
-      />
-    </Tooltip>
-  );
-}
-
-export function RunBrowserChip({
-  browser,
-  browserVersion,
-}: Pick<Run, "browser" | "browserVersion">): ReactElement {
-  return (
-    <Tooltip title={`${browser} ${browserVersion}`}>
-      <Chip
-        label={browserVersion}
-        icon={
-          browser === "chrome" || browser === "chromium" ? (
-            <GoogleChrome />
-          ) : browser === "edge" ? (
-            <MicrosoftEdge />
-          ) : browser === "firefox" ? (
-            <Firefox />
-          ) : (
-            <ElectronFramework />
-          )
-        }
-      />
-    </Tooltip>
-  );
-}
 
 export interface RunAttributesProps {
   run: Run;
@@ -70,6 +25,12 @@ export function RunAttributes({
 }: RunAttributesProps): ReactElement {
   return (
     <Grid container={true} spacing={1}>
+      <Grid item={true} xs={12}>
+        <NextLink passHref={true} href={`/r/${run.id}`}>
+          <Link variant="subtitle1">{run.commitMessage || run.ciBuildId}</Link>
+        </NextLink>
+      </Grid>
+
       <Grid item={true}>
         <Chip
           component="a"
@@ -116,14 +77,39 @@ export function RunAttributes({
       </Grid>
 
       <Grid item={true}>
-        <RunOSChip os={run.os} osVersion={run.osVersion} />
+        <Tooltip title={`${run.os} ${run.osVersion}`}>
+          <Chip
+            label={run.osVersion}
+            icon={
+              run.os === "darwin" ? (
+                <Apple viewBox="0 0 24 26" />
+              ) : run.os === "windows" ? (
+                <MicrosoftWindows />
+              ) : (
+                <Linux />
+              )
+            }
+          />
+        </Tooltip>
       </Grid>
 
       <Grid item={true}>
-        <RunBrowserChip
-          browser={run.browser}
-          browserVersion={run.browserVersion}
-        />
+        <Tooltip title={`${run.browser} ${run.browserVersion}`}>
+          <Chip
+            label={run.browserVersion}
+            icon={
+              run.browser === "chrome" || run.browser === "chromium" ? (
+                <GoogleChrome />
+              ) : run.browser === "edge" ? (
+                <MicrosoftEdge />
+              ) : run.browser === "firefox" ? (
+                <Firefox />
+              ) : (
+                <ElectronFramework />
+              )
+            }
+          />
+        </Tooltip>
       </Grid>
     </Grid>
   );

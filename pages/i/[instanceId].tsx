@@ -2,11 +2,13 @@ import { prisma } from "@/api/db";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
 import { DebugStepOver, SyncCircle } from "@/ui/icons";
-import { RunBrowserChip, RunOSChip } from "@/ui/RunAttributes";
+import { RunAttributes } from "@/ui/RunAttributes";
 import { RunInstanceDurationChip } from "@/ui/RunInstanceDurationChip";
 import {
   Chip,
+  Divider,
   Grid,
+  Link,
   Table,
   TableBody,
   TableCell,
@@ -16,7 +18,8 @@ import {
 } from "@material-ui/core";
 import { Check, Error } from "@material-ui/icons";
 import { Project, Run, RunInstance, TestResult } from "@prisma/client";
-import { ReactElement } from "react";
+import NextLink from "next/link";
+import React, { ReactElement } from "react";
 
 export interface RunInstancePageProps {
   runInstance: RunInstance & {
@@ -65,11 +68,17 @@ export default function RunInstancePage({
       breadcrumbs={[
         ["Projects", "/p"],
         [`${project.org}/${project.repo}`, `/p/${project.id}`],
-        [run.commitMessage || run.ciBuildId, `/r/${run.id}`],
-        runInstance.spec,
       ]}
     >
       <Grid container={true} spacing={2}>
+        <Grid item={true} xs={12}>
+          <RunAttributes run={run} project={project} />
+        </Grid>
+
+        <Grid item={true} xs={12}>
+          <Divider />
+        </Grid>
+
         <Grid item={true} xs={12}>
           <Grid container={true} spacing={1}>
             {runInstance.totalPassed > 0 && (
@@ -118,16 +127,15 @@ export default function RunInstancePage({
             </Grid>
 
             <Grid item={true}>
-              <RunOSChip os={run.os} osVersion={run.osVersion} />
-            </Grid>
-
-            <Grid item={true}>
-              <RunBrowserChip
-                browser={run.browser}
-                browserVersion={run.browserVersion}
-              />
+              <NextLink passHref={true} href={`/i/${runInstance.id}`}>
+                <Link>{runInstance.spec}</Link>
+              </NextLink>
             </Grid>
           </Grid>
+        </Grid>
+
+        <Grid item={true} xs={12}>
+          <Divider />
         </Grid>
 
         <Grid item={true} xs={12}>
