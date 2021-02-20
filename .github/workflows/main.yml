@@ -12,3 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: umidbekk/actions/npm/install@v1
       - run: yarn checks
+      - run: yarn build:actions
+      - run: |
+          git add .
+          git diff --quiet || exit 1

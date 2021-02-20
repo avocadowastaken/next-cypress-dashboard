@@ -6435,7 +6435,7 @@ var require_yaml = __commonJS((exports2, module2) => {
 var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), apiUrl = import_core.getInput("api_url", {required: !0});
 async function resolveCachePath() {
   let version = "", cachePath = "";
-  return await import_exec.exec("npx", ["cypress", "cache", "path"], {
+  return await import_exec.exec("npx", ["cypress", "install"]), await import_exec.exec("npx", ["cypress", "cache", "path"], {
     listeners: {
       stdout: (data) => {
         cachePath += data.toString("utf8");

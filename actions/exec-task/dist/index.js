@@ -1318,12 +1318,22 @@ var require_dist_web2 = __commonJS((exports2) => {
       update: ["PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}"]
     },
     codeScanning: {
+      deleteAnalysis: [
+        "DELETE /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}{?confirm_delete}"
+      ],
       getAlert: [
         "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}",
         {},
         {renamedParameters: {alert_id: "alert_number"}}
       ],
+      getAnalysis: [
+        "GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"
+      ],
+      getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
       listAlertsForRepo: ["GET /repos/{owner}/{repo}/code-scanning/alerts"],
+      listAlertsInstances: [
+        "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"
+      ],
       listRecentAnalyses: ["GET /repos/{owner}/{repo}/code-scanning/analyses"],
       updateAlert: [
         "PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}"
@@ -1632,6 +1642,59 @@ var require_dist_web2 = __commonJS((exports2) => {
       ],
       updateWebhook: ["PATCH /orgs/{org}/hooks/{hook_id}"],
       updateWebhookConfigForOrg: ["PATCH /orgs/{org}/hooks/{hook_id}/config"]
+    },
+    packages: {
+      deletePackageForAuthenticatedUser: [
+        "DELETE /user/packages/{package_type}/{package_name}"
+      ],
+      deletePackageForOrg: [
+        "DELETE /orgs/{org}/packages/{package_type}/{package_name}"
+      ],
+      deletePackageVersionForAuthenticatedUser: [
+        "DELETE /user/packages/{package_type}/{package_name}/versions/{package_version_id}"
+      ],
+      deletePackageVersionForOrg: [
+        "DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"
+      ],
+      getAllPackageVersionsForAPackageOwnedByAnOrg: [
+        "GET /orgs/{org}/packages/{package_type}/{package_name}/versions"
+      ],
+      getAllPackageVersionsForAPackageOwnedByTheAuthenticatedUser: [
+        "GET /user/packages/{package_type}/{package_name}/versions"
+      ],
+      getAllPackageVersionsForPackageOwnedByUser: [
+        "GET /users/{username}/packages/{package_type}/{package_name}/versions"
+      ],
+      getPackageForAuthenticatedUser: [
+        "GET /user/packages/{package_type}/{package_name}"
+      ],
+      getPackageForOrganization: [
+        "GET /orgs/{org}/packages/{package_type}/{package_name}"
+      ],
+      getPackageForUser: [
+        "GET /users/{username}/packages/{package_type}/{package_name}"
+      ],
+      getPackageVersionForAuthenticatedUser: [
+        "GET /user/packages/{package_type}/{package_name}/versions/{package_version_id}"
+      ],
+      getPackageVersionForOrganization: [
+        "GET /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"
+      ],
+      getPackageVersionForUser: [
+        "GET /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"
+      ],
+      restorePackageForAuthenticatedUser: [
+        "POST /user/packages/{package_type}/{package_name}/restore"
+      ],
+      restorePackageForOrg: [
+        "POST /orgs/{org}/packages/{package_type}/{package_name}/restore"
+      ],
+      restorePackageVersionForAuthenticatedUser: [
+        "POST /user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"
+      ],
+      restorePackageVersionForOrg: [
+        "POST /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"
+      ]
     },
     projects: {
       addCollaborator: [
@@ -2321,7 +2384,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       unfollow: ["DELETE /user/following/{username}"],
       updateAuthenticated: ["PATCH /user"]
     }
-  }, VERSION4 = "4.10.3";
+  }, VERSION4 = "4.12.0";
   function endpointsToMethods(octokit2, endpointsMap) {
     let newMethods = {};
     for (let [scope, endpoints] of Object.entries(endpointsMap))
@@ -2376,7 +2439,7 @@ var require_dist_web3 = __commonJS((exports2) => {
     composePaginateRest: () => composePaginateRest,
     paginateRest: () => paginateRest
   });
-  var VERSION4 = "2.9.1";
+  var VERSION4 = "2.10.0";
   function normalizePaginatedListResponse(response) {
     if (!("total_count" in response.data && !("url" in response.data)))
       return response;
