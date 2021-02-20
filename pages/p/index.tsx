@@ -1,7 +1,7 @@
 import { prisma } from "@/api/db";
-import { AppLayout } from "@/app/AppLayout";
 import { toPageParam } from "@/app/data/PaginationParams";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
+import { AppLayout } from "@/ui/AppLayout";
 import {
   Alert,
   Button,

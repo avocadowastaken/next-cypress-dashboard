@@ -1,12 +1,12 @@
 import { prisma } from "@/api/db";
 import { GitHubClient } from "@/api/GitHubClient";
-import { AppTitle } from "@/app/AppLayout";
 import {
   createServerSideProps,
   getRequestBody,
   redirectToSignIn,
 } from "@/app/data/ServerSideProps";
 import { AppErrorCode, formatErrorCode } from "@/shared/AppError";
+import { AppTitle } from "@/ui/AppLayout";
 import {
   Button,
   Dialog,

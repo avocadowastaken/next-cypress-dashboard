@@ -1,8 +1,8 @@
 import { prisma } from "@/api/db";
-import { AppLayout } from "@/app/AppLayout";
 import { toPageParam } from "@/app/data/PaginationParams";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
-import { RunAttributes } from "@/app/runs/RunAttributes";
+import { AppLayout } from "@/ui/AppLayout";
+import { RunAttributes } from "@/ui/RunAttributes";
 import {
   Button,
   Grid,

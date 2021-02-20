@@ -1,5 +1,6 @@
 import { SvgIcon, SvgIconProps } from "@material-ui/core";
 import {
+  mdiDebugStepOver,
   mdiElectronFramework,
   mdiFirefox,
   mdiGoogleChrome,
@@ -7,6 +8,7 @@ import {
   mdiMicrosoftEdge,
   mdiMicrosoftWindows,
   mdiSourceBranch,
+  mdiSyncCircle,
 } from "@mdi/js";
 import { forwardRef, memo, NamedExoticComponent } from "react";
 
@@ -28,6 +30,8 @@ function toSvgIcon(
 }
 
 export const Linux = toSvgIcon("Linux", mdiLinux);
+export const SyncCircle = toSvgIcon("SyncCircle", mdiSyncCircle);
+export const DebugStepOver = toSvgIcon("DebugStepOver", mdiDebugStepOver);
 export const MicrosoftEdge = toSvgIcon("MicrosoftEdge", mdiMicrosoftEdge);
 export const MicrosoftWindows = toSvgIcon(
   "MicrosoftWindows",

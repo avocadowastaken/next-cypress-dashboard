@@ -1,23 +1,22 @@
 import { prisma } from "@/api/db";
-import { AppLayout } from "@/app/AppLayout";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
-import { RunAttributes } from "@/app/runs/RunAttributes";
+import { AppLayout } from "@/ui/AppLayout";
+import { RunAttributes } from "@/ui/RunAttributes";
+import { RunInstanceDurationChip } from "@/ui/RunInstanceDurationChip";
 import {
   Chip,
   Grid,
   Link,
-  Skeleton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
 } from "@material-ui/core";
-import { Check, Timer } from "@material-ui/icons";
+import { Check } from "@material-ui/icons";
 import { Project, Run, RunInstance } from "@prisma/client";
-import { format as formatDate, setMilliseconds, startOfToday } from "date-fns";
 import NextLink from "next/link";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 
 interface RunPageProps {
   run: Run & { project: Project; instances: RunInstance[] };
@@ -49,30 +48,6 @@ export const getServerSideProps = createServerSideProps<
   return { notFound: true };
 });
 
-interface RunInstanceDurationProps {
-  instance: RunInstance;
-}
-
-function RunInstanceDuration({
-  instance: { claimedAt, completedAt },
-}: RunInstanceDurationProps): ReactElement {
-  const duration = useMemo(() => {
-    if (claimedAt && completedAt) {
-      const diff = completedAt.getTime() - claimedAt.getTime();
-
-      if (diff) {
-        return formatDate(setMilliseconds(startOfToday(), diff), "mm:ss");
-      }
-    }
-
-    return null;
-  }, [claimedAt, completedAt]);
-
-  return (
-    <Chip icon={<Timer />} label={duration || <Skeleton width="33px" />} />
-  );
-}
-
 export default function RunPage({ run }: RunPageProps): ReactElement {
   return (
     <AppLayout
@@ -91,19 +66,22 @@ export default function RunPage({ run }: RunPageProps): ReactElement {
           <TableContainer>
             <Table>
               <TableBody>
-                {run.instances.map((instance: RunInstance) => (
-                  <TableRow key={instance.id}>
+                {run.instances.map((runInstance: RunInstance) => (
+                  <TableRow key={runInstance.id}>
                     <TableCell align="center" padding="checkbox">
-                      <Chip icon={<Check />} label={instance.totalPassed} />
+                      <Chip icon={<Check />} label={runInstance.totalPassed} />
                     </TableCell>
 
                     <TableCell align="center" padding="checkbox">
-                      <RunInstanceDuration instance={instance} />
+                      <RunInstanceDurationChip
+                        claimedAt={runInstance.claimedAt}
+                        completedAt={runInstance.completedAt}
+                      />
                     </TableCell>
 
                     <TableCell>
-                      <NextLink passHref={true} href={`/i/${instance.id}`}>
-                        <Link>{instance.spec}</Link>
+                      <NextLink passHref={true} href={`/i/${runInstance.id}`}>
+                        <Link>{runInstance.spec}</Link>
                       </NextLink>
                     </TableCell>
                   </TableRow>

@@ -1,5 +1,4 @@
 import { prisma } from "@/api/db";
-import { AppTitle } from "@/app/AppLayout";
 import {
   createServerSideProps,
   getRequestBody,
@@ -10,6 +9,7 @@ import {
   extractErrorCode,
   formatErrorCode,
 } from "@/shared/AppError";
+import { AppTitle } from "@/ui/AppLayout";
 import {
   Button,
   Dialog,
