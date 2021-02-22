@@ -61,11 +61,12 @@ export const getServerSideProps = createServerSideProps<
   if (context.req.method === "POST") {
     const body = await getRequestBody(context);
 
-    if (
-      body.get("csrfToken") !== csrfToken ||
-      body.get("confirmation") !== `${project.org}/${project.repo}`
-    ) {
+    if (body.get("confirmation") !== `${project.org}/${project.repo}`) {
       return { props: { ...props, error: "BAD_REQUEST" } };
+    }
+
+    if (body.get("csrfToken") !== csrfToken) {
+      return redirectToSignIn(context);
     }
 
     try {

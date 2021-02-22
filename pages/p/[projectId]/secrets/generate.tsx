@@ -25,14 +25,14 @@ export const getServerSideProps = createServerSideProps<
   if (context.req.method === "POST") {
     const body = await getRequestBody(context);
 
-    if (body.get("csrfToken") === csrfToken) {
-      try {
-        await prisma.projectSecrets.create({
-          select: null,
-          data: { projectId },
-        });
-      } catch {}
+    if (body.get("csrfToken") !== csrfToken) {
+      return redirectToSignIn(context);
     }
+
+    await prisma.projectSecrets.createMany({
+      data: { projectId },
+      skipDuplicates: true,
+    });
   }
 
   return {
