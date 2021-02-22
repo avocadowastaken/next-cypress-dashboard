@@ -1,5 +1,5 @@
 import { createApiHandler } from "@/api/ApiHandler";
-import { isUniqueConstraintError, prisma } from "@/api/db";
+import { prisma } from "@/api/db";
 import { TASKS_API_SECRET } from "@/api/env";
 import { createAppError } from "@/shared/AppError";
 import {
@@ -50,28 +50,29 @@ function toBrowser(input: unknown): Browser {
 }
 
 async function obtainRun(
-  input: Prisma.RunUncheckedCreateInput
+  runInput: Prisma.RunCreateManyInput,
+  runInstanceInputs: Array<Omit<Prisma.RunInstanceCreateManyInput, "runId">>
 ): Promise<[run: Run, isNewRun: boolean]> {
-  let run: Run;
-  let isNewRun = true;
-
-  try {
-    run = await prisma.run.create({ data: input });
-  } catch (error: unknown) {
-    if (!isUniqueConstraintError(error)) {
-      throw error;
-    }
-
-    isNewRun = false;
-    run = await prisma.run.findUnique({
-      rejectOnNotFound: true,
-      where: {
-        groupId_ciBuildId_projectId: {
-          groupId: input.groupId,
-          ciBuildId: input.ciBuildId,
-          projectId: input.projectId,
-        },
+  const { count } = await prisma.run.createMany({
+    data: runInput,
+    skipDuplicates: true,
+  });
+  const isNewRun = count === 1;
+  const run = await prisma.run.findUnique({
+    rejectOnNotFound: true,
+    where: {
+      groupId_ciBuildId_projectId: {
+        groupId: runInput.groupId,
+        ciBuildId: runInput.ciBuildId,
+        projectId: runInput.projectId,
       },
+    },
+  });
+
+  if (isNewRun) {
+    await prisma.runInstance.createMany({
+      skipDuplicates: true,
+      data: runInstanceInputs.map((input) => ({ ...input, runId: run.id })),
     });
   }
 
@@ -125,27 +126,26 @@ export default createApiHandler((app) => {
         });
       }
 
-      const [run, isNewRun] = await obtainRun({
-        groupId,
-        ciBuildId,
-        projectId,
+      const [run, isNewRun] = await obtainRun(
+        {
+          groupId,
+          ciBuildId,
+          projectId,
 
-        os: toOS(platform.osName),
-        osVersion: trim(platform.osVersion),
+          os: toOS(platform.osName),
+          osVersion: trim(platform.osVersion),
 
-        browser: toBrowser(platform.browserName),
-        browserVersion: trim(platform.browserVersion),
+          browser: toBrowser(platform.browserName),
+          browserVersion: trim(platform.browserVersion),
 
-        commitSha: trim(commit.sha),
-        commitBranch: trim(commit.branch),
-        commitMessage: trim(commit.message),
-        commitAuthorName: trim(commit.authorName),
-        commitAuthorEmail: trim(commit.authorEmail),
-
-        instances: {
-          create: specs.map((spec) => ({ spec, groupId })),
+          commitSha: trim(commit.sha),
+          commitBranch: trim(commit.branch),
+          commitMessage: trim(commit.message),
+          commitAuthorName: trim(commit.authorName),
+          commitAuthorEmail: trim(commit.authorEmail),
         },
-      });
+        specs.map((spec) => ({ spec, groupId }))
+      );
 
       const protocol =
         process.env.NODE_ENV === "development" ? "http" : "https";
@@ -184,8 +184,8 @@ export default createApiHandler((app) => {
       claimedInstances: 0,
     };
 
-    while (response.totalInstances > response.claimedInstances) {
-      const [firstUnclaimed, claimedInstances] = await prisma.$transaction([
+    while (response.claimedInstances < response.totalInstances) {
+      const [firstUnclaimed, claimedInstances] = await Promise.all([
         prisma.runInstance.findFirst({
           where: { runId, groupId, claimedAt: null },
         }),
@@ -221,15 +221,16 @@ export default createApiHandler((app) => {
   //
 
   app.put<{
-    Params: { instanceId: string };
     Body: UpdateInstanceInput;
     Reply: UpdateInstanceResponse;
-  }>("/instances/:instanceId", async (request, reply) => {
-    const { instanceId } = request.params;
+    Params: { runInstanceId: string };
+  }>("/instances/:runInstanceId", async (request, reply) => {
+    const { runInstanceId } = request.params;
     const { error, stats, tests } = request.body;
 
     await prisma.runInstance.update({
-      where: { id: instanceId },
+      select: null,
+      where: { id: runInstanceId },
       data: {
         error,
         totalPassed: stats.passes,
@@ -237,14 +238,17 @@ export default createApiHandler((app) => {
         totalPending: stats.pending,
         totalSkipped: stats.skipped,
         completedAt: stats.wallClockEndedAt,
-        testResults: {
-          create: tests.map(({ state, title, displayError }) => ({
-            state,
-            displayError,
-            titleParts: title,
-          })),
-        },
       },
+    });
+
+    await prisma.testResult.createMany({
+      skipDuplicates: true,
+      data: tests.map(({ title, state, displayError }) => ({
+        state,
+        displayError,
+        runInstanceId,
+        titleParts: title,
+      })),
     });
 
     reply.send({ screenshotUploadUrls: [] });
