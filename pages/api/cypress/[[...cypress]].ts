@@ -243,8 +243,9 @@ export default createApiHandler((app) => {
 
     await prisma.testResult.createMany({
       skipDuplicates: true,
-      data: tests.map(({ title, state, displayError }) => ({
+      data: tests.map(({ title, state, testId, displayError }) => ({
         state,
+        testId,
         displayError,
         runInstanceId,
         titleParts: title,

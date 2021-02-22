@@ -37,8 +37,8 @@ export const getServerSideProps = createServerSideProps<
   if (instanceId) {
     const runInstance = await prisma.runInstance.findFirst({
       include: {
-        testResults: true,
         run: { include: { project: true } },
+        testResults: { orderBy: { testId: "desc" } },
       },
       where: {
         id: instanceId,

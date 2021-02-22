@@ -6,7 +6,7 @@ async function main() {
 
   await exec(
     "cypress",
-    ["run", "--record", "--parallel", "--ci-build-id", "id2"],
+    ["run", "--record", "--parallel", "--ci-build-id", "id3"],
     {
       env: {
         ...process.env,
