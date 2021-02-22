@@ -209,11 +209,11 @@ var require_core = __commonJS((exports2) => {
   }
   __name(warning, "warning");
   exports2.warning = warning;
-  function info(message) {
+  function info2(message) {
     process.stdout.write(message + os.EOL);
   }
-  __name(info, "info");
-  exports2.info = info;
+  __name(info2, "info");
+  exports2.info = info2;
   function startGroup(name) {
     command_1.issue("group", name);
   }
@@ -224,7 +224,7 @@ var require_core = __commonJS((exports2) => {
   }
   __name(endGroup, "endGroup");
   exports2.endGroup = endGroup;
-  function group(name, fn) {
+  function group2(name, fn) {
     return __awaiter(this, void 0, void 0, function* () {
       startGroup(name);
       let result;
@@ -236,8 +236,8 @@ var require_core = __commonJS((exports2) => {
       return result;
     });
   }
-  __name(group, "group");
-  exports2.group = group;
+  __name(group2, "group");
+  exports2.group = group2;
   function saveState(name, value) {
     command_1.issueCommand("save-state", {name}, value);
   }
@@ -6435,26 +6435,26 @@ var require_yaml = __commonJS((exports2, module2) => {
 var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), apiUrl = import_core.getInput("api_url", {required: !0});
 async function resolveCachePath() {
   let version = "", cachePath = "";
-  return await import_exec.exec("npx", ["cypress", "install"]), await import_exec.exec("npx", ["cypress", "cache", "path"], {
+  return await import_core.group("Verify Cypress installation", () => import_exec.exec("npx", ["cypress", "install"])), await import_core.group("Obtain Cypress cache path", () => import_exec.exec("npx", ["cypress", "cache", "path"], {
     listeners: {
       stdout: (data) => {
         cachePath += data.toString("utf8");
       }
     }
-  }), await import_exec.exec("npx", ["cypress", "version", "--component", "binary"], {
+  })), await import_core.group("Obtain Cypress binary version", () => import_exec.exec("npx", ["cypress", "version", "--component", "binary"], {
     listeners: {
       stdout: (data) => {
         version += data.toString("utf8");
       }
     }
-  }), path.join(cachePath.trim(), version.trim());
+  })), path.join(cachePath.trim(), version.trim());
 }
 __name(resolveCachePath, "resolveCachePath");
 async function main() {
   let cachePath = await resolveCachePath(), glob = await import_glob.create(`${cachePath}/**/app.yml`);
   for await (let configPath of glob.globGenerator()) {
     let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = yaml.parse(configYaml);
-    config.production.api_url !== apiUrl && (config.production.api_url = apiUrl, await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8"));
+    config.production.api_url !== apiUrl ? (config.production.api_url = apiUrl, import_core.info(`Updating ${configPath}\u2026`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : import_core.info(`Skipping ${configPath}`);
   }
 }
 __name(main, "main");
