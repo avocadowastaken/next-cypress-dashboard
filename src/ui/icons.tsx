@@ -8,6 +8,8 @@ import {
   mdiMicrosoftEdge,
   mdiMicrosoftWindows,
   mdiSourceBranch,
+  mdiSourceCommit,
+  mdiSourcePull,
   mdiSyncCircle,
 } from "@mdi/js";
 import { forwardRef, memo, NamedExoticComponent } from "react";
@@ -43,4 +45,6 @@ export const ElectronFramework = toSvgIcon(
 );
 export const GoogleChrome = toSvgIcon("GoogleChrome", mdiGoogleChrome);
 export const Firefox = toSvgIcon("Firefox", mdiFirefox);
+export const SourcePull = toSvgIcon("SourcePull", mdiSourcePull);
 export const SourceBranch = toSvgIcon("SourceBranch", mdiSourceBranch);
+export const SourceCommit = toSvgIcon("SourceCommit", mdiSourceCommit);

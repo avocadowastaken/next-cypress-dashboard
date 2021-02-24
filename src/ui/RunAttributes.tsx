@@ -6,13 +6,17 @@ import {
   MicrosoftEdge,
   MicrosoftWindows,
   SourceBranch,
+  SourceCommit,
+  SourcePull,
 } from "@/ui/icons";
 import { Avatar, Chip, Grid, Link, Tooltip } from "@material-ui/core";
 import { AccessTime, Apple } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
 import NextLink from "next/link";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
+
+const PR_BRANCH_PATTERN = /^refs\/pull\/(\d+)\/merge$/;
 
 export interface RunAttributesProps {
   run: Run;
@@ -23,6 +27,38 @@ export function RunAttributes({
   run,
   project,
 }: RunAttributesProps): ReactElement {
+  const [branchIcon, branchLabel, branchHref] = useMemo<
+    [icon: ReactElement, label: string, url: string]
+  >(() => {
+    const repoUrl = `https://github.com/${project.org}/${project.repo}`;
+
+    if (run.commitBranch) {
+      const prBranchMatches = run.commitBranch.match(PR_BRANCH_PATTERN);
+
+      if (prBranchMatches) {
+        const [, pr] = prBranchMatches;
+
+        return [
+          <SourcePull />,
+          pr,
+          `${repoUrl}/pull/${pr}/commits/${run.commitSha}`,
+        ];
+      }
+
+      return [
+        <SourceBranch viewBox="0 0 24 26" />,
+        run.commitBranch,
+        `${repoUrl}/commit/${run.commitSha}`,
+      ];
+    }
+
+    return [
+      <SourceCommit />,
+      run.commitSha.slice(0, 7),
+      `${repoUrl}/commit/${run.commitSha}`,
+    ];
+  }, [project.org, project.repo, run.commitSha, run.commitBranch]);
+
   return (
     <Grid container={true} spacing={1}>
       <Grid item={true} xs={12}>
@@ -70,9 +106,9 @@ export function RunAttributes({
           target="_blank"
           clickable={true}
           rel="noopener noreferrer"
-          icon={<SourceBranch viewBox="0 0 24 26" />}
-          label={run.commitBranch || run.commitSha.slice(0, 7)}
-          href={`https://github.com/${project.org}/${project.repo}/commit/${run.commitSha}`}
+          href={branchHref}
+          icon={branchIcon}
+          label={branchLabel}
         />
       </Grid>
 
