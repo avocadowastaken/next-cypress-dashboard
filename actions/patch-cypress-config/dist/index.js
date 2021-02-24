@@ -6456,10 +6456,12 @@ async function resolveCachePath() {
 __name(resolveCachePath, "resolveCachePath");
 async function main() {
   let cachePath = await resolveCachePath(), glob = await import_glob.create(`${cachePath}/**/app.yml`);
-  for await (let configPath of glob.globGenerator()) {
-    let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = yaml.parse(configYaml);
-    config.production.api_url !== API_URL ? (config.production.api_url = API_URL, import_core.info(`Updating ${configPath}\u2026`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : import_core.info(`Skipping ${configPath}`);
-  }
+  await import_core.group("Patching config", async () => {
+    for await (let configPath of glob.globGenerator()) {
+      let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = yaml.parse(configYaml);
+      config.production.api_url !== API_URL ? (config.production.api_url = API_URL, import_core.info(`Patching ${configPath}`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : import_core.info(`Skipping ${configPath}`);
+    }
+  });
 }
 __name(main, "main");
 main().catch(import_core.setFailed);

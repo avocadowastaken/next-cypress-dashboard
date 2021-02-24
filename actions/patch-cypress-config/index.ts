@@ -43,22 +43,24 @@ async function main(): Promise<void> {
   const cachePath = await resolveCachePath();
   const glob = await createGlob(`${cachePath}/**/app.yml`);
 
-  for await (const configPath of glob.globGenerator()) {
-    const configYaml = await fs.readFile(configPath, "utf-8");
-    const config = yaml.parse(configYaml) as {
-      production: { api_url: string };
-    };
+  await group("Patching config", async () => {
+    for await (const configPath of glob.globGenerator()) {
+      const configYaml = await fs.readFile(configPath, "utf-8");
+      const config = yaml.parse(configYaml) as {
+        production: { api_url: string };
+      };
 
-    if (config.production.api_url !== API_URL) {
-      config.production.api_url = API_URL;
+      if (config.production.api_url !== API_URL) {
+        config.production.api_url = API_URL;
 
-      info(`Updating ${configPath}…`);
+        info(`Patching ${configPath}`);
 
-      await fs.writeFile(configPath, yaml.stringify(config), "utf-8");
-    } else {
-      info(`Skipping ${configPath}`);
+        await fs.writeFile(configPath, yaml.stringify(config), "utf-8");
+      } else {
+        info(`Skipping ${configPath}`);
+      }
     }
-  }
+  });
 }
 
 main().catch(setFailed);
