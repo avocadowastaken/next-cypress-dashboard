@@ -2,7 +2,10 @@ import { exec } from "@actions/exec";
 import * as path from "path";
 
 async function main() {
-  await exec("ts-node", [path.join(__dirname, "patch-cypress-config.ts")]);
+  await exec("ts-node", [
+    path.join(__dirname, "patch-cypress-config.ts"),
+    "http://localhost:3000",
+  ]);
 
   await exec(
     "cypress",
