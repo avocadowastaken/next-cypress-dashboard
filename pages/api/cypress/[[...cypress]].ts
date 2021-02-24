@@ -11,7 +11,7 @@ import {
   UpdateInstanceResponse,
 } from "@/shared/cypress-types";
 import { parseGitUrl } from "@/shared/GitUrl";
-import { Browser, OS, Prisma, Run } from "@prisma/client";
+import { Browser, OS, Prisma, Run, TestResultState } from "@prisma/client";
 
 function trim(input: unknown): string {
   if (typeof input == "string") {
@@ -47,6 +47,18 @@ function toBrowser(input: unknown): Browser {
   }
 
   return "unknown";
+}
+
+function toTestResultState(input: unknown): TestResultState {
+  const state = trim(input).toLocaleLowerCase() as TestResultState;
+
+  switch (state) {
+    case "failed":
+    case "passed":
+      return state;
+  }
+
+  return "passed";
 }
 
 async function obtainRun(
@@ -244,11 +256,11 @@ export default createApiHandler((app) => {
     await prisma.testResult.createMany({
       skipDuplicates: true,
       data: tests.map(({ title, state, testId, displayError }) => ({
-        state,
         testId,
         displayError,
         runInstanceId,
         titleParts: title,
+        state: toTestResultState(state),
       })),
     });
 

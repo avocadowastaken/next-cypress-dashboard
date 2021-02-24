@@ -161,11 +161,16 @@ model RunInstance {
   @@index([runId, groupId, claimedAt])
 }
 
+enum TestResultState {
+  passed
+  failed
+}
+
 model TestResult {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  state        String
+  state        TestResultState
   testId       String
   titleParts   String[]
   displayError Json?
