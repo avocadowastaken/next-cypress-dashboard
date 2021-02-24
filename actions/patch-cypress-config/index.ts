@@ -5,7 +5,9 @@ import { promises as fs } from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
 
-const apiUrl = getInput("api_url", { required: true });
+const API_URL =
+  getInput("api_url", { required: false }) ||
+  "https://next-cypress-dashboard.vercel.app";
 
 async function resolveCachePath(): Promise<string> {
   let version = "";
@@ -48,8 +50,8 @@ async function main(): Promise<void> {
       production: { api_url: string };
     };
 
-    if (config.production.api_url !== apiUrl) {
-      config.production.api_url = apiUrl;
+    if (config.production.api_url !== API_URL) {
+      config.production.api_url = API_URL;
 
       info(`Updating ${configPath}…`);
 

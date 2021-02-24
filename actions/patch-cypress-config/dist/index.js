@@ -6432,7 +6432,7 @@ var require_yaml = __commonJS((exports2, module2) => {
 });
 
 // actions/patch-cypress-config/index.ts
-var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), apiUrl = import_core.getInput("api_url", {required: !0});
+var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), API_URL = import_core.getInput("api_url", {required: !1}) || "https://next-cypress-dashboard.vercel.app";
 async function resolveCachePath() {
   let version = "", cachePath = "";
   return await import_core.group("Verify Cypress installation", () => import_exec.exec("npx", ["cypress", "install"])), await import_core.group("Obtain Cypress cache path", () => import_exec.exec("npx", ["cypress", "cache", "path"], {
@@ -6454,7 +6454,7 @@ async function main() {
   let cachePath = await resolveCachePath(), glob = await import_glob.create(`${cachePath}/**/app.yml`);
   for await (let configPath of glob.globGenerator()) {
     let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = yaml.parse(configYaml);
-    config.production.api_url !== apiUrl ? (config.production.api_url = apiUrl, import_core.info(`Updating ${configPath}\u2026`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : import_core.info(`Skipping ${configPath}`);
+    config.production.api_url !== API_URL ? (config.production.api_url = API_URL, import_core.info(`Updating ${configPath}\u2026`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : import_core.info(`Skipping ${configPath}`);
   }
 }
 __name(main, "main");

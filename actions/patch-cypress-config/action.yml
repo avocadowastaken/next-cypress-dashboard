@@ -3,7 +3,7 @@ description: "Updates Cypress config with provided values"
 author: "umidbekk"
 inputs:
   api_url:
-    required: true
+    required: false
     description: "Url to Next Cypress Dashboard"
 
 runs:
