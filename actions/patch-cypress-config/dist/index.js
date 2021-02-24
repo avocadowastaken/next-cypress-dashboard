@@ -6434,20 +6434,24 @@ var require_yaml = __commonJS((exports2, module2) => {
 // actions/patch-cypress-config/index.ts
 var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), API_URL = import_core.getInput("api_url", {required: !1}) || "https://next-cypress-dashboard.vercel.app";
 async function resolveCachePath() {
-  let version = "", cachePath = "";
-  return await import_core.group("Verify Cypress installation", () => import_exec.exec("npx", ["cypress", "install"])), await import_core.group("Obtain Cypress cache path", () => import_exec.exec("npx", ["cypress", "cache", "path"], {
-    listeners: {
-      stdout: (data) => {
-        cachePath += data.toString("utf8");
+  return await import_core.group("Verify Cypress installation", async () => {
+    await import_exec.exec("npx", ["cypress", "install"]), await import_exec.exec("npx", ["cypress", "verify"]);
+  }), import_core.group("Resolve Cypress cache path", async () => {
+    let version = "", cacheDir = "";
+    return await import_exec.exec("npx", ["cypress", "cache", "path"], {
+      listeners: {
+        stdout: (data) => {
+          cacheDir += data.toString("utf8");
+        }
       }
-    }
-  })), await import_core.group("Obtain Cypress binary version", () => import_exec.exec("npx", ["cypress", "version", "--component", "binary"], {
-    listeners: {
-      stdout: (data) => {
-        version += data.toString("utf8");
+    }), await import_exec.exec("npx", ["cypress", "version", "--component", "binary"], {
+      listeners: {
+        stdout: (data) => {
+          version += data.toString("utf8");
+        }
       }
-    }
-  })), path.join(cachePath.trim(), version.trim());
+    }), path.join(cacheDir.trim(), version.trim());
+  });
 }
 __name(resolveCachePath, "resolveCachePath");
 async function main() {

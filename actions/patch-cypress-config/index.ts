@@ -10,34 +10,33 @@ const API_URL =
   "https://next-cypress-dashboard.vercel.app";
 
 async function resolveCachePath(): Promise<string> {
-  let version = "";
-  let cachePath = "";
+  await group("Verify Cypress installation", async () => {
+    await exec("npx", ["cypress", "install"]);
+    await exec("npx", ["cypress", "verify"]);
+  });
 
-  await group("Verify Cypress installation", () =>
-    exec("npx", ["cypress", "install"])
-  );
+  return group("Resolve Cypress cache path", async () => {
+    let version = "";
+    let cacheDir = "";
 
-  await group("Obtain Cypress cache path", () =>
-    exec("npx", ["cypress", "cache", "path"], {
+    await exec("npx", ["cypress", "cache", "path"], {
       listeners: {
         stdout: (data) => {
-          cachePath += data.toString("utf8");
+          cacheDir += data.toString("utf8");
         },
       },
-    })
-  );
+    });
 
-  await group("Obtain Cypress binary version", () =>
-    exec("npx", ["cypress", "version", "--component", "binary"], {
+    await exec("npx", ["cypress", "version", "--component", "binary"], {
       listeners: {
         stdout: (data) => {
           version += data.toString("utf8");
         },
       },
-    })
-  );
+    });
 
-  return path.join(cachePath.trim(), version.trim());
+    return path.join(cacheDir.trim(), version.trim());
+  });
 }
 
 async function main(): Promise<void> {
