@@ -1,4 +1,4 @@
-import { JsonObject, JsonValue } from "type-fest";
+import { JsonObject } from "type-fest";
 
 export interface CreateRunInput {
   specs: string[];
@@ -61,13 +61,13 @@ export interface UpdateInstanceInput {
     wallClockDuration: number;
   };
 
-  tests: Array<{
+  tests: null | Array<{
     body: string;
     state: string;
     title: string[];
     testId: string;
+    displayError: string;
     attempts: JsonObject[];
-    displayError: JsonValue;
   }>;
 
   video: boolean;

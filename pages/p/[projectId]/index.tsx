@@ -32,7 +32,7 @@ export const getServerSideProps = createServerSideProps<
   const projectId = params?.projectId;
 
   if (projectId) {
-    const take = 10;
+    const take = 5;
     const page = toPageParam(query.page);
 
     const [count, project] = await Promise.all([

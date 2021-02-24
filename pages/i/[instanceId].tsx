@@ -1,14 +1,16 @@
 import { prisma } from "@/api/db";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
-import { DebugStepOver, SyncCircle } from "@/ui/icons";
+import { DebugStepOver } from "@/ui/icons";
+import { Pre } from "@/ui/Pre";
 import { RunAttributes } from "@/ui/RunAttributes";
-import { RunInstanceDurationChip } from "@/ui/RunInstanceDurationChip";
+import { RunInstanceAttributes } from "@/ui/RunInstanceAttributes";
 import {
-  Chip,
+  Box,
+  Collapse,
   Divider,
   Grid,
-  Link,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -16,10 +18,14 @@ import {
   TableRow,
   Tooltip,
 } from "@material-ui/core";
-import { Check, Error } from "@material-ui/icons";
+import {
+  Check,
+  Error,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+} from "@material-ui/icons";
 import { Project, Run, RunInstance, TestResult } from "@prisma/client";
-import NextLink from "next/link";
-import React, { ReactElement } from "react";
+import React, { Fragment, ReactElement, useState } from "react";
 
 export interface RunInstancePageProps {
   runInstance: RunInstance & {
@@ -38,7 +44,7 @@ export const getServerSideProps = createServerSideProps<
     const runInstance = await prisma.runInstance.findFirst({
       include: {
         run: { include: { project: true } },
-        testResults: { orderBy: { testId: "desc" } },
+        testResults: { orderBy: { testId: "asc" } },
       },
       where: {
         id: instanceId,
@@ -63,6 +69,8 @@ export default function RunInstancePage({
     run: { project },
   } = runInstance;
 
+  const [selectedResult, setSelectedResult] = useState<string>();
+
   return (
     <AppLayout
       breadcrumbs={[
@@ -80,78 +88,102 @@ export default function RunInstancePage({
         </Grid>
 
         <Grid item={true} xs={12}>
-          <Grid container={true} spacing={1}>
-            {runInstance.totalPassed > 0 && (
-              <Grid item={true}>
-                <Tooltip title="Passed">
-                  <Chip icon={<Check />} label={runInstance.totalPassed} />
-                </Tooltip>
-              </Grid>
-            )}
-
-            {runInstance.totalFailed > 0 && (
-              <Grid item={true}>
-                <Tooltip title="Failed">
-                  <Chip icon={<Error />} label={runInstance.totalFailed} />
-                </Tooltip>
-              </Grid>
-            )}
-
-            {runInstance.totalPending > 0 && (
-              <Grid item={true}>
-                <Tooltip title="Pending">
-                  <Chip
-                    icon={<SyncCircle />}
-                    label={runInstance.totalPending}
-                  />
-                </Tooltip>
-              </Grid>
-            )}
-
-            {runInstance.totalSkipped > 0 && (
-              <Grid item={true}>
-                <Tooltip title="Skipped">
-                  <Chip
-                    icon={<DebugStepOver />}
-                    label={runInstance.totalSkipped}
-                  />
-                </Tooltip>
-              </Grid>
-            )}
-
-            <Grid item={true}>
-              <RunInstanceDurationChip
-                claimedAt={runInstance.claimedAt}
-                completedAt={runInstance.completedAt}
-              />
-            </Grid>
-
-            <Grid item={true}>
-              <NextLink passHref={true} href={`/i/${runInstance.id}`}>
-                <Link>{runInstance.spec}</Link>
-              </NextLink>
-            </Grid>
-          </Grid>
+          <RunInstanceAttributes runInstance={runInstance} />
         </Grid>
 
         <Grid item={true} xs={12}>
           <Divider />
         </Grid>
 
-        <Grid item={true} xs={12}>
-          <TableContainer>
-            <Table>
-              <TableBody>
-                {testResults.map((testResult: TestResult) => (
-                  <TableRow key={testResult.id}>
-                    <TableCell>{testResult.state}</TableCell>
-                    <TableCell>{testResult.titleParts.join(" – ")}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
+        {runInstance.error ? (
+          <Grid item={true} xs={12}>
+            <Pre>{runInstance.error}</Pre>
+          </Grid>
+        ) : (
+          <Grid item={true} xs={12}>
+            <TableContainer>
+              <Table>
+                <TableBody>
+                  {testResults.map((testResult: TestResult) => {
+                    const isSelected = selectedResult === testResult.id;
+
+                    return (
+                      <Fragment key={testResult.id}>
+                        <TableRow sx={{ "& > td": { borderBottom: "none" } }}>
+                          <TableCell>
+                            <Grid
+                              spacing={1}
+                              container={true}
+                              alignItems="center"
+                            >
+                              <Grid item={true}>
+                                {testResult.state === "failed" ? (
+                                  <Tooltip title="Failed">
+                                    <Error color="error" fontSize="small" />
+                                  </Tooltip>
+                                ) : testResult.state === "skipped" ? (
+                                  <Tooltip title="Skipped">
+                                    <DebugStepOver
+                                      color="disabled"
+                                      fontSize="small"
+                                    />
+                                  </Tooltip>
+                                ) : (
+                                  <Check color="primary" fontSize="small" />
+                                )}
+                              </Grid>
+
+                              <Grid item={true}>
+                                {testResult.titleParts.join(" – ")}
+                              </Grid>
+
+                              {testResult.state === "failed" && (
+                                <Grid item={true}>
+                                  <IconButton
+                                    size="small"
+                                    onClick={() => {
+                                      setSelectedResult(
+                                        !isSelected ? testResult.id : undefined
+                                      );
+                                    }}
+                                  >
+                                    {isSelected ? (
+                                      <KeyboardArrowUp fontSize="small" />
+                                    ) : (
+                                      <KeyboardArrowDown fontSize="small" />
+                                    )}
+                                  </IconButton>
+                                </Grid>
+                              )}
+                            </Grid>
+                          </TableCell>
+                        </TableRow>
+
+                        <TableRow sx={{ "& > td": { paddingY: 0 } }}>
+                          <TableCell>
+                            <Collapse
+                              in={isSelected}
+                              timeout="auto"
+                              unmountOnExit
+                            >
+                              <Box paddingY={2}>
+                                {testResult.state === "failed" && (
+                                  <Pre>
+                                    {testResult.displayError || "Unknown error"}
+                                  </Pre>
+                                )}
+                              </Box>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      </Fragment>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        )}
       </Grid>
     </AppLayout>
   );

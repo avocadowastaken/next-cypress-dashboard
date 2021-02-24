@@ -2,21 +2,17 @@ import { prisma } from "@/api/db";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
 import { RunAttributes } from "@/ui/RunAttributes";
-import { RunInstanceDurationChip } from "@/ui/RunInstanceDurationChip";
+import { RunInstanceAttributes } from "@/ui/RunInstanceAttributes";
 import {
-  Chip,
   Divider,
   Grid,
-  Link,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
 } from "@material-ui/core";
-import { Check } from "@material-ui/icons";
 import { Project, Run, RunInstance } from "@prisma/client";
-import NextLink from "next/link";
 import React, { ReactElement } from "react";
 
 interface RunPageProps {
@@ -70,23 +66,10 @@ export default function RunPage({ run }: RunPageProps): ReactElement {
           <TableContainer>
             <Table>
               <TableBody>
-                {run.instances.map((runInstance: RunInstance) => (
+                {run.instances.map((runInstance) => (
                   <TableRow key={runInstance.id}>
-                    <TableCell align="center" padding="checkbox">
-                      <Chip icon={<Check />} label={runInstance.totalPassed} />
-                    </TableCell>
-
-                    <TableCell align="center" padding="checkbox">
-                      <RunInstanceDurationChip
-                        claimedAt={runInstance.claimedAt}
-                        completedAt={runInstance.completedAt}
-                      />
-                    </TableCell>
-
-                    <TableCell>
-                      <NextLink passHref={true} href={`/i/${runInstance.id}`}>
-                        <Link>{runInstance.spec}</Link>
-                      </NextLink>
+                    <TableCell align="center">
+                      <RunInstanceAttributes runInstance={runInstance} />
                     </TableCell>
                   </TableRow>
                 ))}

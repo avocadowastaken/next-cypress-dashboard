@@ -8,5 +8,5 @@
 CREATE TYPE "TestResultState" AS ENUM ('passed', 'failed');
 
 -- AlterTable
-ALTER TABLE "TestResult" ALTER COLUMN "state" SET DATA TYPE "TestResultState",
+ALTER TABLE "TestResult" ALTER COLUMN "state" SET DATA TYPE "TestResultState" USING state::"TestResultState",
 ALTER COLUMN "testId" DROP DEFAULT;

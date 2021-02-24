@@ -55,6 +55,7 @@ function toTestResultState(input: unknown): TestResultState {
   switch (state) {
     case "failed":
     case "passed":
+    case "skipped":
       return state;
   }
 
@@ -118,6 +119,10 @@ export default createApiHandler((app) => {
     ) => {
       if (!recordKey || !projectId) {
         throw createAppError("FORBIDDEN");
+      }
+
+      if (!ciBuildId) {
+        ciBuildId = commit.sha + "-" + Date.now();
       }
 
       const groupId = trim(group || ciBuildId);
@@ -253,16 +258,18 @@ export default createApiHandler((app) => {
       },
     });
 
-    await prisma.testResult.createMany({
-      skipDuplicates: true,
-      data: tests.map(({ title, state, testId, displayError }) => ({
-        testId,
-        displayError,
-        runInstanceId,
-        titleParts: title,
-        state: toTestResultState(state),
-      })),
-    });
+    if (tests) {
+      await prisma.testResult.createMany({
+        skipDuplicates: true,
+        data: tests.map(({ title, state, testId, displayError }) => ({
+          testId,
+          displayError,
+          runInstanceId,
+          titleParts: title,
+          state: toTestResultState(state),
+        })),
+      });
+    }
 
     reply.send({ screenshotUploadUrls: [] });
   });

@@ -143,7 +143,7 @@ model RunInstance {
   spec    String
   groupId String
 
-  error        Json?
+  error        String?
   claimedAt    DateTime?
   completedAt  DateTime?
   totalPassed  Int       @default(0)
@@ -164,6 +164,7 @@ model RunInstance {
 enum TestResultState {
   passed
   failed
+  skipped
 }
 
 model TestResult {
@@ -173,7 +174,7 @@ model TestResult {
   state        TestResultState
   testId       String
   titleParts   String[]
-  displayError Json?
+  displayError String?
 
   runInstanceId String
   runInstance   RunInstance @relation(fields: [runInstanceId], references: [id])
