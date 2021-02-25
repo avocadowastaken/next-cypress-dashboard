@@ -97,7 +97,7 @@ export default function RunInstancePage({
 
         {runInstance.error ? (
           <Grid item={true} xs={12}>
-            <Pre>{runInstance.error}</Pre>
+            <Pre code={runInstance.error} language="bash" />
           </Grid>
         ) : (
           <Grid item={true} xs={12}>
@@ -168,9 +168,12 @@ export default function RunInstancePage({
                             >
                               <Box paddingY={2}>
                                 {testResult.state === "failed" && (
-                                  <Pre>
-                                    {testResult.displayError || "Unknown error"}
-                                  </Pre>
+                                  <Pre
+                                    language="bash"
+                                    code={
+                                      testResult.displayError || "Unknown error"
+                                    }
+                                  />
                                 )}
                               </Box>
                             </Collapse>

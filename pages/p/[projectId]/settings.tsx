@@ -142,9 +142,10 @@ export default function ProjectSecretsPage({
                 </TableCell>
 
                 <TableCell>
-                  <Pre>
-                    {JSON.stringify({ projectId: project.id }, null, 2)}
-                  </Pre>
+                  <Pre
+                    language="json"
+                    code={JSON.stringify({ projectId: project.id }, null, 2)}
+                  />
                 </TableCell>
               </TableRow>
 
@@ -193,7 +194,10 @@ export default function ProjectSecretsPage({
                   </TableCell>
 
                   <TableCell>
-                    <Pre>cypress run --record --key {secrets.recordKey}</Pre>
+                    <Pre
+                      language="bash"
+                      code={`cypress run --record --key ${secrets.recordKey}`}
+                    />
                   </TableCell>
                 </TableRow>
               )}

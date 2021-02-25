@@ -1,8 +1,10 @@
 const makeWithMDX = require("@next/mdx");
+const rehypePrism = require("@mapbox/rehype-prism");
 const makeWithPrismaPlugin = require("next-prisma-plugin");
 
 const withMDX = makeWithMDX({
   extension: /\.mdx?$/,
+  options: { rehypePlugins: [rehypePrism] },
 });
 
 const withPrismaPlugin = makeWithPrismaPlugin();

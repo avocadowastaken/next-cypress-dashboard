@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Container,
+  ContainerProps,
   Grid,
   Toolbar,
 } from "@material-ui/core";
@@ -15,6 +16,7 @@ export interface PublicLayoutProps {
   title?: string;
   action?: ReactNode;
   children?: ReactNode;
+  maxWidth?: ContainerProps["maxWidth"];
   breadcrumbs?: AppTitleProps["breadcrumbs"];
 }
 
@@ -23,6 +25,7 @@ export function PublicLayout({
   action,
   children,
   breadcrumbs,
+  maxWidth = "sm",
 }: PublicLayoutProps): ReactElement {
   return (
     <>
@@ -46,7 +49,7 @@ export function PublicLayout({
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="sm">
+      <Container maxWidth={maxWidth}>
         <Grid container={true} spacing={1}>
           {!!breadcrumbs && (
             <Grid item={true} xs={12}>

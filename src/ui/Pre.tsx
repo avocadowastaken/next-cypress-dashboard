@@ -1,13 +1,36 @@
-import { ReactElement, ReactNode } from "react";
+import Highlight, {
+  defaultProps,
+  Language,
+  PrismTheme,
+} from "prism-react-renderer";
+import { ReactElement } from "react";
+
+const prismTheme: PrismTheme = { plain: {}, styles: [] };
 
 export interface PreProps {
-  children?: ReactNode;
+  code: string;
+  language: Language;
 }
 
-export function Pre({ children }: PreProps): ReactElement {
+export function Pre({ code, language }: PreProps): ReactElement {
   return (
-    <pre>
-      <code>{children}</code>
-    </pre>
+    <Highlight
+      {...defaultProps}
+      code={code}
+      theme={prismTheme}
+      language={language}
+    >
+      {({ className, tokens, getLineProps, getTokenProps }) => (
+        <pre className={className}>
+          {tokens.map((line, i) => (
+            <div {...getLineProps({ line, key: i })}>
+              {line.map((token, key) => (
+                <span {...getTokenProps({ token, key })} />
+              ))}
+            </div>
+          ))}
+        </pre>
+      )}
+    </Highlight>
   );
 }

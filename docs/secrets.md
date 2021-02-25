@@ -8,7 +8,7 @@ yarn ts-node scripts/generate-secrets.ts
 
 It will generate secrets in dotenv format.
 
-```dotenv
+```bash
 JWT_SECRET='/dXSGOC5rb+AhmnnYr4H8UVgoK755MrrJXKyw05AI4T/Rtkr0GvwlqVy2LSu4ql3wgbI+coQTdwG+DL2Avks/A=='
 JWT_SIGNING_KEY='{"kty":"oct","kid":"6qFS-R8xNQwKTzbs4mD0UAhucxuYl05Fp5S7yKS1tjk","alg":"HS512","k":"1KwL-EB7RKm7zcARBWHaFz1fKL6Zzy3Ek6Zl67OjMKw"}'
 JWT_ENCRYPTION_KEY='{"kty":"oct","kid":"W3CPPaI-ltmeSmL3GWGK3XJKaC30uxeNAvaE_tK3uGg","use":"enc","alg":"A256GCM","k":"ZlP_Dm44EHUhTdeQnLCi2QMm9pVSuswlOUR9Btle1rI"}'

@@ -1,11 +1,12 @@
-import { Button, Divider } from "@material-ui/core";
+import { Button, Divider, Grid } from "@material-ui/core";
 import NextLink from "next/link";
 import { PublicLayout } from "../src/ui/PublicLayout";
 import Deployment from "../docs/deployment.md";
 import Secrets from "../docs/secrets.md";
+import Privacy from "../docs/privacy.md";
 import Ci from "../docs/ci.md";
 
-<PublicLayout title="Docs" action={
+<PublicLayout title="Docs" maxWidth="md" action={
   <NextLink passHref={true} href="/">
     <Button color="inherit">Home</Button>
   </NextLink>
@@ -16,20 +17,41 @@ import Ci from "../docs/ci.md";
 - [Deployment](#deployment)
 - [Secrets](#secrets)
 - [Continuous integration](#continuous_integration)
+- [Privacy](#privacy)
 
-<Divider />
+<Grid container={true} spacing={1}>
+<Grid item={true} xs={12}>
+  <Divider />
+</Grid>
 
-<Deployment />
+<Grid item={true} xs={12}>
+  <Deployment />
+</Grid>
 
-<Divider />
+<Grid item={true} xs={12}>
+  <Divider />
+</Grid>
 
-<Secrets />
+<Grid item={true} xs={12}>
+  <Secrets />
+</Grid>
 
-<Divider />
+<Grid item={true} xs={12}>
+  <Divider />
+</Grid>
 
-<Ci />
+<Grid item={true} xs={12}>
+  <Ci />
+</Grid>
 
-<Divider />
+<Grid item={true} xs={12}>
+  <Divider />
+</Grid>
+
+<Grid item={true} xs={12}>
+  <Privacy />
+</Grid>
+</Grid>
 
 [Back to top ⬆](#table_of_content)
 

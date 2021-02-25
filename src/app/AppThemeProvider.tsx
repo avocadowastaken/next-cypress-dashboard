@@ -1,4 +1,10 @@
-import { createMuiTheme, Link, ThemeProvider } from "@material-ui/core";
+import {
+  createMuiTheme,
+  CssBaseline,
+  Link,
+  ScopedCssBaseline,
+  ThemeProvider,
+} from "@material-ui/core";
 import { blue, blueGrey, grey, red } from "@material-ui/core/colors";
 import { Components, MDXProvider } from "@mdx-js/react";
 import NextLink from "next/link";
@@ -19,26 +25,34 @@ const theme = createMuiTheme({
   },
 
   components: {
-    MuiCssBaseline: {
+    MuiScopedCssBaseline: {
       styleOverrides: {
-        code: {
-          margin: 0,
-          fontSize: ".85em",
-          padding: ".2em .4em",
-          borderRadius: "4px",
-          backgroundColor: grey[800],
-          fontFamily: "SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace",
-        },
+        root: {
+          "& pre": {
+            fontSize: "12px",
+            lineHeight: 1.45,
+            fontFamily:
+              "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
 
-        pre: {
-          margin: 0,
-          padding: "16px",
-          overflow: "auto",
-          borderRadius: "4px",
-          backgroundColor: grey[800],
+            margin: 0,
+            padding: "16px",
+            overflow: "auto",
+            borderRadius: "4px",
 
-          "& > code": {
-            padding: 0,
+            "& code": {
+              padding: 0,
+              fontFamily: "inherit",
+            },
+          },
+
+          "& blockquote": {
+            margin: 0,
+            padding: "8px 16px",
+            borderLeft: `.25em solid ${blue[700]}`,
+
+            "& p": {
+              margin: 0,
+            },
           },
         },
       },
@@ -168,7 +182,11 @@ export interface ThemeConfigProps {
 export function AppThemeProvider({ children }: ThemeConfigProps): ReactElement {
   return (
     <MDXProvider components={mdxComponents}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+
+        <ScopedCssBaseline>{children}</ScopedCssBaseline>
+      </ThemeProvider>
     </MDXProvider>
   );
 }
