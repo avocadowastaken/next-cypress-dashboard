@@ -1,4 +1,6 @@
-### Generate Secrets
+### Secrets
+
+#### Generate Secrets
 
 ```bash
 yarn ts-node scripts/generate-secrets.ts
@@ -18,13 +20,15 @@ So you can append directly to your env file (do not forget to add `--silent` aft
 yarn --silent ts-node scripts/generate-secrets.ts >> .env
 ```
 
-### Updating Vercel secrets
+#### Updating Vercel secrets
 
-You can use any name you want for the secrets, but you have to keep same env
-variable names.
+> You can use any name you want for the secrets, but you have to keep same env
+> variable names.
+
+##### Vercel preview secrets
 
 ```bash
-# Generate new secrets
+# Generate new secrets for preview
 yarn --silent ts-node scripts/generate-secrets.ts > .env.preview
 
 # Copy all the new variables for the preview
@@ -44,8 +48,12 @@ vercel secret rm jwt-encryption-key-preview --yes
 vercel secrets add jwt-encryption-key-preview "${JWT_ENCRYPTION_KEY}"
 vercel env rm JWT_ENCRYPTION_KEY preview --yes
 printf "jwt-encryption-key-preview" | vercel env add secret JWT_ENCRYPTION_KEY preview
+```
 
-# Generate new secrets
+##### Vercel production secrets
+
+```bash
+# Generate new secrets for production
 yarn --silent ts-node scripts/generate-secrets.ts > .env.production
 
 # Copy all the new variables for the production
@@ -65,5 +73,4 @@ vercel secret rm jwt-encryption-key-production --yes
 vercel secrets add jwt-encryption-key-production "${JWT_ENCRYPTION_KEY}"
 vercel env rm JWT_ENCRYPTION_KEY production --yes
 printf "jwt-encryption-key-production" | vercel env add secret JWT_ENCRYPTION_KEY production
-
 ```
