@@ -27,15 +27,11 @@ export function migrate(schema: string, ...args: string[]) {
   const databaseURL = getDatabaseURL();
   databaseURL.searchParams.set("schema", schema);
 
-  spawnSync(
-    "yarn",
-    ["prisma", "migrate", "deploy", "--preview-feature", ...args],
-    {
-      stdio: "inherit",
-      encoding: "utf8",
-      env: { ...process.env, DATABASE_URL: databaseURL.toString() },
-    }
-  );
+  spawnSync("yarn", ["prisma", "db", "push", "--preview-feature", ...args], {
+    stdio: "inherit",
+    encoding: "utf8",
+    env: { ...process.env, DATABASE_URL: databaseURL.toString() },
+  });
 }
 
 if (require.main === module) {

@@ -1,5 +1,9 @@
 import { prisma } from "@/api/db";
-import { createServerSideProps } from "@/app/data/ServerSideProps";
+import { verifyGitHubRepoAccess } from "@/api/GitHubClient";
+import {
+  createServerSideProps,
+  redirectToSignIn,
+} from "@/app/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
 import { DebugStepOver } from "@/ui/icons";
 import { Pre } from "@/ui/Pre";
@@ -37,8 +41,8 @@ export interface RunInstancePageProps {
 export const getServerSideProps = createServerSideProps<
   RunInstancePageProps,
   { instanceId: string }
->(async ({ userId }, { params }) => {
-  const instanceId = params?.instanceId;
+>(async ({ userId }, context) => {
+  const instanceId = context.params?.instanceId;
 
   if (instanceId) {
     const runInstance = await prisma.runInstance.findFirst({
@@ -53,6 +57,16 @@ export const getServerSideProps = createServerSideProps<
     });
 
     if (runInstance) {
+      try {
+        await verifyGitHubRepoAccess(
+          userId,
+          runInstance.run.project.org,
+          runInstance.run.project.repo
+        );
+      } catch {
+        return redirectToSignIn(context);
+      }
+
       return { props: { runInstance } };
     }
   }
