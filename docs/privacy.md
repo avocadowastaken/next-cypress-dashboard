@@ -1,12 +1,9 @@
 ### Privacy
 
 1. We only gather required data to display minimal test details like
-
-   - Organization of the repository
-   - Name of the repository
-   - Test spec file name
-   - Test suite name
-   - Test result errors
+   - Repository data – name and owner
+   - Commit data – sha, branch, message, author name and email
+   - Test data - file name, suite name, stats, errors
 
 > Please check [schema.prisma](https://github.com/umidbekk/next-cypress-dashboard/blob/main/prisma/schema.prisma) file for more detail.
 
