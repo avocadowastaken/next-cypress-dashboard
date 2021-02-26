@@ -4,6 +4,7 @@ import { AppLayout } from "@/ui/AppLayout";
 import { RunAttributes } from "@/ui/RunAttributes";
 import { RunInstanceAttributes } from "@/ui/RunInstanceAttributes";
 import {
+  Button,
   Divider,
   Grid,
   Table,
@@ -13,6 +14,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { Project, Run, RunInstance } from "@prisma/client";
+import NextLink from "next/link";
 import React, { ReactElement } from "react";
 
 interface RunPageProps {
@@ -52,6 +54,11 @@ export default function RunPage({ run }: RunPageProps): ReactElement {
         ["Projects", "/p"],
         [`${run.project.org} / ${run.project.repo}`, `/p/${run.project.id}`],
       ]}
+      actions={
+        <NextLink href={`/r/${run.id}/delete`}>
+          <Button>Delete</Button>
+        </NextLink>
+      }
     >
       <Grid container={true} spacing={2}>
         <Grid item={true} xs={12}>

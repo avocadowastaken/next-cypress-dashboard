@@ -1,4 +1,5 @@
 import {
+  Alert,
   AppBar,
   Box,
   Breadcrumbs,
@@ -11,6 +12,7 @@ import {
 } from "@material-ui/core";
 import Head from "next/head";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React, { ReactElement, ReactNode, useMemo } from "react";
 
 export interface AppTitleProps {
@@ -72,6 +74,8 @@ export function AppLayout({
   maxWidth = "md",
   breadcrumbs = [],
 }: LayoutProps) {
+  const router = useRouter();
+
   return (
     <>
       <AppTitle breadcrumbs={breadcrumbs} />
@@ -113,7 +117,51 @@ export function AppLayout({
           </Grid>
         </Box>
 
-        {children}
+        <Grid container={true} spacing={2}>
+          {!!router.query.error && (
+            <Grid item={true} xs={12}>
+              <Alert
+                severity="error"
+                action={
+                  <NextLink
+                    href={{
+                      pathname: router.pathname,
+                      query: { ...router.query, error: [] },
+                    }}
+                  >
+                    <Button color="inherit">Close</Button>
+                  </NextLink>
+                }
+              >
+                {router.query.error}
+              </Alert>
+            </Grid>
+          )}
+
+          {!!router.query.success && (
+            <Grid item={true} xs={12}>
+              <Alert
+                severity="success"
+                action={
+                  <NextLink
+                    href={{
+                      pathname: router.pathname,
+                      query: { ...router.query, success: [] },
+                    }}
+                  >
+                    <Button color="inherit">Close</Button>
+                  </NextLink>
+                }
+              >
+                {router.query.success}
+              </Alert>
+            </Grid>
+          )}
+
+          <Grid item={true} xs={12}>
+            {children}
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

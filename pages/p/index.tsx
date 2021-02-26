@@ -3,9 +3,7 @@ import { toPageParam } from "@/app/data/PaginationParams";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
 import { AppLayout } from "@/ui/AppLayout";
 import {
-  Alert,
   Button,
-  Grid,
   Link,
   Pagination,
   PaginationItem,
@@ -66,79 +64,56 @@ export default function ProjectsPage({
         </NextLink>
       }
     >
-      <Grid container={true} spacing={2}>
-        {!!router.query.success && (
-          <Grid item={true} xs={12}>
-            <Alert
-              action={
-                <NextLink
-                  href={{
-                    pathname: "/p",
-                    query: { ...router.query, success: [] },
-                  }}
-                >
-                  <Button color="inherit">Close</Button>
-                </NextLink>
-              }
-            >
-              {router.query.success}
-            </Alert>
-          </Grid>
-        )}
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Provider</TableCell>
+              <TableCell>Organization</TableCell>
+              <TableCell>Repo</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {projects.map((project) => (
+              <TableRow key={project.id}>
+                <TableCell component="th" scope="row">
+                  {project.providerId}
+                </TableCell>
+                <TableCell>{project.org}</TableCell>
+                <TableCell>
+                  <NextLink passHref={true} href={`/p/${project.id}`}>
+                    <Link>{project.repo}</Link>
+                  </NextLink>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
 
-        <Grid item={true} xs={12}>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Provider</TableCell>
-                  <TableCell>Organization</TableCell>
-                  <TableCell>Repo</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {projects.map((project) => (
-                  <TableRow key={project.id}>
-                    <TableCell component="th" scope="row">
-                      {project.providerId}
-                    </TableCell>
-                    <TableCell>{project.org}</TableCell>
-                    <TableCell>
-                      <NextLink passHref={true} href={`/p/${project.id}`}>
-                        <Link>{project.repo}</Link>
+          {maxPage > 1 && (
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Pagination
+                    page={page}
+                    count={maxPage}
+                    renderItem={(item) => (
+                      <NextLink
+                        passHref={true}
+                        href={{
+                          pathname: "/p",
+                          query: { ...router.query, page: item.page },
+                        }}
+                      >
+                        <PaginationItem {...item} />
                       </NextLink>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-
-              {maxPage > 1 && (
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={3}>
-                      <Pagination
-                        page={page}
-                        count={maxPage}
-                        renderItem={(item) => (
-                          <NextLink
-                            passHref={true}
-                            href={{
-                              pathname: "/p",
-                              query: { ...router.query, page: item.page },
-                            }}
-                          >
-                            <PaginationItem {...item} />
-                          </NextLink>
-                        )}
-                      />
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
-              )}
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
+                    )}
+                  />
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          )}
+        </Table>
+      </TableContainer>
     </AppLayout>
   );
 }

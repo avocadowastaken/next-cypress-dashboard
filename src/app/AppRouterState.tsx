@@ -53,7 +53,17 @@ export function AppRouterProgressIndicator() {
   const routerState = useAppRouterState();
 
   return (
-    <Collapse in={routerState === "navigating"} unmountOnExit={true}>
+    <Collapse
+      in={routerState === "navigating"}
+      unmountOnExit={true}
+      style={{
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 2000,
+        position: "fixed",
+      }}
+    >
       <LinearProgress color="primary" />
     </Collapse>
   );

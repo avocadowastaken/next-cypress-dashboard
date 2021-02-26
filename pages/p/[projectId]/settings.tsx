@@ -1,5 +1,5 @@
 import { prisma } from "@/api/db";
-import { GitHubClient } from "@/api/GitHubClient";
+import { verifyGitHubRepoAccess } from "@/api/GitHubClient";
 import {
   createServerSideProps,
   redirectToSignIn,
@@ -56,9 +56,7 @@ export const getServerSideProps = createServerSideProps<
       const props: ProjectSecretsPageProps = { project, csrfToken };
 
       try {
-        const client = await GitHubClient.create(userId);
-
-        await client.verifyRepoAccess(project.org, project.repo);
+        await verifyGitHubRepoAccess(userId, project.org, project.repo);
 
         const secrets = await prisma.projectSecrets.findUnique({
           where: { projectId: project.id },

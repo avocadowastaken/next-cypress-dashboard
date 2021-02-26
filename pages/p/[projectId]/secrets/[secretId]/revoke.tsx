@@ -1,5 +1,5 @@
 import { prisma } from "@/api/db";
-import { GitHubClient } from "@/api/GitHubClient";
+import { verifyGitHubRepoAccess } from "@/api/GitHubClient";
 import {
   createServerSideProps,
   getRequestBody,
@@ -49,9 +49,7 @@ export const getServerSideProps = createServerSideProps<
   const settingsUrl = `/p/${project.id}/settings`;
 
   try {
-    const gitHubClient = await GitHubClient.create(userId);
-
-    await gitHubClient.verifyRepoAccess(project.org, project.repo);
+    await verifyGitHubRepoAccess(userId, project.org, project.repo);
   } catch {
     return { redirect: { permanent: false, destination: settingsUrl } };
   }

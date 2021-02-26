@@ -1,6 +1,6 @@
 import { prisma } from "@/api/db";
 import { GITHUB_CLIENT_SLUG } from "@/api/env";
-import { GitHubClient } from "@/api/GitHubClient";
+import { verifyGitHubRepoAccess } from "@/api/GitHubClient";
 import {
   createServerSideProps,
   getRequestBody,
@@ -60,9 +60,8 @@ export const getServerSideProps = createServerSideProps<AddProjectPageProps>(
 
       try {
         const [providerId, org, repo] = parseGitUrl(repoUrl);
-        const client = await GitHubClient.create(userId);
 
-        await client.verifyRepoAccess(org, repo);
+        await verifyGitHubRepoAccess(userId, org, repo);
 
         const project = await prisma.project.upsert({
           select: { id: true },
