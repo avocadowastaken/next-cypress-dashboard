@@ -13,6 +13,12 @@ import {
 import { parseGitUrl } from "@/shared/GitUrl";
 import { Browser, OS, Prisma, Run, TestResultState } from "@prisma/client";
 
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 function trim(input: unknown): string {
   if (typeof input == "string") {
     return input.trim();
@@ -189,17 +195,28 @@ export default createApiHandler((app) => {
     const { runId } = request.params;
     const { groupId } = request.body;
 
-    const totalInstances = await prisma.runInstance.count({
-      where: { runId, groupId },
-    });
-
     const response: CreateInstanceResponse = {
       spec: null,
       instanceId: null,
-
-      totalInstances,
+      totalInstances: 0,
       claimedInstances: 0,
     };
+
+    let attempts = 0;
+    while (response.totalInstances === 0) {
+      attempts += 1;
+      response.totalInstances = await prisma.runInstance.count({
+        where: { runId, groupId },
+      });
+
+      if (response.totalInstances === 0) {
+        if (attempts > 3) {
+          return response;
+        }
+
+        await wait(500 * attempts);
+      }
+    }
 
     while (response.claimedInstances < response.totalInstances) {
       const [firstUnclaimed, claimedInstances] = await Promise.all([
@@ -245,8 +262,8 @@ export default createApiHandler((app) => {
     const { runInstanceId } = request.params;
     const { error, stats, tests } = request.body;
 
-    await prisma.runInstance.update({
-      select: null,
+    const { runId } = await prisma.runInstance.update({
+      select: { runId: true },
       where: { id: runInstanceId },
       data: {
         error,
@@ -268,6 +285,34 @@ export default createApiHandler((app) => {
           titleParts: title,
           state: toTestResultState(state),
         })),
+      });
+    }
+
+    const incompleteRunInstanceCount = await prisma.runInstance.count({
+      where: { runId, completedAt: null },
+    });
+
+    if (incompleteRunInstanceCount === 0) {
+      const { sum } = await prisma.runInstance.aggregate({
+        where: { runId },
+        sum: {
+          totalFailed: true,
+          totalPassed: true,
+          totalPending: true,
+          totalSkipped: true,
+        },
+      });
+
+      await prisma.run.update({
+        select: null,
+        where: { id: runId },
+        data: {
+          totalFailed: sum.totalFailed,
+          totalPassed: sum.totalPassed,
+          totalPending: sum.totalPending,
+          totalSkipped: sum.totalSkipped,
+          completedAt: stats.wallClockEndedAt,
+        },
       });
     }
 

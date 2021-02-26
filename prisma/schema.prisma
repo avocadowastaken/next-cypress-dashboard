@@ -109,8 +109,15 @@ enum Browser {
 }
 
 model Run {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id String @id @default(cuid())
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  totalPassed  Int @default(0)
+  totalFailed  Int @default(0)
+  totalPending Int @default(0)
+  totalSkipped Int @default(0)
 
   groupId   String
   ciBuildId String

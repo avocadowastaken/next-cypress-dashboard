@@ -1,10 +1,10 @@
+import { DurationChip } from "@/ui/DurationChip";
 import { DebugStepOver, SyncCircle } from "@/ui/icons";
-import { Chip, Grid, Link, Skeleton, Tooltip } from "@material-ui/core";
-import { Check, Error, Timer } from "@material-ui/icons";
+import { Chip, Grid, Link, Tooltip } from "@material-ui/core";
+import { Check, Error } from "@material-ui/icons";
 import { RunInstance } from "@prisma/client";
-import { format as formatDate, setMilliseconds, startOfToday } from "date-fns";
 import NextLink from "next/link";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 
 export interface RunInstanceAttributesProps {
   runInstance: RunInstance;
@@ -22,22 +22,10 @@ export function RunInstanceAttributes({
     totalSkipped,
   },
 }: RunInstanceAttributesProps): ReactElement {
-  const duration = useMemo(() => {
-    if (claimedAt && completedAt) {
-      const diff = completedAt.getTime() - claimedAt.getTime();
-
-      if (diff) {
-        return formatDate(setMilliseconds(startOfToday(), diff), "mm:ss");
-      }
-    }
-
-    return null;
-  }, [claimedAt, completedAt]);
-
   return (
     <Grid container={true} spacing={1}>
       <Grid item={true}>
-        <Chip icon={<Timer />} label={duration || <Skeleton width="33px" />} />
+        <DurationChip start={claimedAt} finish={completedAt} />
       </Grid>
 
       {totalPassed > 0 && (

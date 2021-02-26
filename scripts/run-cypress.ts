@@ -1,15 +1,9 @@
 import { exec } from "@actions/exec";
-import * as path from "path";
 
 async function main() {
-  await exec("ts-node", [
-    path.join(__dirname, "patch-cypress-config.ts"),
-    "http://localhost:3000",
-  ]);
-
   await exec(
     "cypress",
-    ["run", "--record", "--parallel", "--ci-build-id", "id3"],
+    ["run", "--record", "--parallel", "--ci-build-id", "id12"],
     {
       env: {
         ...process.env,

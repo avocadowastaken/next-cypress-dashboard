@@ -33,7 +33,7 @@ export const getServerSideProps = createServerSideProps<
       },
       include: {
         project: true,
-        instances: { orderBy: { claimedAt: "asc" } },
+        instances: { orderBy: [{ totalFailed: "desc" }, { claimedAt: "asc" }] },
       },
     });
 

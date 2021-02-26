@@ -1,3 +1,4 @@
+import { DurationChip } from "@/ui/DurationChip";
 import {
   ElectronFramework,
   Firefox,
@@ -10,9 +11,9 @@ import {
   SourcePull,
 } from "@/ui/icons";
 import { Avatar, Chip, Grid, Link, Tooltip } from "@material-ui/core";
-import { AccessTime, Apple } from "@material-ui/icons";
+import { AccessTime, Apple, Check, Error } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import NextLink from "next/link";
 import React, { ReactElement, useMemo } from "react";
 
@@ -67,6 +68,31 @@ export function RunAttributes({
         </NextLink>
       </Grid>
 
+      {run.totalFailed > 0 ? (
+        <Grid item={true}>
+          <Chip icon={<Error />} label="Failed" />
+        </Grid>
+      ) : run.totalPassed > 0 ? (
+        <Grid item={true}>
+          <Chip icon={<Check />} label="Passed" />
+        </Grid>
+      ) : null}
+
+      <Grid item={true}>
+        <DurationChip start={run.createdAt} finish={run.completedAt} />
+      </Grid>
+
+      <Grid item={true}>
+        <Tooltip title={run.createdAt.toLocaleString()}>
+          <Chip
+            icon={<AccessTime />}
+            label={formatDistanceToNowStrict(run.createdAt, {
+              addSuffix: true,
+            })}
+          />
+        </Tooltip>
+      </Grid>
+
       <Grid item={true}>
         <Chip
           component="a"
@@ -87,28 +113,14 @@ export function RunAttributes({
       </Grid>
 
       <Grid item={true}>
-        <Tooltip title={run.createdAt.toLocaleString()}>
-          <Chip
-            icon={<AccessTime />}
-            label={
-              <>
-                Created{" "}
-                {formatDistanceToNow(run.createdAt, { addSuffix: true })}
-              </>
-            }
-          />
-        </Tooltip>
-      </Grid>
-
-      <Grid item={true}>
         <Chip
           component="a"
           target="_blank"
           clickable={true}
-          rel="noopener noreferrer"
           href={branchHref}
           icon={branchIcon}
           label={branchLabel}
+          rel="noopener noreferrer"
         />
       </Grid>
 
