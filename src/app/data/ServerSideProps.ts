@@ -16,6 +16,8 @@ interface UserSession {
 async function getUserSession(
   context: GetServerSidePropsContext
 ): Promise<null | UserSession> {
+  console.time("Validating token");
+
   try {
     const session = await getToken({
       secret: JWT_SECRET,
@@ -27,6 +29,8 @@ async function getUserSession(
     return { userId: session["sub"] };
   } catch {
     return null;
+  } finally {
+    console.timeEnd("Validating token");
   }
 }
 
@@ -49,9 +53,14 @@ export function redirectToSignIn<TProps>(
 export async function getRequestBody(
   context: GetServerSidePropsContext
 ): Promise<URLSearchParams> {
-  const body = await getRawBody(context.req, { encoding: "utf8" });
+  console.time("Parsing request body");
 
-  return new URLSearchParams(body);
+  const body = await getRawBody(context.req, { encoding: "utf8" });
+  const params = new URLSearchParams(body);
+
+  console.timeEnd("Parsing request body");
+
+  return params;
 }
 
 export function createServerSideProps<
@@ -72,6 +81,12 @@ export function createServerSideProps<
       return redirectToSignIn(context);
     }
 
-    return fn(session, context);
+    console.time("Collecting server side props");
+
+    const response = await fn(session, context);
+
+    console.timeEnd("Collecting server side props");
+
+    return response;
   };
 }
