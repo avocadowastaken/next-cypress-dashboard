@@ -1,4 +1,4 @@
-import { prisma } from "@/api/db";
+import { prisma } from "@/server/db";
 import { createAppError } from "@/shared/AppError";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types";
@@ -9,9 +9,13 @@ export async function verifyGitHubRepoAccess(
   owner: string,
   repo: string
 ): Promise<void> {
+  console.time("Loading GitHub Account");
+
   const account = await prisma.userAccount.findUnique({
     where: { userId_providerId: { userId, providerId: "github" } },
   });
+
+  console.timeEnd("Loading GitHub Account");
 
   if (!account) {
     throw createAppError("GITHUB_ACCOUNT_NOT_LINKED");
@@ -24,6 +28,8 @@ export async function verifyGitHubRepoAccess(
   const octokit = new Octokit({ auth: account.accessToken });
 
   let repository: components["schemas"]["full-repository"];
+
+  console.time("Fetching GitHub Repo");
 
   try {
     const response = await octokit.request("GET /repos/{owner}/{repo}", {
@@ -44,6 +50,8 @@ export async function verifyGitHubRepoAccess(
     }
 
     throw error;
+  } finally {
+    console.timeEnd("Fetching GitHub Repo");
   }
 
   if (!repository.permissions?.push) {

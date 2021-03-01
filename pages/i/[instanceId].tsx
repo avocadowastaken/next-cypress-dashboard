@@ -1,9 +1,9 @@
-import { prisma } from "@/api/db";
-import { verifyGitHubRepoAccess } from "@/api/GitHubClient";
 import {
   createServerSideProps,
   redirectToSignIn,
 } from "@/app/data/ServerSideProps";
+import { prisma } from "@/server/db";
+import { verifyGitHubRepoAccess } from "@/server/GitHubClient";
 import { AppLayout } from "@/ui/AppLayout";
 import { DebugStepOver } from "@/ui/icons";
 import { Pre } from "@/ui/Pre";

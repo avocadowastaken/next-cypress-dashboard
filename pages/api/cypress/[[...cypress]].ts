@@ -1,6 +1,6 @@
-import { createApiHandler } from "@/api/ApiHandler";
-import { prisma } from "@/api/db";
-import { TASKS_API_SECRET } from "@/api/env";
+import { createApiHandler } from "@/server/ApiHandler";
+import { prisma } from "@/server/db";
+import { TASKS_API_SECRET } from "@/server/env";
 import { createAppError } from "@/shared/AppError";
 import {
   CreateInstanceInput,

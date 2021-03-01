@@ -1,4 +1,4 @@
-import { JWT_ENCRYPTION_KEY, JWT_SECRET, JWT_SIGNING_KEY } from "@/api/env";
+import { JWT_ENCRYPTION_KEY, JWT_SECRET, JWT_SIGNING_KEY } from "@/server/env";
 import {
   GetServerSideProps,
   GetServerSidePropsContext,

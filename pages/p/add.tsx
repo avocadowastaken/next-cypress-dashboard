@@ -1,11 +1,11 @@
-import { prisma } from "@/api/db";
-import { GITHUB_CLIENT_SLUG } from "@/api/env";
-import { verifyGitHubRepoAccess } from "@/api/GitHubClient";
 import {
   createServerSideProps,
   getRequestBody,
   redirectToSignIn,
 } from "@/app/data/ServerSideProps";
+import { prisma } from "@/server/db";
+import { GITHUB_CLIENT_SLUG } from "@/server/env";
+import { verifyGitHubRepoAccess } from "@/server/GitHubClient";
 import {
   AppErrorCode,
   extractErrorCode,

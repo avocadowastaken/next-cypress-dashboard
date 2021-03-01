@@ -1,9 +1,9 @@
-import { prisma } from "@/api/db";
 import {
   createServerSideProps,
   getRequestBody,
   redirectToSignIn,
 } from "@/app/data/ServerSideProps";
+import { prisma } from "@/server/db";
 import { getCsrfToken } from "next-auth/client";
 
 export const getServerSideProps = createServerSideProps<

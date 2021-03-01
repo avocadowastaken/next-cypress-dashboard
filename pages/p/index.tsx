@@ -1,6 +1,6 @@
-import { prisma } from "@/api/db";
 import { toPageParam } from "@/app/data/PaginationParams";
 import { createServerSideProps } from "@/app/data/ServerSideProps";
+import { prisma } from "@/server/db";
 import { AppLayout } from "@/ui/AppLayout";
 import {
   Button,
