@@ -1039,6 +1039,9 @@ var require_dist_web2 = __commonJS((exports2) => {
       cancelWorkflowRun: [
         "POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel"
       ],
+      createOrUpdateEnvironmentSecret: [
+        "PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
+      ],
       createOrUpdateOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}"],
       createOrUpdateRepoSecret: [
         "PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}"
@@ -1058,6 +1061,9 @@ var require_dist_web2 = __commonJS((exports2) => {
       ],
       deleteArtifact: [
         "DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"
+      ],
+      deleteEnvironmentSecret: [
+        "DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
       ],
       deleteOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}"],
       deleteRepoSecret: [
@@ -1101,6 +1107,12 @@ var require_dist_web2 = __commonJS((exports2) => {
         "GET /repos/{owner}/{repo}/actions/permissions/selected-actions"
       ],
       getArtifact: ["GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
+      getEnvironmentPublicKey: [
+        "GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key"
+      ],
+      getEnvironmentSecret: [
+        "GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
+      ],
       getGithubActionsPermissionsOrganization: [
         "GET /orgs/{org}/actions/permissions"
       ],
@@ -1110,6 +1122,9 @@ var require_dist_web2 = __commonJS((exports2) => {
       getJobForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/jobs/{job_id}"],
       getOrgPublicKey: ["GET /orgs/{org}/actions/secrets/public-key"],
       getOrgSecret: ["GET /orgs/{org}/actions/secrets/{secret_name}"],
+      getPendingDeploymentsForRun: [
+        "GET /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"
+      ],
       getRepoPermissions: [
         "GET /repos/{owner}/{repo}/actions/permissions",
         {},
@@ -1117,6 +1132,9 @@ var require_dist_web2 = __commonJS((exports2) => {
       ],
       getRepoPublicKey: ["GET /repos/{owner}/{repo}/actions/secrets/public-key"],
       getRepoSecret: ["GET /repos/{owner}/{repo}/actions/secrets/{secret_name}"],
+      getReviewsForRun: [
+        "GET /repos/{owner}/{repo}/actions/runs/{run_id}/approvals"
+      ],
       getSelfHostedRunnerForOrg: ["GET /orgs/{org}/actions/runners/{runner_id}"],
       getSelfHostedRunnerForRepo: [
         "GET /repos/{owner}/{repo}/actions/runners/{runner_id}"
@@ -1130,6 +1148,9 @@ var require_dist_web2 = __commonJS((exports2) => {
         "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/timing"
       ],
       listArtifactsForRepo: ["GET /repos/{owner}/{repo}/actions/artifacts"],
+      listEnvironmentSecrets: [
+        "GET /repositories/{repository_id}/environments/{environment_name}/secrets"
+      ],
       listJobsForWorkflowRun: [
         "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs"
       ],
@@ -1158,6 +1179,9 @@ var require_dist_web2 = __commonJS((exports2) => {
       reRunWorkflow: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun"],
       removeSelectedRepoFromOrgSecret: [
         "DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"
+      ],
+      reviewPendingDeploymentsForRun: [
+        "POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"
       ],
       setAllowedActionsOrganization: [
         "PUT /orgs/{org}/actions/permissions/selected-actions"
@@ -1912,7 +1936,7 @@ var require_dist_web2 = __commonJS((exports2) => {
         "DELETE /reactions/{reaction_id}",
         {mediaType: {previews: ["squirrel-girl"]}},
         {
-          deprecated: "octokit.reactions.deleteLegacy() is deprecated, see https://docs.github.com/v3/reactions/#delete-a-reaction-legacy"
+          deprecated: "octokit.reactions.deleteLegacy() is deprecated, see https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy"
         }
       ],
       listForCommitComment: [
@@ -1986,6 +2010,9 @@ var require_dist_web2 = __commonJS((exports2) => {
       createForAuthenticatedUser: ["POST /user/repos"],
       createFork: ["POST /repos/{owner}/{repo}/forks"],
       createInOrg: ["POST /orgs/{org}/repos"],
+      createOrUpdateEnvironment: [
+        "PUT /repos/{owner}/{repo}/environments/{environment_name}"
+      ],
       createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
       createPagesSite: [
         "POST /repos/{owner}/{repo}/pages",
@@ -2004,6 +2031,9 @@ var require_dist_web2 = __commonJS((exports2) => {
       ],
       deleteAdminBranchProtection: [
         "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"
+      ],
+      deleteAnEnvironment: [
+        "DELETE /repos/{owner}/{repo}/environments/{environment_name}"
       ],
       deleteBranchProtection: [
         "DELETE /repos/{owner}/{repo}/branches/{branch}/protection"
@@ -2063,6 +2093,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       getAdminBranchProtection: [
         "GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"
       ],
+      getAllEnvironments: ["GET /repos/{owner}/{repo}/environments"],
       getAllStatusCheckContexts: [
         "GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts"
       ],
@@ -2097,6 +2128,9 @@ var require_dist_web2 = __commonJS((exports2) => {
       getDeployment: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}"],
       getDeploymentStatus: [
         "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}"
+      ],
+      getEnvironment: [
+        "GET /repos/{owner}/{repo}/environments/{environment_name}"
       ],
       getLatestPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/latest"],
       getLatestRelease: ["GET /repos/{owner}/{repo}/releases/latest"],
@@ -2384,7 +2418,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       unfollow: ["DELETE /user/following/{username}"],
       updateAuthenticated: ["PATCH /user"]
     }
-  }, VERSION4 = "4.12.0";
+  }, VERSION4 = "4.13.1";
   function endpointsToMethods(octokit2, endpointsMap) {
     let newMethods = {};
     for (let [scope, endpoints] of Object.entries(endpointsMap))
@@ -2439,7 +2473,7 @@ var require_dist_web3 = __commonJS((exports2) => {
     composePaginateRest: () => composePaginateRest,
     paginateRest: () => paginateRest
   });
-  var VERSION4 = "2.10.0";
+  var VERSION4 = "2.11.0";
   function normalizePaginatedListResponse(response) {
     if (!("total_count" in response.data && !("url" in response.data)))
       return response;
