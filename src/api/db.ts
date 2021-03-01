@@ -4,7 +4,14 @@ export const prisma = createPrisma();
 
 function createPrisma(): PrismaClient {
   if (process.env.NODE_ENV === "production") {
-    return new PrismaClient({ log: ["info", "warn", "error"] });
+    return new PrismaClient({
+      log: [
+        { emit: "event", level: "query" },
+        { emit: "stdout", level: "error" },
+        { emit: "stdout", level: "info" },
+        { emit: "stdout", level: "warn" },
+      ],
+    });
   }
 
   // Ensure the previous prisma instance is disconnected.

@@ -16,7 +16,7 @@ interface UserSession {
 async function getUserSession(
   context: GetServerSidePropsContext
 ): Promise<null | UserSession> {
-  console.time("Validating token");
+  console.time("SSP: validating token");
 
   try {
     const session = await getToken({
@@ -30,7 +30,7 @@ async function getUserSession(
   } catch {
     return null;
   } finally {
-    console.timeEnd("Validating token");
+    console.timeEnd("SSP: validating token");
   }
 }
 
@@ -53,12 +53,12 @@ export function redirectToSignIn<TProps>(
 export async function getRequestBody(
   context: GetServerSidePropsContext
 ): Promise<URLSearchParams> {
-  console.time("Parsing request body");
+  console.time("SSP: parsing request body");
 
   const body = await getRawBody(context.req, { encoding: "utf8" });
   const params = new URLSearchParams(body);
 
-  console.timeEnd("Parsing request body");
+  console.timeEnd("SSP: parsing request body");
 
   return params;
 }
@@ -81,11 +81,11 @@ export function createServerSideProps<
       return redirectToSignIn(context);
     }
 
-    console.time("Collecting server side props");
+    console.time("SSP: Collecting props");
 
     const response = await fn(session, context);
 
-    console.timeEnd("Collecting server side props");
+    console.timeEnd("SSP: Collecting props");
 
     return response;
   };
