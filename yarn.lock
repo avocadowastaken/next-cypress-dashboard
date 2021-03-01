@@ -5625,10 +5625,10 @@ stylis@^4.0.3:
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-4.0.7.tgz#412a90c28079417f3d27c028035095e4232d2904"
   integrity sha512-OFFeUXFgwnGOKvEXaSv0D0KQ5ADP0n6g3SVONx6I/85JzNZ3u50FRwB3lVIk1QO2HNdI75tbVzc4Z66Gdp9voA==
 
-superjson@1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/superjson/-/superjson-1.7.2.tgz#81f531829fee8bdab5593f57c145be25d2ed54c4"
-  integrity sha512-KwMBfX2c5Mq4EcvGivXH3JBYqYFoZQbA3aMhwXIdpkyVInEkxIGaoSDk+E8y/gMe5RH3mjBU3xRpvKsjZktphw==
+superjson@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/superjson/-/superjson-1.6.2.tgz#fc336c6b57838a55ef2297248272819e698bef9e"
+  integrity sha512-G1U2iz11hcoum+sfEKCMvzWdrHVR57uJxO14MgcNwNZt0VrBc82TTPGIOjDz+SSGIS/MObQU/QIZyr55D9kv9A==
   dependencies:
     debug "^4.3.1"
 

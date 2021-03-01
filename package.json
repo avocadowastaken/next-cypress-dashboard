@@ -39,7 +39,7 @@
     "prism-react-renderer": "1.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "superjson": "1.7.2"
+    "superjson": "1.6.2"
   },
   "devDependencies": {
     "@actions/core": "1.2.6",
