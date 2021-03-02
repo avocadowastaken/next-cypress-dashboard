@@ -7,14 +7,20 @@ function createPrisma(): PrismaClient {
   if (process.env.NODE_ENV === "production") {
     const logInfo = debug("app:db:info");
     const logError = debug("app:db:error");
+    const logQuery = debug("app:db:query");
     const logWarning = debug("app:db:warn");
 
     const prismaClient = new PrismaClient({
       log: [
+        { emit: "event", level: "query" },
         { emit: "event", level: "error" },
         { emit: "event", level: "info" },
         { emit: "event", level: "warn" },
       ],
+    });
+
+    prismaClient.$on("query", ({ query }) => {
+      logQuery(query);
     });
 
     prismaClient.$on("error", ({ message }) => {
