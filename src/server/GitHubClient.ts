@@ -3,25 +3,30 @@ import { createAppError } from "@/shared/AppError";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types";
 import { RequestError } from "@octokit/request-error";
+import debug from "debug";
+
+const logger = debug("app:github");
 
 export async function verifyGitHubRepoAccess(
   userId: string,
   owner: string,
   repo: string
 ): Promise<void> {
-  console.time("Loading GitHub Account");
+  logger("loading account…");
 
   const account = await prisma.userAccount.findUnique({
     where: { userId_providerId: { userId, providerId: "github" } },
   });
 
-  console.timeEnd("Loading GitHub Account");
-
   if (!account) {
+    logger("account not found");
+
     throw createAppError("GITHUB_ACCOUNT_NOT_LINKED");
   }
 
   if (!account.accessToken) {
+    logger("empty access token");
+
     throw createAppError("GITHUB_ACCOUNT_INVALID_ACCESS_TOKEN");
   }
 
@@ -29,7 +34,7 @@ export async function verifyGitHubRepoAccess(
 
   let repository: components["schemas"]["full-repository"];
 
-  console.time("Fetching GitHub Repo");
+  logger("fetching repo");
 
   try {
     const response = await octokit.request("GET /repos/{owner}/{repo}", {
@@ -41,20 +46,28 @@ export async function verifyGitHubRepoAccess(
   } catch (error: unknown) {
     if (error instanceof RequestError) {
       if (error.status === 401) {
+        logger("invalid access token");
+
         throw createAppError("GITHUB_ACCOUNT_INVALID_ACCESS_TOKEN");
       }
 
       if (error.status === 404) {
+        logger("repo not found");
+
         throw createAppError("GITHUB_REPO_NOT_FOUND");
       }
     }
 
+    logger(error);
+
     throw error;
-  } finally {
-    console.timeEnd("Fetching GitHub Repo");
   }
 
+  logger("verifying push permissions");
+
   if (!repository.permissions?.push) {
+    logger("access denied");
+
     throw createAppError("GITHUB_REPO_ACCESS_DENIED");
   }
 }

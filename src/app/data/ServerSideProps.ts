@@ -1,4 +1,5 @@
 import { JWT_ENCRYPTION_KEY, JWT_SECRET, JWT_SIGNING_KEY } from "@/server/env";
+import debug from "debug";
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -13,10 +14,12 @@ interface UserSession {
   userId: string;
 }
 
+const sspJWTLogger = debug("app:ssp:jwt");
+
 async function getUserSession(
   context: GetServerSidePropsContext
 ): Promise<null | UserSession> {
-  console.time("SSP: validating token");
+  sspJWTLogger("parsing token");
 
   try {
     const session = await getToken({
@@ -26,11 +29,12 @@ async function getUserSession(
       req: context.req as NextApiRequest,
     });
 
+    sspJWTLogger("access granted");
     return { userId: session["sub"] };
   } catch {
+    sspJWTLogger("access denied");
+
     return null;
-  } finally {
-    console.timeEnd("SSP: validating token");
   }
 }
 
@@ -50,18 +54,22 @@ export function redirectToSignIn<TProps>(
   };
 }
 
+const sspBodyLogger = debug("app:ssp:body");
+
 export async function getRequestBody(
   context: GetServerSidePropsContext
 ): Promise<URLSearchParams> {
-  console.time("SSP: parsing request body");
+  sspBodyLogger("starting parsing");
 
   const body = await getRawBody(context.req, { encoding: "utf8" });
   const params = new URLSearchParams(body);
 
-  console.timeEnd("SSP: parsing request body");
+  sspBodyLogger("parsing finished");
 
   return params;
 }
+
+const sspLogger = debug("app:ssp");
 
 export function createServerSideProps<
   TProps,
@@ -81,11 +89,11 @@ export function createServerSideProps<
       return redirectToSignIn(context);
     }
 
-    console.time("SSP: Collecting props");
+    sspLogger("getting server side props");
 
     const response = await fn(session, context);
 
-    console.timeEnd("SSP: Collecting props");
+    sspLogger("sending server side props to the client");
 
     return response;
   };
