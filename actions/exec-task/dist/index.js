@@ -8,7 +8,7 @@ var __commonJS = (callback, module2) => () => (module2 || (module2 = {exports: {
     for (let key of __getOwnPropNames(module2))
       !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
   return target;
-}, __toModule = (module2) => module2 && module2.__esModule ? module2 : __exportStar(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", {value: module2, enumerable: !0})), module2);
+}, __toModule = (module2) => __exportStar(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: !0} : {value: module2, enumerable: !0})), module2);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS((exports2) => {
@@ -956,7 +956,7 @@ var require_dist_web = __commonJS((exports2) => {
   __export(exports2, {
     Octokit: () => Octokit
   });
-  var import_before_after_hook = __toModule(require_before_after_hook()), VERSION4 = "3.2.5", Octokit = class {
+  var import_before_after_hook = __toModule(require_before_after_hook()), VERSION4 = "3.3.0", Octokit = class {
     constructor(options = {}) {
       let hook2 = new import_before_after_hook.Collection(), requestDefaults = {
         baseUrl: request.endpoint.DEFAULTS.baseUrl,
@@ -2418,7 +2418,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       unfollow: ["DELETE /user/following/{username}"],
       updateAuthenticated: ["PATCH /user"]
     }
-  }, VERSION4 = "4.13.1";
+  }, VERSION4 = "4.13.5";
   function endpointsToMethods(octokit2, endpointsMap) {
     let newMethods = {};
     for (let [scope, endpoints] of Object.entries(endpointsMap))
@@ -3484,7 +3484,7 @@ var Deprecation = class extends Error {
 __name(Deprecation, "Deprecation");
 
 // node_modules/@octokit/request-error/dist-web/index.js
-var import_once = __toModule(require_once()), logOnce = import_once.default((deprecation) => console.warn(deprecation)), RequestError = class extends Error {
+var import_once = __toModule(require_once()), logOnce = (0, import_once.default)((deprecation) => console.warn(deprecation)), RequestError = class extends Error {
   constructor(message, statusCode, options) {
     super(message);
     Error.captureStackTrace && Error.captureStackTrace(this, this.constructor), this.name = "HttpError", this.status = statusCode, Object.defineProperty(this, "code", {
@@ -3587,7 +3587,7 @@ var request = withDefaults2(endpoint, {
 });
 
 // node_modules/@octokit/graphql/dist-web/index.js
-var VERSION3 = "4.6.0", GraphqlError = class extends Error {
+var VERSION3 = "4.6.1", GraphqlError = class extends Error {
   constructor(request2, response) {
     let message = response.data.errors[0].message;
     super(message);
@@ -3603,10 +3603,15 @@ var NON_VARIABLE_OPTIONS = [
   "request",
   "query",
   "mediaType"
-], GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
+], FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"], GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
 function graphql(request2, query, options) {
-  if (typeof query == "string" && options && "query" in options)
-    return Promise.reject(new Error('[@octokit/graphql] "query" cannot be used as variable name'));
+  if (options) {
+    if (typeof query == "string" && "query" in options)
+      return Promise.reject(new Error('[@octokit/graphql] "query" cannot be used as variable name'));
+    for (let key in options)
+      if (!!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
+        return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
+  }
   let parsedOptions = typeof query == "string" ? Object.assign({query}, options) : query, requestOptions = Object.keys(parsedOptions).reduce((result, key) => NON_VARIABLE_OPTIONS.includes(key) ? (result[key] = parsedOptions[key], result) : (result.variables || (result.variables = {}), result.variables[key] = parsedOptions[key], result), {}), baseUrl = parsedOptions.baseUrl || request2.endpoint.DEFAULTS.baseUrl;
   return GHES_V3_SUFFIX_REGEX.test(baseUrl) && (requestOptions.url = baseUrl.replace(GHES_V3_SUFFIX_REGEX, "/api/graphql")), request2(requestOptions).then((response) => {
     if (response.data.errors) {
@@ -3676,7 +3681,7 @@ var createTokenAuth = /* @__PURE__ */ __name(function(token2) {
 
 // actions/exec-task/index.ts
 var import_github = __toModule(require_github());
-var {TASKS_API_SECRET} = process.env, token = import_core.getInput("token", {required: !0}), name = import_core.getInput("name", {required: !0}), payload = import_core.getInput("payload", {required: !1}), environment = import_core.getInput("environment", {required: !0}), ignoreErrors = import_core.getInput("ignore_errors", {required: !1}) === "true", octokit = import_github.getOctokit(token);
+var {TASKS_API_SECRET} = process.env, token = (0, import_core.getInput)("token", {required: !0}), name = (0, import_core.getInput)("name", {required: !0}), payload = (0, import_core.getInput)("payload", {required: !1}), environment = (0, import_core.getInput)("environment", {required: !0}), ignoreErrors = (0, import_core.getInput)("ignore_errors", {required: !1}) === "true", octokit = (0, import_github.getOctokit)(token);
 async function findDeploymentURL() {
   for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", {
     ...import_github.context.repo,
@@ -3697,12 +3702,12 @@ __name(findDeploymentURL, "findDeploymentURL");
 async function main() {
   let deploymentURL = await findDeploymentURL();
   if (!deploymentURL)
-    return import_core.warning(`There are no deployments for the environment '${environment}'`);
+    return (0, import_core.warning)(`There are no deployments for the environment '${environment}'`);
   let headers = {
     Accept: "application/json",
     "Content-Type": "application/json"
   };
-  TASKS_API_SECRET && (headers.Authorization = `Token ${TASKS_API_SECRET}`), import_core.info(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
+  TASKS_API_SECRET && (headers.Authorization = `Token ${TASKS_API_SECRET}`), (0, import_core.info)(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
   let requestInit = {
     headers,
     method: "POST"
@@ -3710,7 +3715,7 @@ async function main() {
   payload && (requestInit.body = payload);
   let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, requestInit), responseText = await response.text().catch(() => null);
   if (response.ok)
-    responseText && import_core.info(responseText);
+    responseText && (0, import_core.info)(responseText);
   else
     throw new Error(`Failed to execute task.
 ${response.statusText}
@@ -3718,5 +3723,5 @@ ${responseText}`);
 }
 __name(main, "main");
 main().catch((error) => {
-  ignoreErrors ? import_core.warning(error) : import_core.setFailed(error);
+  ignoreErrors ? (0, import_core.warning)(error) : (0, import_core.setFailed)(error);
 });

@@ -6,7 +6,7 @@ var __exportStar = (target, module2, desc) => {
     for (let key of __getOwnPropNames(module2))
       !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
   return target;
-}, __toModule = (module2) => module2 && module2.__esModule ? module2 : __exportStar(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", {value: module2, enumerable: !0})), module2);
+}, __toModule = (module2) => __exportStar(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: !0} : {value: module2, enumerable: !0})), module2);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS((exports2) => {
@@ -6432,19 +6432,19 @@ var require_yaml = __commonJS((exports2, module2) => {
 });
 
 // actions/patch-cypress-config/index.ts
-var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), API_URL = import_core.getInput("api_url", {required: !1}) || "https://next-cypress-dashboard.vercel.app";
+var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), API_URL = (0, import_core.getInput)("api_url", {required: !1}) || "https://next-cypress-dashboard.vercel.app";
 async function resolveCachePath() {
-  return await import_core.group("Verify Cypress installation", async () => {
-    await import_exec.exec("npx", ["cypress", "install"]), await import_exec.exec("npx", ["cypress", "verify"]);
-  }), import_core.group("Resolve Cypress cache path", async () => {
+  return await (0, import_core.group)("Verify Cypress installation", async () => {
+    await (0, import_exec.exec)("npx", ["cypress", "install"]), await (0, import_exec.exec)("npx", ["cypress", "verify"]);
+  }), (0, import_core.group)("Resolve Cypress cache path", async () => {
     let version = "", cacheDir = "";
-    return await import_exec.exec("npx", ["cypress", "cache", "path"], {
+    return await (0, import_exec.exec)("npx", ["cypress", "cache", "path"], {
       listeners: {
         stdout: (data) => {
           cacheDir += data.toString("utf8");
         }
       }
-    }), await import_exec.exec("npx", ["cypress", "version", "--component", "binary"], {
+    }), await (0, import_exec.exec)("npx", ["cypress", "version", "--component", "binary"], {
       listeners: {
         stdout: (data) => {
           version += data.toString("utf8");
@@ -6455,11 +6455,11 @@ async function resolveCachePath() {
 }
 __name(resolveCachePath, "resolveCachePath");
 async function main() {
-  let cachePath = await resolveCachePath(), glob = await import_glob.create(`${cachePath}/**/app.yml`);
-  await import_core.group("Patching config", async () => {
+  let cachePath = await resolveCachePath(), glob = await (0, import_glob.create)(`${cachePath}/**/app.yml`);
+  await (0, import_core.group)("Patching config", async () => {
     for await (let configPath of glob.globGenerator()) {
       let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = yaml.parse(configYaml);
-      config.production.api_url !== API_URL ? (config.production.api_url = API_URL, import_core.info(`Patching ${configPath}`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : import_core.info(`Skipping ${configPath}`);
+      config.production.api_url !== API_URL ? (config.production.api_url = API_URL, (0, import_core.info)(`Patching ${configPath}`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : (0, import_core.info)(`Skipping ${configPath}`);
     }
   });
 }
