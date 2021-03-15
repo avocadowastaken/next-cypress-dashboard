@@ -29,7 +29,3 @@ export const TASKS_API_SECRET = resolveRequired("TASKS_API_SECRET");
 
 export const GITHUB_CLIENT_ID = resolveRequired("GITHUB_ID");
 export const GITHUB_CLIENT_SECRET = resolveRequired("GITHUB_SECRET");
-export const GITHUB_CLIENT_SLUG = resolveOptional(
-  "GITHUB_SLUG",
-  "next-cypress-dashboard"
-);

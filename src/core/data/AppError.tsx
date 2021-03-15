@@ -22,8 +22,16 @@ export const APP_ERROR_CODES = [
   "GITHUB_REPO_ACCESS_DENIED",
 ] as const;
 
+export class AppError extends Error {
+  constructor(code: AppErrorCode) {
+    super(code);
+    this.name = "AppError";
+  }
+}
+
+/** @deprecated use AppError class directly */
 export function createAppError(code: AppErrorCode): Error {
-  return new Error(code);
+  return new AppError(code);
 }
 
 export function extractErrorCode(error: unknown): AppErrorCode {
@@ -38,8 +46,10 @@ export function extractErrorCode(error: unknown): AppErrorCode {
   return "UNKNOWN_ERROR";
 }
 
-export function formatErrorCode(error: AppErrorCode): string {
-  switch (error) {
+export function formatErrorCode(error: unknown): string {
+  const code = extractErrorCode(error);
+
+  switch (code) {
     case "UNKNOWN_ERROR":
       return "Unknown Error";
     case "BAD_REQUEST":
@@ -54,12 +64,14 @@ export function formatErrorCode(error: AppErrorCode): string {
       return "Insufficient permissions to the GitHub repository";
 
     default:
-      return error;
+      return code;
   }
 }
 
-export function isGitHubIntegrationError(error: AppErrorCode): boolean {
-  switch (error) {
+export function isGitHubIntegrationError(error: unknown): boolean {
+  const code = extractErrorCode(error);
+
+  switch (code) {
     case "GITHUB_ACCOUNT_NOT_LINKED":
     case "GITHUB_ACCOUNT_INVALID_ACCESS_TOKEN":
       return true;
