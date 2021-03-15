@@ -61,7 +61,7 @@ export default createApiHandler((app) => {
       };
       const response = await createPageResponse(request.query, {
         maxNodesPerPage: 10,
-        defaultNodesPerPage: 5,
+        defaultNodesPerPage: 10,
         getCount: () => prisma.project.count({ where }),
         getNodes: (args) =>
           prisma.project.findMany({
@@ -148,6 +148,27 @@ export default createApiHandler((app) => {
       });
 
       reply.send(projectSecrets);
+    }
+  );
+
+  app.get<{ Querystring: PageInput & { projectId?: string } }>(
+    "/api/runs",
+    async (request, reply) => {
+      const { projectId, ...pageInput } = request.query;
+      const { userId } = await getRequestSession(request);
+      const where: Prisma.RunWhereInput = {
+        project: {
+          id: projectId,
+          users: { some: { id: userId } },
+        },
+      };
+
+      const response = await createPageResponse(pageInput, {
+        getCount: () => prisma.run.count({ where }),
+        getNodes: (args) => prisma.run.findMany({ ...args, where }),
+      });
+
+      reply.send(response);
     }
   );
 });

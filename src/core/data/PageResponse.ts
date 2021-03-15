@@ -15,11 +15,16 @@ export interface PageInput {
   nodesPerPage?: unknown;
 }
 
+interface PageResponseNodesArgs {
+  take: number;
+  skip: number;
+}
+
 export interface PageResponseOptions<TData> {
   maxNodesPerPage?: number;
   defaultNodesPerPage?: number;
   getCount: () => Promise<number>;
-  getNodes: (input: PageResponseNodesInput) => Promise<TData[]>;
+  getNodes: (args: PageResponseNodesArgs) => Promise<TData[]>;
 }
 
 export interface PageResponse<TData> {
@@ -29,11 +34,6 @@ export interface PageResponse<TData> {
   page: number;
   maxPage: number;
   nodesPerPage: number;
-}
-
-interface PageResponseNodesInput {
-  take: number;
-  skip: number;
 }
 
 export async function createPageResponse<TData>(
@@ -51,7 +51,7 @@ export async function createPageResponse<TData>(
     toPositiveNumber(input.nodesPerPage, defaultNodesPerPage)
   );
 
-  const nodesInput: PageResponseNodesInput = {
+  const nodesInput: PageResponseNodesArgs = {
     take: nodesPerPage,
     skip: (page - 1) * nodesPerPage,
   };

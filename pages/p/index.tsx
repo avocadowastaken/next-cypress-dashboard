@@ -131,6 +131,7 @@ export function AddProjectDialog({
 
 export default function ProjectsPage(): ReactElement {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const response = useQuery<PageResponse<Project>>(
     `/api/projects?page=${router.query.page}`,
     { keepPreviousData: true }
