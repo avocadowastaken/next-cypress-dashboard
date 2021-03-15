@@ -1,4 +1,4 @@
-import { DurationChip } from "@/ui/DurationChip";
+import { DurationChip } from "@/core/components/DurationChip";
 import {
   ElectronFramework,
   Firefox,
@@ -9,7 +9,7 @@ import {
   SourceBranch,
   SourceCommit,
   SourcePull,
-} from "@/ui/icons";
+} from "@/core/components/icons";
 import { Avatar, Chip, Grid, Link, Tooltip } from "@material-ui/core";
 import { AccessTime, Apple, Check, Error } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";

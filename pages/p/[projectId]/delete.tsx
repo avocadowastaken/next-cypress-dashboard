@@ -1,15 +1,15 @@
-import {
-  createServerSideProps,
-  getRequestBody,
-  redirectToSignIn,
-} from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
+import { AppTitle } from "@/core/components/AppLayout";
 import {
   AppErrorCode,
   extractErrorCode,
   formatErrorCode,
-} from "@/shared/AppError";
-import { AppTitle } from "@/ui/AppLayout";
+} from "@/core/data/AppError";
+import { prisma } from "@/core/helpers/db";
+import {
+  createServerSideProps,
+  getRequestBody,
+  redirectToSignIn,
+} from "@/core/ServerSideProps";
 import {
   Button,
   Dialog,

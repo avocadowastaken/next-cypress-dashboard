@@ -1,4 +1,4 @@
-import { createAppError } from "@/shared/AppError";
+import { createAppError } from "@/core/data/AppError";
 import gitUrlParse from "git-url-parse";
 
 const resourceProviderMap = new Map<string, string>().set(

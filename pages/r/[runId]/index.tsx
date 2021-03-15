@@ -1,12 +1,12 @@
+import { AppLayout } from "@/core/components/AppLayout";
+import { RunAttributes } from "@/core/components/RunAttributes";
+import { RunInstanceAttributes } from "@/core/components/RunInstanceAttributes";
+import { prisma } from "@/core/helpers/db";
+import { verifyGitHubRepoAccess } from "@/core/helpers/GitHub";
 import {
   createServerSideProps,
   redirectToSignIn,
-} from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
-import { verifyGitHubRepoAccess } from "@/server/GitHubClient";
-import { AppLayout } from "@/ui/AppLayout";
-import { RunAttributes } from "@/ui/RunAttributes";
-import { RunInstanceAttributes } from "@/ui/RunInstanceAttributes";
+} from "@/core/ServerSideProps";
 import {
   Button,
   Divider,

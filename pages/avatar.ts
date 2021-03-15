@@ -1,4 +1,4 @@
-import { createServerSideProps } from "@/app/data/ServerSideProps";
+import { createServerSideProps } from "@/core/ServerSideProps";
 import { createHash } from "crypto";
 
 function normalizeEmail(input: unknown): null | string {

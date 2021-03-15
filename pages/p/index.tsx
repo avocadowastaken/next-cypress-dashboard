@@ -1,12 +1,12 @@
-import { toPageParam } from "@/app/data/PaginationParams";
-import { createServerSideProps } from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
-import { AppLayout } from "@/ui/AppLayout";
+import { AppLayout } from "@/core/components/AppLayout";
+import { PageResponse } from "@/core/data/PageResponse";
+import { formatProjectName } from "@/projects/helpers";
 import {
   Button,
   Link,
   Pagination,
   PaginationItem,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -16,42 +16,18 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import { Prisma, Project } from "@prisma/client";
+import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
+import { useQuery } from "react-query";
 
-interface ProjectsPageProps {
-  page: number;
-  maxPage: number;
-  projects: Project[];
-}
-
-export const getServerSideProps = createServerSideProps<ProjectsPageProps>(
-  async ({ userId }, { query }) => {
-    const take = 10;
-    const page = toPageParam(query.page);
-    const where: Prisma.ProjectWhereInput = {
-      users: { some: { id: userId } },
-    };
-
-    const [count, projects] = await Promise.all([
-      prisma.project.count({ where }),
-      prisma.project.findMany({ where, take, skip: (page - 1) * take }),
-    ]);
-
-    const maxPage = Math.ceil(count / take);
-
-    return { props: { page, maxPage, projects } };
-  }
-);
-
-export default function ProjectsPage({
-  page,
-  maxPage,
-  projects,
-}: ProjectsPageProps): ReactElement {
+export default function ProjectsPage(): ReactElement {
   const router = useRouter();
+  const response = useQuery<PageResponse<Project>>(
+    `/api/projects?page=${router.query.page}`,
+    { keepPreviousData: true }
+  );
 
   return (
     <AppLayout
@@ -69,48 +45,62 @@ export default function ProjectsPage({
           <TableHead>
             <TableRow>
               <TableCell>Provider</TableCell>
-              <TableCell>Organization</TableCell>
               <TableCell>Repo</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {projects.map((project) => (
-              <TableRow key={project.id}>
-                <TableCell component="th" scope="row">
-                  {project.providerId}
-                </TableCell>
-                <TableCell>{project.org}</TableCell>
-                <TableCell>
-                  <NextLink passHref={true} href={`/p/${project.id}`}>
-                    <Link>{project.repo}</Link>
-                  </NextLink>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
 
-          {maxPage > 1 && (
-            <TableFooter>
+          {response.status !== "success" ? (
+            <TableBody>
               <TableRow>
-                <TableCell colSpan={3}>
-                  <Pagination
-                    page={page}
-                    count={maxPage}
-                    renderItem={(item) => (
-                      <NextLink
-                        passHref={true}
-                        href={{
-                          pathname: "/p",
-                          query: { ...router.query, page: item.page },
-                        }}
-                      >
-                        <PaginationItem {...item} />
-                      </NextLink>
-                    )}
-                  />
+                <TableCell>
+                  <Skeleton />
+                </TableCell>
+
+                <TableCell>
+                  <Skeleton />
                 </TableCell>
               </TableRow>
-            </TableFooter>
+            </TableBody>
+          ) : (
+            <>
+              <TableBody>
+                {response.data.nodes.map((project) => (
+                  <TableRow key={project.id}>
+                    <TableCell>{project.providerId}</TableCell>
+
+                    <TableCell>
+                      <NextLink passHref={true} href={`/p/${project.id}`}>
+                        <Link>{formatProjectName(project)}</Link>
+                      </NextLink>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+
+              {response.data.maxPage > 1 && (
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={3}>
+                      <Pagination
+                        page={response.data.page}
+                        count={response.data.maxPage}
+                        renderItem={(item) => (
+                          <NextLink
+                            passHref={true}
+                            href={{
+                              pathname: "/p",
+                              query: { ...router.query, page: item.page },
+                            }}
+                          >
+                            <PaginationItem {...item} />
+                          </NextLink>
+                        )}
+                      />
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              )}
+            </>
           )}
         </Table>
       </TableContainer>

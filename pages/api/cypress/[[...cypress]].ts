@@ -1,7 +1,5 @@
-import { createApiHandler } from "@/server/ApiHandler";
-import { prisma } from "@/server/db";
-import { TASKS_API_SECRET } from "@/server/env";
-import { createAppError } from "@/shared/AppError";
+import { createAppError } from "@/core/data/AppError";
+import { createApiHandler } from "@/core/helpers/Api";
 import {
   CreateInstanceInput,
   CreateInstanceResponse,
@@ -9,8 +7,10 @@ import {
   CreateRunResponse,
   UpdateInstanceInput,
   UpdateInstanceResponse,
-} from "@/shared/cypress-types";
-import { parseGitUrl } from "@/shared/GitUrl";
+} from "@/core/helpers/cypress-types";
+import { prisma } from "@/core/helpers/db";
+import { TASKS_API_SECRET } from "@/core/helpers/env";
+import { parseGitUrl } from "@/core/helpers/Git";
 import { Browser, OS, Prisma, Run, TestResultState } from "@prisma/client";
 
 function wait(ms: number): Promise<void> {

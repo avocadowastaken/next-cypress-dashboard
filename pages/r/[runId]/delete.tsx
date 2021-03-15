@@ -1,11 +1,11 @@
+import { AppTitle } from "@/core/components/AppLayout";
+import { prisma } from "@/core/helpers/db";
+import { verifyGitHubRepoAccess } from "@/core/helpers/GitHub";
 import {
   createServerSideProps,
   getRequestBody,
   redirectToSignIn,
-} from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
-import { verifyGitHubRepoAccess } from "@/server/GitHubClient";
-import { AppTitle } from "@/ui/AppLayout";
+} from "@/core/ServerSideProps";
 import {
   Button,
   Dialog,

@@ -1,5 +1,5 @@
-import { prisma } from "@/server/db";
-import { createAppError } from "@/shared/AppError";
+import { createAppError } from "@/core/data/AppError";
+import { prisma } from "@/core/helpers/db";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types";
 import { RequestError } from "@octokit/request-error";

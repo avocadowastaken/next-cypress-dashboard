@@ -1,12 +1,12 @@
+import { AppTitle } from "@/core/components/AppLayout";
+import { AppErrorCode, formatErrorCode } from "@/core/data/AppError";
+import { prisma } from "@/core/helpers/db";
+import { verifyGitHubRepoAccess } from "@/core/helpers/GitHub";
 import {
   createServerSideProps,
   getRequestBody,
   redirectToSignIn,
-} from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
-import { verifyGitHubRepoAccess } from "@/server/GitHubClient";
-import { AppErrorCode, formatErrorCode } from "@/shared/AppError";
-import { AppTitle } from "@/ui/AppLayout";
+} from "@/core/ServerSideProps";
 import {
   Button,
   Dialog,

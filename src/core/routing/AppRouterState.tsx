@@ -8,6 +8,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { useIsFetching } from "react-query";
 
 export type AppRouterState = "unknown" | "navigated" | "navigating";
 
@@ -50,11 +51,12 @@ export function AppRouterStateProvider({
 }
 
 export function AppRouterProgressIndicator() {
+  const fetchingCount = useIsFetching();
   const routerState = useAppRouterState();
 
   return (
     <Collapse
-      in={routerState === "navigating"}
+      in={routerState === "navigating" || fetchingCount > 0}
       unmountOnExit={true}
       style={{
         top: 0,

@@ -1,8 +1,8 @@
-import { toPageParam } from "@/app/data/PaginationParams";
-import { createServerSideProps } from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
-import { AppLayout } from "@/ui/AppLayout";
-import { RunAttributes } from "@/ui/RunAttributes";
+import { AppLayout } from "@/core/components/AppLayout";
+import { RunAttributes } from "@/core/components/RunAttributes";
+import { prisma } from "@/core/helpers/db";
+import { toPageParam } from "@/core/PaginationParams";
+import { createServerSideProps } from "@/core/ServerSideProps";
 import {
   Button,
   Pagination,

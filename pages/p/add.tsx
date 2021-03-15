@@ -1,18 +1,18 @@
 import {
-  createServerSideProps,
-  getRequestBody,
-  redirectToSignIn,
-} from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
-import { GITHUB_CLIENT_SLUG } from "@/server/env";
-import { verifyGitHubRepoAccess } from "@/server/GitHubClient";
-import {
   AppErrorCode,
   extractErrorCode,
   formatErrorCode,
   isGitHubIntegrationError,
-} from "@/shared/AppError";
-import { parseGitUrl } from "@/shared/GitUrl";
+} from "@/core/data/AppError";
+import { prisma } from "@/core/helpers/db";
+import { GITHUB_CLIENT_SLUG } from "@/core/helpers/env";
+import { parseGitUrl } from "@/core/helpers/Git";
+import { verifyGitHubRepoAccess } from "@/core/helpers/GitHub";
+import {
+  createServerSideProps,
+  getRequestBody,
+  redirectToSignIn,
+} from "@/core/ServerSideProps";
 import {
   Alert,
   Button,
@@ -158,7 +158,7 @@ export default function AddProjectPage({
 
           <DialogActions>
             <NextLink replace={true} passHref={true} href="/p">
-              <Button>Dismiss</Button>
+              <Button type="button">Dismiss</Button>
             </NextLink>
 
             <Button>Confirm</Button>

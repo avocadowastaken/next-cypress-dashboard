@@ -7,8 +7,9 @@ import {
 } from "@material-ui/core";
 import { blue, blueGrey, grey, red } from "@material-ui/core/colors";
 import { Components, MDXProvider } from "@mdx-js/react";
+import Head from "next/head";
 import NextLink from "next/link";
-import {
+import React, {
   AnchorHTMLAttributes,
   HTMLAttributes,
   ReactElement,
@@ -181,12 +182,29 @@ export interface ThemeConfigProps {
 
 export function AppThemeProvider({ children }: ThemeConfigProps): ReactElement {
   return (
-    <MDXProvider components={mdxComponents}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <>
+      <Head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
 
-        <ScopedCssBaseline>{children}</ScopedCssBaseline>
-      </ThemeProvider>
-    </MDXProvider>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/prismjs@1.23.0/themes/prism-tomorrow.css"
+        />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
+      </Head>
+
+      <MDXProvider components={mdxComponents}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+
+          <ScopedCssBaseline>{children}</ScopedCssBaseline>
+        </ThemeProvider>
+      </MDXProvider>
+    </>
   );
 }

@@ -1,11 +1,11 @@
-import { prisma } from "@/server/db";
+import { prisma } from "@/core/helpers/db";
 import {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
   JWT_ENCRYPTION_KEY,
   JWT_SECRET,
   JWT_SIGNING_KEY,
-} from "@/server/env";
+} from "@/core/helpers/env";
 import nextAuth, { User } from "next-auth";
 import Adapters from "next-auth/adapters";
 import Providers from "next-auth/providers";

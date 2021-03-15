@@ -1,4 +1,8 @@
-import { JWT_ENCRYPTION_KEY, JWT_SECRET, JWT_SIGNING_KEY } from "@/server/env";
+import {
+  JWT_ENCRYPTION_KEY,
+  JWT_SECRET,
+  JWT_SIGNING_KEY,
+} from "@/core/helpers/env";
 import debug from "debug";
 import {
   GetServerSideProps,

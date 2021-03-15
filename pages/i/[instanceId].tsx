@@ -1,14 +1,14 @@
+import { AppLayout } from "@/core/components/AppLayout";
+import { DebugStepOver } from "@/core/components/icons";
+import { Pre } from "@/core/components/Pre";
+import { RunAttributes } from "@/core/components/RunAttributes";
+import { RunInstanceAttributes } from "@/core/components/RunInstanceAttributes";
+import { prisma } from "@/core/helpers/db";
+import { verifyGitHubRepoAccess } from "@/core/helpers/GitHub";
 import {
   createServerSideProps,
   redirectToSignIn,
-} from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
-import { verifyGitHubRepoAccess } from "@/server/GitHubClient";
-import { AppLayout } from "@/ui/AppLayout";
-import { DebugStepOver } from "@/ui/icons";
-import { Pre } from "@/ui/Pre";
-import { RunAttributes } from "@/ui/RunAttributes";
-import { RunInstanceAttributes } from "@/ui/RunInstanceAttributes";
+} from "@/core/ServerSideProps";
 import {
   Box,
   Collapse,

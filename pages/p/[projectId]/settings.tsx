@@ -1,17 +1,17 @@
-import {
-  createServerSideProps,
-  redirectToSignIn,
-} from "@/app/data/ServerSideProps";
-import { prisma } from "@/server/db";
-import { verifyGitHubRepoAccess } from "@/server/GitHubClient";
+import { AppLayout } from "@/core/components/AppLayout";
+import { Pre } from "@/core/components/Pre";
 import {
   AppErrorCode,
   extractErrorCode,
   formatErrorCode,
   isGitHubIntegrationError,
-} from "@/shared/AppError";
-import { AppLayout } from "@/ui/AppLayout";
-import { Pre } from "@/ui/Pre";
+} from "@/core/data/AppError";
+import { prisma } from "@/core/helpers/db";
+import { verifyGitHubRepoAccess } from "@/core/helpers/GitHub";
+import {
+  createServerSideProps,
+  redirectToSignIn,
+} from "@/core/ServerSideProps";
 import {
   Alert,
   Button,
