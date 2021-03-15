@@ -3636,8 +3636,13 @@ var require_parse_cst = __commonJS((exports2) => {
 `; ) {
         if (ch === `
 `) {
-          let lineStart = offset + 1, inEnd = PlainValue.Node.endOfIndent(src, lineStart), indentDiff = inEnd - (lineStart + this.indent), noIndicatorAsIndent = parent.type === PlainValue.Type.SEQ_ITEM && parent.context.atLineStart;
-          if (!PlainValue.Node.nextNodeIsIndented(src[inEnd], indentDiff, !noIndicatorAsIndent))
+          let inEnd = offset, lineStart;
+          do
+            lineStart = inEnd + 1, inEnd = PlainValue.Node.endOfIndent(src, lineStart);
+          while (src[inEnd] === `
+`);
+          let indentDiff = inEnd - (lineStart + this.indent), noIndicatorAsIndent = parent.type === PlainValue.Type.SEQ_ITEM && parent.context.atLineStart;
+          if (src[inEnd] !== "#" && !PlainValue.Node.nextNodeIsIndented(src[inEnd], indentDiff, !noIndicatorAsIndent))
             break;
           this.atLineStart = !0, this.lineStart = lineStart, lineHasProps = !1, offset = inEnd;
         } else if (ch === PlainValue.Char.COMMENT) {
@@ -3686,8 +3691,8 @@ var require_parse_cst = __commonJS((exports2) => {
   exports2.parse = parse2;
 });
 
-// node_modules/yaml/dist/resolveSeq-4a68b39b.js
-var require_resolveSeq_4a68b39b = __commonJS((exports2) => {
+// node_modules/yaml/dist/resolveSeq-d03cb037.js
+var require_resolveSeq_d03cb037 = __commonJS((exports2) => {
   "use strict";
   var PlainValue = require_PlainValue_ec8e588e();
   function addCommentBefore(str, indent, comment) {
@@ -3734,8 +3739,19 @@ ${indent}${str}` : str;
   function collectionFromPath(schema, path2, value) {
     let v = value;
     for (let i = path2.length - 1; i >= 0; --i) {
-      let k = path2[i], o = Number.isInteger(k) && k >= 0 ? [] : {};
-      o[k] = v, v = o;
+      let k = path2[i];
+      if (Number.isInteger(k) && k >= 0) {
+        let a = [];
+        a[k] = v, v = a;
+      } else {
+        let o = {};
+        Object.defineProperty(o, k, {
+          value: v,
+          writable: !0,
+          enumerable: !0,
+          configurable: !0
+        }), v = o;
+      }
     }
     return schema.createNode(v, !1);
   }
@@ -3920,7 +3936,7 @@ ${indent}${s}` : `
   };
   __name(YAMLSeq, "YAMLSeq");
   var stringifyKey = /* @__PURE__ */ __name((key, jsKey, ctx) => jsKey === null ? "" : typeof jsKey != "object" ? String(jsKey) : key instanceof Node && ctx && ctx.doc ? key.toString({
-    anchors: {},
+    anchors: Object.create(null),
     doc: ctx.doc,
     indent: "",
     indentStep: ctx.indentStep,
@@ -3951,8 +3967,13 @@ ${indent}${s}` : `
       } else if (map instanceof Set)
         map.add(key);
       else {
-        let stringKey = stringifyKey(this.key, key, ctx);
-        map[stringKey] = toJSON(this.value, stringKey, ctx);
+        let stringKey = stringifyKey(this.key, key, ctx), value = toJSON(this.value, stringKey, ctx);
+        stringKey in map ? Object.defineProperty(map, stringKey, {
+          value,
+          writable: !0,
+          enumerable: !0,
+          configurable: !0
+        }) : map[stringKey] = value;
       }
       return map;
     }
@@ -3979,7 +4000,7 @@ ${indent}${s}` : `
           throw new Error(msg);
         }
       }
-      let explicitKey = !simpleKeys && (!key || keyComment || key instanceof Collection || key.type === PlainValue.Type.BLOCK_FOLDED || key.type === PlainValue.Type.BLOCK_LITERAL), {
+      let explicitKey = !simpleKeys && (!key || keyComment || (key instanceof Node ? key instanceof Collection || key.type === PlainValue.Type.BLOCK_FOLDED || key.type === PlainValue.Type.BLOCK_LITERAL : typeof key == "object")), {
         doc,
         indent,
         indentStep,
@@ -3990,8 +4011,13 @@ ${indent}${s}` : `
         indent: indent + indentStep
       });
       let chompKeep = !1, str = stringify2(key, ctx, () => keyComment = null, () => chompKeep = !0);
-      if (str = addComment(str, ctx.indent, keyComment), ctx.allNullValues && !simpleKeys)
-        return this.comment ? (str = addComment(str, ctx.indent, this.comment), onComment && onComment()) : chompKeep && !keyComment && onChompKeep && onChompKeep(), ctx.inFlow ? str : `? ${str}`;
+      if (str = addComment(str, ctx.indent, keyComment), !explicitKey && str.length > 1024) {
+        if (simpleKeys)
+          throw new Error("With simple keys, single line scalar must not span more than 1024 characters");
+        explicitKey = !0;
+      }
+      if (ctx.allNullValues && !simpleKeys)
+        return this.comment ? (str = addComment(str, ctx.indent, this.comment), onComment && onComment()) : chompKeep && !keyComment && onChompKeep && onChompKeep(), ctx.inFlow && !explicitKey ? str : `? ${str}`;
       str = explicitKey ? `? ${str}
 ${indent}:` : `${str}:`, this.comment && (str = addComment(str, ctx.indent, this.comment), onComment && onComment());
       let vcb = "", valueComment = null;
@@ -4000,9 +4026,10 @@ ${indent}:` : `${str}:`, this.comment && (str = addComment(str, ctx.indent, this
 ${value.commentBefore.replace(/^/gm, `${ctx.indent}#`)}`), valueComment = value.comment) : value && typeof value == "object" && (value = doc.schema.createNode(value, !0)), ctx.implicitKey = !1, !explicitKey && !this.comment && value instanceof Scalar && (ctx.indentAtStart = str.length + 1), chompKeep = !1, !indentSeq && indentSize >= 2 && !ctx.inFlow && !explicitKey && value instanceof YAMLSeq && value.type !== PlainValue.Type.FLOW_SEQ && !value.tag && !doc.anchors.getName(value) && (ctx.indent = ctx.indent.substr(2));
       let valueStr = stringify2(value, ctx, () => valueComment = null, () => chompKeep = !0), ws = " ";
       return vcb || this.comment ? ws = `${vcb}
-${ctx.indent}` : !explicitKey && value instanceof Collection && (!(valueStr[0] === "[" || valueStr[0] === "{") || valueStr.includes(`
+${ctx.indent}` : !explicitKey && value instanceof Collection ? (!(valueStr[0] === "[" || valueStr[0] === "{") || valueStr.includes(`
 `)) && (ws = `
-${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), addComment(str + ws + valueStr, ctx.indent, valueComment);
+${ctx.indent}`) : valueStr[0] === `
+` && (ws = ""), chompKeep && !valueComment && onChompKeep && onChompKeep(), addComment(str + ws + valueStr, ctx.indent, valueComment);
     }
   };
   __name(Pair, "Pair");
@@ -4150,7 +4177,12 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
           throw new Error("Merge sources must be maps");
         let srcMap = source.toJSON(null, ctx, Map);
         for (let [key, value] of srcMap)
-          map instanceof Map ? map.has(key) || map.set(key, value) : map instanceof Set ? map.add(key) : Object.prototype.hasOwnProperty.call(map, key) || (map[key] = value);
+          map instanceof Map ? map.has(key) || map.set(key, value) : map instanceof Set ? map.add(key) : Object.prototype.hasOwnProperty.call(map, key) || Object.defineProperty(map, key, {
+            value,
+            writable: !0,
+            enumerable: !0,
+            configurable: !0
+          });
       }
       return map;
     }
@@ -4224,11 +4256,13 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
     let endStep = Math.max(1 + minContentWidth, 1 + lineWidth - indent.length);
     if (text.length <= endStep)
       return text;
-    let folds = [], escapedFolds = {}, end = lineWidth - (typeof indentAtStart == "number" ? indentAtStart : indent.length), split, prev, overflow = !1, i = -1;
+    let folds = [], escapedFolds = {}, end = lineWidth - indent.length;
+    typeof indentAtStart == "number" && (indentAtStart > lineWidth - Math.max(2, minContentWidth) ? folds.push(0) : end = lineWidth - indentAtStart);
+    let split, prev, overflow = !1, i = -1, escStart = -1, escEnd = -1;
     mode === FOLD_BLOCK && (i = consumeMoreIndentedLines(text, i), i !== -1 && (end = i + endStep));
     for (let ch; ch = text[i += 1]; ) {
-      if (mode === FOLD_QUOTED && ch === "\\")
-        switch (text[i + 1]) {
+      if (mode === FOLD_QUOTED && ch === "\\") {
+        switch (escStart = i, text[i + 1]) {
           case "x":
             i += 3;
             break;
@@ -4241,6 +4275,8 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
           default:
             i += 1;
         }
+        escEnd = i;
+      }
       if (ch === `
 `)
         mode === FOLD_BLOCK && (i = consumeMoreIndentedLines(text, i)), end = i + endStep, split = void 0;
@@ -4257,7 +4293,10 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
           else if (mode === FOLD_QUOTED) {
             for (; prev === " " || prev === "	"; )
               prev = ch, ch = text[i += 1], overflow = !0;
-            folds.push(i - 2), escapedFolds[i - 2] = !0, end = i - 2 + endStep, split = void 0;
+            let j = i > escEnd + 1 ? i - 2 : escStart - 1;
+            if (escapedFolds[j])
+              return text;
+            folds.push(j), escapedFolds[j] = !0, end = j + endStep, split = void 0;
           } else
             overflow = !0;
       }
@@ -4269,8 +4308,9 @@ ${ctx.indent}`), chompKeep && !valueComment && onChompKeep && onChompKeep(), add
     let res = text.slice(0, folds[0]);
     for (let i2 = 0; i2 < folds.length; ++i2) {
       let fold = folds[i2], end2 = folds[i2 + 1] || text.length;
-      mode === FOLD_QUOTED && escapedFolds[fold] && (res += `${text[fold]}\\`), res += `
-${indent}${text.slice(fold + 1, end2)}`;
+      fold === 0 ? res = `
+${indent}${text.slice(0, end2)}` : (mode === FOLD_QUOTED && escapedFolds[fold] && (res += `${text[fold]}\\`), res += `
+${indent}${text.slice(fold + 1, end2)}`);
     }
     return res;
   }
@@ -4280,8 +4320,10 @@ ${indent}${text.slice(fold + 1, end2)}`;
   }) => indentAtStart ? Object.assign({
     indentAtStart
   }, strOptions.fold) : strOptions.fold, "getFoldOptions"), containsDocumentMarker = /* @__PURE__ */ __name((str) => /^(%|---|\.\.\.)/m.test(str), "containsDocumentMarker");
-  function lineLengthOverLimit(str, limit) {
-    let strLen = str.length;
+  function lineLengthOverLimit(str, lineWidth, indentLength) {
+    if (!lineWidth || lineWidth < 0)
+      return !1;
+    let limit = lineWidth - indentLength, strLen = str.length;
     if (strLen <= limit)
       return !1;
     for (let i = 0, start = 0; i < strLen; ++i)
@@ -4379,7 +4421,7 @@ ${indent}`) + "'";
   }, ctx, onComment, onChompKeep) {
     if (/\n[\t ]+$/.test(value) || /^\s*$/.test(value))
       return doubleQuotedString(value, ctx);
-    let indent = ctx.indent || (ctx.forceBlockIndent || containsDocumentMarker(value) ? "  " : ""), indentSize = indent ? "2" : "1", literal = type === PlainValue.Type.BLOCK_FOLDED ? !1 : type === PlainValue.Type.BLOCK_LITERAL ? !0 : !lineLengthOverLimit(value, strOptions.fold.lineWidth - indent.length), header = literal ? "|" : ">";
+    let indent = ctx.indent || (ctx.forceBlockIndent || containsDocumentMarker(value) ? "  " : ""), indentSize = indent ? "2" : "1", literal = type === PlainValue.Type.BLOCK_FOLDED ? !1 : type === PlainValue.Type.BLOCK_LITERAL ? !0 : !lineLengthOverLimit(value, strOptions.fold.lineWidth, indent.length), header = literal ? "|" : ">";
     if (!value)
       return header + `
 `;
@@ -5137,10 +5179,10 @@ ${ca}` : ca);
   exports2.toJSON = toJSON;
 });
 
-// node_modules/yaml/dist/warnings-39684f17.js
-var require_warnings_39684f17 = __commonJS((exports2) => {
+// node_modules/yaml/dist/warnings-1000a372.js
+var require_warnings_1000a372 = __commonJS((exports2) => {
   "use strict";
-  var PlainValue = require_PlainValue_ec8e588e(), resolveSeq = require_resolveSeq_4a68b39b(), binary = {
+  var PlainValue = require_PlainValue_ec8e588e(), resolveSeq = require_resolveSeq_d03cb037(), binary = {
     identify: (value) => value instanceof Uint8Array,
     default: !1,
     tag: "tag:yaml.org,2002:binary",
@@ -5426,10 +5468,10 @@ ${pair.comment}` : item.comment), item = pair;
   exports2.warnOptionDeprecation = warnOptionDeprecation;
 });
 
-// node_modules/yaml/dist/Schema-42e9705c.js
-var require_Schema_42e9705c = __commonJS((exports2) => {
+// node_modules/yaml/dist/Schema-88e323a7.js
+var require_Schema_88e323a7 = __commonJS((exports2) => {
   "use strict";
-  var PlainValue = require_PlainValue_ec8e588e(), resolveSeq = require_resolveSeq_4a68b39b(), warnings = require_warnings_39684f17();
+  var PlainValue = require_PlainValue_ec8e588e(), resolveSeq = require_resolveSeq_d03cb037(), warnings = require_warnings_1000a372();
   function createMap(schema, obj, ctx) {
     let map2 = new resolveSeq.YAMLMap(schema);
     if (obj instanceof Map)
@@ -5475,14 +5517,14 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
       }, ctx), resolveSeq.stringifyString(item, ctx, onComment, onChompKeep);
     },
     options: resolveSeq.strOptions
-  }, failsafe = [map, seq, string], intIdentify = /* @__PURE__ */ __name((value) => typeof value == "bigint" || Number.isInteger(value), "intIdentify"), intResolve = /* @__PURE__ */ __name((src, part, radix) => resolveSeq.intOptions.asBigInt ? BigInt(src) : parseInt(part, radix), "intResolve");
-  function intStringify(node, radix, prefix) {
+  }, failsafe = [map, seq, string], intIdentify$2 = /* @__PURE__ */ __name((value) => typeof value == "bigint" || Number.isInteger(value), "intIdentify$2"), intResolve$1 = /* @__PURE__ */ __name((src, part, radix) => resolveSeq.intOptions.asBigInt ? BigInt(src) : parseInt(part, radix), "intResolve$1");
+  function intStringify$1(node, radix, prefix) {
     let {
       value
     } = node;
-    return intIdentify(value) && value >= 0 ? prefix + value.toString(radix) : resolveSeq.stringifyNumber(node);
+    return intIdentify$2(value) && value >= 0 ? prefix + value.toString(radix) : resolveSeq.stringifyNumber(node);
   }
-  __name(intStringify, "intStringify");
+  __name(intStringify$1, "intStringify$1");
   var nullObj = {
     identify: (value) => value == null,
     createNode: (schema, value, ctx) => ctx.wrapScalars ? new resolveSeq.Scalar(null) : null,
@@ -5503,31 +5545,31 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
       value
     }) => value ? resolveSeq.boolOptions.trueStr : resolveSeq.boolOptions.falseStr
   }, octObj = {
-    identify: (value) => intIdentify(value) && value >= 0,
+    identify: (value) => intIdentify$2(value) && value >= 0,
     default: !0,
     tag: "tag:yaml.org,2002:int",
     format: "OCT",
     test: /^0o([0-7]+)$/,
-    resolve: (str, oct) => intResolve(str, oct, 8),
+    resolve: (str, oct) => intResolve$1(str, oct, 8),
     options: resolveSeq.intOptions,
-    stringify: (node) => intStringify(node, 8, "0o")
+    stringify: (node) => intStringify$1(node, 8, "0o")
   }, intObj = {
-    identify: intIdentify,
+    identify: intIdentify$2,
     default: !0,
     tag: "tag:yaml.org,2002:int",
     test: /^[-+]?[0-9]+$/,
-    resolve: (str) => intResolve(str, str, 10),
+    resolve: (str) => intResolve$1(str, str, 10),
     options: resolveSeq.intOptions,
     stringify: resolveSeq.stringifyNumber
   }, hexObj = {
-    identify: (value) => intIdentify(value) && value >= 0,
+    identify: (value) => intIdentify$2(value) && value >= 0,
     default: !0,
     tag: "tag:yaml.org,2002:int",
     format: "HEX",
     test: /^0x([0-9a-fA-F]+)$/,
-    resolve: (str, hex) => intResolve(str, hex, 16),
+    resolve: (str, hex) => intResolve$1(str, hex, 16),
     options: resolveSeq.intOptions,
-    stringify: (node) => intStringify(node, 16, "0x")
+    stringify: (node) => intStringify$1(node, 16, "0x")
   }, nanObj = {
     identify: (value) => typeof value == "number",
     default: !0,
@@ -5600,8 +5642,8 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
   };
   var boolStringify = /* @__PURE__ */ __name(({
     value
-  }) => value ? resolveSeq.boolOptions.trueStr : resolveSeq.boolOptions.falseStr, "boolStringify"), intIdentify$2 = /* @__PURE__ */ __name((value) => typeof value == "bigint" || Number.isInteger(value), "intIdentify$2");
-  function intResolve$1(sign, src, radix) {
+  }) => value ? resolveSeq.boolOptions.trueStr : resolveSeq.boolOptions.falseStr, "boolStringify"), intIdentify = /* @__PURE__ */ __name((value) => typeof value == "bigint" || Number.isInteger(value), "intIdentify");
+  function intResolve(sign, src, radix) {
     let str = src.replace(/_/g, "");
     if (resolveSeq.intOptions.asBigInt) {
       switch (radix) {
@@ -5621,18 +5663,18 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
     let n = parseInt(str, radix);
     return sign === "-" ? -1 * n : n;
   }
-  __name(intResolve$1, "intResolve$1");
-  function intStringify$1(node, radix, prefix) {
+  __name(intResolve, "intResolve");
+  function intStringify(node, radix, prefix) {
     let {
       value
     } = node;
-    if (intIdentify$2(value)) {
+    if (intIdentify(value)) {
       let str = value.toString(radix);
       return value < 0 ? "-" + prefix + str.substr(1) : prefix + str;
     }
     return resolveSeq.stringifyNumber(node);
   }
-  __name(intStringify$1, "intStringify$1");
+  __name(intStringify, "intStringify");
   var yaml11 = failsafe.concat([{
     identify: (value) => value == null,
     createNode: (schema, value, ctx) => ctx.wrapScalars ? new resolveSeq.Scalar(null) : null,
@@ -5659,36 +5701,36 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
     options: resolveSeq.boolOptions,
     stringify: boolStringify
   }, {
-    identify: intIdentify$2,
+    identify: intIdentify,
     default: !0,
     tag: "tag:yaml.org,2002:int",
     format: "BIN",
     test: /^([-+]?)0b([0-1_]+)$/,
-    resolve: (str, sign, bin) => intResolve$1(sign, bin, 2),
-    stringify: (node) => intStringify$1(node, 2, "0b")
+    resolve: (str, sign, bin) => intResolve(sign, bin, 2),
+    stringify: (node) => intStringify(node, 2, "0b")
   }, {
-    identify: intIdentify$2,
+    identify: intIdentify,
     default: !0,
     tag: "tag:yaml.org,2002:int",
     format: "OCT",
     test: /^([-+]?)0([0-7_]+)$/,
-    resolve: (str, sign, oct) => intResolve$1(sign, oct, 8),
-    stringify: (node) => intStringify$1(node, 8, "0")
+    resolve: (str, sign, oct) => intResolve(sign, oct, 8),
+    stringify: (node) => intStringify(node, 8, "0")
   }, {
-    identify: intIdentify$2,
+    identify: intIdentify,
     default: !0,
     tag: "tag:yaml.org,2002:int",
     test: /^([-+]?)([0-9][0-9_]*)$/,
-    resolve: (str, sign, abs) => intResolve$1(sign, abs, 10),
+    resolve: (str, sign, abs) => intResolve(sign, abs, 10),
     stringify: resolveSeq.stringifyNumber
   }, {
-    identify: intIdentify$2,
+    identify: intIdentify,
     default: !0,
     tag: "tag:yaml.org,2002:int",
     format: "HEX",
     test: /^([-+]?)0x([0-9a-fA-F_]+)$/,
-    resolve: (str, sign, hex) => intResolve$1(sign, hex, 16),
-    stringify: (node) => intStringify$1(node, 16, "0x")
+    resolve: (str, sign, hex) => intResolve(sign, hex, 16),
+    stringify: (node) => intStringify(node, 16, "0x")
   }, {
     identify: (value) => typeof value == "number",
     default: !0,
@@ -5767,12 +5809,15 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
     tagName && tagName.startsWith("!!") && (tagName = defaultPrefix + tagName.slice(2));
     let tagObj = findTagObject(value, tagName, schema.tags);
     if (!tagObj) {
-      if (typeof value.toJSON == "function" && (value = value.toJSON()), typeof value != "object")
+      if (typeof value.toJSON == "function" && (value = value.toJSON()), !value || typeof value != "object")
         return wrapScalars ? new resolveSeq.Scalar(value) : value;
       tagObj = value instanceof Map ? map : value[Symbol.iterator] ? seq : map;
     }
     onTagObj && (onTagObj(tagObj), delete ctx.onTagObj);
-    let obj = {};
+    let obj = {
+      value: void 0,
+      node: void 0
+    };
     if (value && typeof value == "object" && prevObjects) {
       let prev = prevObjects.get(value);
       if (prev) {
@@ -5841,10 +5886,10 @@ var require_Schema_42e9705c = __commonJS((exports2) => {
   exports2.Schema = Schema;
 });
 
-// node_modules/yaml/dist/Document-2cf6b08c.js
-var require_Document_2cf6b08c = __commonJS((exports2) => {
+// node_modules/yaml/dist/Document-9b4560a1.js
+var require_Document_9b4560a1 = __commonJS((exports2) => {
   "use strict";
-  var PlainValue = require_PlainValue_ec8e588e(), resolveSeq = require_resolveSeq_4a68b39b(), Schema = require_Schema_42e9705c(), defaultOptions = {
+  var PlainValue = require_PlainValue_ec8e588e(), resolveSeq = require_resolveSeq_d03cb037(), Schema = require_Schema_88e323a7(), defaultOptions = {
     anchorPrefix: "a",
     customTags: null,
     indent: 2,
@@ -5900,7 +5945,7 @@ var require_Document_2cf6b08c = __commonJS((exports2) => {
         prefix: "tag:private.yaml.org,2002:"
       }]
     },
-    "1.1": {
+    1.1: {
       schema: "yaml-1.1",
       merge: !0,
       tagPrefixes: [{
@@ -5911,7 +5956,7 @@ var require_Document_2cf6b08c = __commonJS((exports2) => {
         prefix: PlainValue.defaultTagPrefix
       }]
     },
-    "1.2": {
+    1.2: {
       schema: "core",
       merge: !1,
       tagPrefixes: [{
@@ -6012,7 +6057,7 @@ ${ctx.indent}${str}` : str;
       return node instanceof resolveSeq.Scalar || node instanceof resolveSeq.YAMLSeq || node instanceof resolveSeq.YAMLMap;
     }
     constructor(prefix) {
-      PlainValue._defineProperty(this, "map", {}), this.prefix = prefix;
+      PlainValue._defineProperty(this, "map", Object.create(null)), this.prefix = prefix;
     }
     createAlias(node, name) {
       return this.setAnchor(node, name), new resolveSeq.Alias(node);
@@ -6340,7 +6385,7 @@ ${cbNode.commentBefore}` : cb;
         tagNames.some((t) => t.indexOf(prefix) === 0) && (lines.push(`%TAG ${handle} ${prefix}`), hasDirectives = !0);
       }), (hasDirectives || this.directivesEndMarker) && lines.push("---"), this.commentBefore && ((hasDirectives || !this.directivesEndMarker) && lines.unshift(""), lines.unshift(this.commentBefore.replace(/^/gm, "#")));
       let ctx = {
-        anchors: {},
+        anchors: Object.create(null),
         doc: this,
         indent: "",
         indentStep: " ".repeat(indentSize),
@@ -6367,9 +6412,8 @@ ${cbNode.commentBefore}` : cb;
 // node_modules/yaml/dist/index.js
 var require_dist = __commonJS((exports2) => {
   "use strict";
-  var PlainValue = require_PlainValue_ec8e588e(), parseCst = require_parse_cst();
-  require_resolveSeq_4a68b39b();
-  var Document$1 = require_Document_2cf6b08c(), Schema = require_Schema_42e9705c(), warnings = require_warnings_39684f17();
+  var parseCst = require_parse_cst(), Document$1 = require_Document_9b4560a1(), Schema = require_Schema_88e323a7(), PlainValue = require_PlainValue_ec8e588e(), warnings = require_warnings_1000a372();
+  require_resolveSeq_d03cb037();
   function createNode(value, wrapScalars = !0, tag) {
     tag === void 0 && typeof wrapScalars == "string" && (tag = wrapScalars, wrapScalars = !0);
     let options = Object.assign({}, Document$1.Document.defaults[Document$1.defaultOptions.version], Document$1.defaultOptions);
