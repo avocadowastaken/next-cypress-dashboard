@@ -2,7 +2,7 @@ import { parse, serialize } from "superjson";
 
 export type RequestOptions =
   | { method?: "GET" | "DELETE" }
-  | { data: unknown; method: "POST" | "PUT" | "PATCH" };
+  | { method: "POST" | "PUT" | "PATCH"; data?: unknown };
 
 export async function requestJSON<TData>(
   url: string,

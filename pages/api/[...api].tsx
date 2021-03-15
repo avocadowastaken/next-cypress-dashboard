@@ -74,4 +74,80 @@ export default createApiHandler((app) => {
       reply.send(response);
     }
   );
+
+  app.get<{ Params: { projectId: string } }>(
+    "/api/projects/:projectId",
+    async (request, reply) => {
+      const { userId } = await getRequestSession(request);
+      const project = await prisma.project.findFirst({
+        rejectOnNotFound: true,
+        where: {
+          id: request.params.projectId,
+          users: { some: { id: userId } },
+        },
+      });
+
+      reply.send(project);
+    }
+  );
+
+  app.delete<{ Params: { projectId: string } }>(
+    "/api/projects/:projectId",
+    async (request, reply) => {
+      const { projectId } = request.params;
+      const { userId } = await getRequestSession(request);
+
+      await prisma.project.update({
+        where: { id: projectId },
+        data: { users: { disconnect: { id: userId } } },
+      });
+
+      reply.send({ projectId });
+    }
+  );
+
+  app.post<{ Params: { projectId: string } }>(
+    "/api/projects/:projectId/secrets",
+    async (request, reply) => {
+      const { projectId } = request.params;
+      const { userId } = await getRequestSession(request);
+      const project = await prisma.project.findFirst({
+        rejectOnNotFound: true,
+        where: { id: projectId, users: { some: { id: userId } } },
+      });
+
+      await verifyGitHubRepoAccess(userId, project.org, project.repo);
+
+      await prisma.projectSecrets.deleteMany({ where: { projectId } });
+
+      const projectSecrets = await prisma.projectSecrets.create({
+        data: { projectId },
+      });
+
+      reply.send(projectSecrets);
+    }
+  );
+
+  app.get<{ Params: { projectId: string } }>(
+    "/api/projects/:projectId/secrets",
+    async (request, reply) => {
+      const { userId } = await getRequestSession(request);
+      const project = await prisma.project.findFirst({
+        rejectOnNotFound: true,
+        where: {
+          id: request.params.projectId,
+          users: { some: { id: userId } },
+        },
+      });
+
+      await verifyGitHubRepoAccess(userId, project.org, project.repo);
+
+      const projectSecrets = await prisma.projectSecrets.findUnique({
+        rejectOnNotFound: true,
+        where: { projectId: project.id },
+      });
+
+      reply.send(projectSecrets);
+    }
+  );
 });

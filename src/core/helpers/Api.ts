@@ -1,4 +1,4 @@
-import { createAppError } from "@/core/data/AppError";
+import { AppError, createAppError } from "@/core/data/AppError";
 import {
   JWT_ENCRYPTION_KEY,
   JWT_SECRET,
@@ -46,6 +46,14 @@ export function createApiHandler(
   });
 
   app.register(fastifyCookie);
+
+  app.setErrorHandler((error, request, reply) => {
+    if (error.name === "NotFoundError") {
+      reply.status(404).send(new AppError("NOT_FOUND"));
+    }
+
+    reply.status(error.statusCode || 500).send(error);
+  });
 
   setup(app);
 

@@ -1,21 +1,22 @@
 import { AppLayout } from "@/core/components/AppLayout";
+import { ErrorPage } from "@/core/components/ErrorPage";
 import { Pre } from "@/core/components/Pre";
 import {
-  AppErrorCode,
   extractErrorCode,
-  formatErrorCode,
-  isGitHubIntegrationError,
+  formatAppError,
+  useErrorHandler,
 } from "@/core/data/AppError";
-import { prisma } from "@/core/helpers/db";
-import { verifyGitHubRepoAccess } from "@/core/helpers/GitHub";
-import {
-  createServerSideProps,
-  redirectToSignIn,
-} from "@/core/ServerSideProps";
+import { requestJSON } from "@/core/data/Http";
+import { useRouterParam } from "@/core/routing/useRouterParam";
+import { formatProjectName } from "@/projects/helpers";
 import {
   Alert,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
   Link,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -23,186 +24,291 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import { LoadingButton } from "@material-ui/lab";
 import { Project, ProjectSecrets } from "@prisma/client";
-import { getCsrfToken } from "next-auth/client";
 import NextLink from "next/link";
-import React, { ReactElement } from "react";
+import { useRouter } from "next/router";
+import React, { ReactElement, useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
-export interface ProjectSecretsPageProps {
+interface DeleteProjectDialogProps {
   project: Project;
-  csrfToken: string;
-  errorCode?: AppErrorCode;
-  secrets?: null | ProjectSecrets;
+  open: boolean;
+  onClose: () => void;
+  onSubmitSuccess: () => void;
 }
 
-export const getServerSideProps = createServerSideProps<
-  ProjectSecretsPageProps,
-  { projectId: string }
->(async ({ userId }, context) => {
-  const csrfToken = await getCsrfToken(context);
-
-  if (!csrfToken) {
-    return redirectToSignIn(context);
-  }
-
-  const projectId = context.params?.projectId;
-
-  if (projectId) {
-    const project = await prisma.project.findFirst({
-      where: { id: projectId, users: { some: { id: userId } } },
-    });
-
-    if (project) {
-      const props: ProjectSecretsPageProps = { project, csrfToken };
-
-      try {
-        await verifyGitHubRepoAccess(userId, project.org, project.repo);
-
-        const secrets = await prisma.projectSecrets.findUnique({
-          where: { projectId: project.id },
-        });
-
-        return { props: { ...props, secrets } };
-      } catch (error: unknown) {
-        const errorCode = extractErrorCode(error);
-
-        if (isGitHubIntegrationError(errorCode)) {
-          return redirectToSignIn(context);
-        }
-
-        return { props: { ...props, errorCode } };
-      }
-    }
-  }
-
-  return { notFound: true };
-});
-
-export default function ProjectSecretsPage({
+function DeleteProjectDialog({
+  open,
   project,
-  secrets,
-  csrfToken,
-  errorCode,
-}: ProjectSecretsPageProps): ReactElement {
+  onClose,
+  onSubmitSuccess,
+}: DeleteProjectDialogProps) {
+  const {
+    reset,
+    mutate,
+    isLoading,
+  } = useMutation(
+    `DELETE /api/projects/${project.id}`,
+    () => requestJSON(`/api/projects/${project.id}`, { method: "DELETE" }),
+    { onSuccess: onSubmitSuccess }
+  );
+
+  useEffect(() => {
+    if (!open) reset();
+  }, [open, reset]);
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <form method="POST">
+        <DialogContent>
+          This action cannot be undone. This will permanently revoke your access
+          to the{" "}
+          <Typography color="primary">
+            {project.org}/{project.repo}
+          </Typography>{" "}
+          project.
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={onClose} disabled={isLoading}>
+            Dismiss
+          </Button>
+          <LoadingButton
+            pending={isLoading}
+            onClick={() => {
+              mutate();
+            }}
+          >
+            Confirm
+          </LoadingButton>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
+}
+
+interface RevokeSecretsDialogProps {
+  project: Project;
+  open: boolean;
+  onClose: () => void;
+}
+
+function RevokeSecretsDialog({
+  open,
+  project,
+  onClose,
+}: RevokeSecretsDialogProps): ReactElement {
+  const queryClient = useQueryClient();
+  const { reset, mutate, isLoading } = useMutation(
+    `POST /api/projects/${project.id}/secrets`,
+    () =>
+      requestJSON<ProjectSecrets>(`/api/projects/${project.id}/secrets`, {
+        method: "POST",
+      }),
+    {
+      onSuccess: (secrets) => {
+        onClose();
+        queryClient.setQueryData(
+          `/api/projects/${project.id}/secrets`,
+          secrets
+        );
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (!open) reset();
+  }, [open, reset]);
+
+  return (
+    <Dialog open={open} onClose={isLoading ? undefined : onClose}>
+      <DialogContent>
+        This action cannot be undone. This will permanently revoke access for
+        the current record key to the{" "}
+        <Typography color="primary">
+          {project.org}/{project.repo}
+        </Typography>{" "}
+        project.
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose} disabled={isLoading}>
+          Dismiss
+        </Button>
+
+        <LoadingButton
+          pending={isLoading}
+          onClick={() => {
+            mutate();
+          }}
+        >
+          Confirm
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+export default function ProjectSecretsPage(): ReactElement {
+  const router = useRouter();
+  const projectId = useRouterParam("projectId");
+  const project = useQuery<Project>(`/api/projects/${projectId}`, {
+    enabled: !!projectId,
+  });
+  const projectSecrets = useQuery<ProjectSecrets>(
+    `/api/projects/${projectId}/secrets`,
+    { enabled: project.status === "success" }
+  );
+
+  useErrorHandler(project.error || projectSecrets.error);
+
+  if (project.status === "error") {
+    return <ErrorPage error={project.error} />;
+  }
+
+  if (project.status !== "success") {
+    return <AppLayout breadcrumbs={[["Projects", "/p"]]} />;
+  }
+
+  const errorCode = !projectSecrets.error
+    ? null
+    : extractErrorCode(projectSecrets.error);
+
   return (
     <AppLayout
       breadcrumbs={[
         ["Projects", "/p"],
-        [`${project.org} / ${project.repo}`, `/p/${project.id}`],
+        [formatProjectName(project.data), `/p/${project.data.id}`],
         "Settings",
       ]}
       actions={
-        !errorCode && (
-          <NextLink passHref={true} href={`/p/${project.id}/delete`}>
+        project.status === "success" && (
+          <NextLink
+            passHref={true}
+            href={{
+              pathname: router.pathname,
+              query: { ...router.query, remove: "true" },
+            }}
+          >
             <Button>Delete</Button>
           </NextLink>
         )
       }
     >
-      {errorCode ? (
-        <Alert
-          severity="error"
-          action={
-            errorCode === "GITHUB_REPO_NOT_FOUND" ||
-            errorCode === "GITHUB_REPO_ACCESS_DENIED" ? (
-              <form method="POST" action={`/p/${project.id}/delete`}>
-                <input type="hidden" name="csrfToken" value={csrfToken} />
-                <input
-                  type="hidden"
-                  name="confirmation"
-                  value={`${project.org}/${project.repo}`}
+      <RevokeSecretsDialog
+        project={project.data}
+        open={router.query.revoke === "true"}
+        onClose={() => {
+          void router.replace({
+            pathname: router.pathname,
+            query: { ...router.query, revoke: [] },
+          });
+        }}
+      />
+
+      <DeleteProjectDialog
+        project={project.data}
+        open={router.query.remove === "true"}
+        onClose={() => {
+          void router.replace({
+            pathname: router.pathname,
+            query: { ...router.query, remove: [] },
+          });
+        }}
+        onSubmitSuccess={() => {
+          void router.replace(
+            `/p?success=${encodeURIComponent(
+              `${formatProjectName(project.data)} removed`
+            )}`
+          );
+        }}
+      />
+
+      <TableContainer>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell variant="head">
+                Project ID
+                <Typography variant="body2" display="block">
+                  This <code>projectId</code> should be in your{" "}
+                  <code>cypress.json</code>
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Pre
+                  language="json"
+                  code={JSON.stringify({ projectId: project.data.id }, null, 2)}
                 />
+              </TableCell>
+            </TableRow>
 
-                <Button color="inherit" type="submit">
-                  Delete Project
-                </Button>
-              </form>
-            ) : (
-              <NextLink passHref={true} href={`/p/${project.id}`}>
-                <Button color="inherit">Close</Button>
-              </NextLink>
-            )
-          }
-        >
-          {formatErrorCode(errorCode)}
-        </Alert>
-      ) : (
-        <TableContainer>
-          <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell variant="head">
-                  Project ID
-                  <Typography variant="body2" display="block">
-                    This <code>projectId</code> should be in your{" "}
-                    <code>cypress.json</code>
-                  </Typography>
-                </TableCell>
+            <TableRow>
+              <TableCell variant="head">
+                Record Key
+                <Typography variant="body2" display="block">
+                  Secret key, do not expose it, but if you did you can{" "}
+                  <NextLink
+                    passHref={true}
+                    href={{
+                      pathname: router.pathname,
+                      query: { ...router.query, revoke: "true" },
+                    }}
+                  >
+                    <Link>revoke</Link>
+                  </NextLink>{" "}
+                  it anytime
+                </Typography>
+              </TableCell>
 
-                <TableCell>
-                  <Pre
-                    language="json"
-                    code={JSON.stringify({ projectId: project.id }, null, 2)}
-                  />
-                </TableCell>
-              </TableRow>
-
-              {!secrets ? (
-                <TableRow>
-                  <TableCell variant="head">Record Key</TableCell>
-
-                  <TableCell>
-                    <Alert
-                      severity="error"
-                      action={
-                        <form
-                          method="POST"
-                          action={`/p/${project.id}/secrets/generate`}
+              <TableCell>
+                {errorCode ? (
+                  <Alert
+                    severity="error"
+                    action={
+                      errorCode === "GITHUB_REPO_NOT_FOUND" ||
+                      errorCode === "GITHUB_REPO_ACCESS_DENIED" ? (
+                        <NextLink
+                          passHref={true}
+                          href={{
+                            pathname: router.pathname,
+                            query: { ...router.query, remove: "true" },
+                          }}
                         >
-                          <input
-                            type="hidden"
-                            name="csrfToken"
-                            value={csrfToken}
-                          />
-
-                          <Button type="submit" color="inherit">
-                            Regenerate
+                          <Button color="inherit" type="submit">
+                            Delete Project
                           </Button>
-                        </form>
-                      }
-                    >
-                      Projects secrets not found
-                    </Alert>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                <TableRow>
-                  <TableCell variant="head">
-                    Record Key
-                    <Typography variant="body2" display="block">
-                      Secret key, do not expose it, but if you did you can{" "}
-                      <NextLink
-                        passHref={true}
-                        href={`/p/${project.id}/secrets/${secrets.id}/revoke`}
-                      >
-                        <Link>revoke</Link>
-                      </NextLink>{" "}
-                      it anytime
-                    </Typography>
-                  </TableCell>
-
-                  <TableCell>
-                    <Pre
-                      language="bash"
-                      code={`cypress run --record --key ${secrets.recordKey}`}
-                    />
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+                        </NextLink>
+                      ) : (
+                        <NextLink
+                          passHref={true}
+                          href={{
+                            pathname: router.pathname,
+                            query: { ...router.query, revoke: "true" },
+                          }}
+                        >
+                          <Button color="inherit">Regenerate</Button>
+                        </NextLink>
+                      )
+                    }
+                  >
+                    {formatAppError(errorCode)}
+                  </Alert>
+                ) : projectSecrets.status !== "success" ? (
+                  <Skeleton />
+                ) : (
+                  <Pre
+                    language="bash"
+                    code={`cypress run --record --key ${projectSecrets.data.recordKey}`}
+                  />
+                )}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </AppLayout>
   );
 }

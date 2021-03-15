@@ -1,5 +1,5 @@
 import { AppLayout } from "@/core/components/AppLayout";
-import { extractErrorCode, formatErrorCode } from "@/core/data/AppError";
+import { extractErrorCode, formatAppError } from "@/core/data/AppError";
 import { requestJSON } from "@/core/data/Http";
 import { PageResponse } from "@/core/data/PageResponse";
 import { formatProjectName } from "@/projects/helpers";
@@ -109,7 +109,7 @@ export function AddProjectDialog({
                 autoFocus={true}
                 disabled={isLoading}
                 error={!!errorCode}
-                helperText={!!errorCode && formatErrorCode(errorCode)}
+                helperText={!!errorCode && formatAppError(errorCode)}
                 placeholder="https://github.com/umidbekk/next-cypress-dashboard"
                 defaultValue={typeof initialRepo == "string" ? initialRepo : ""}
               />

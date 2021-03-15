@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 export type AppErrorCode = typeof APP_ERROR_CODES[number];
 export const APP_ERROR_CODES = [
   "UNKNOWN_ERROR",
@@ -5,6 +7,7 @@ export const APP_ERROR_CODES = [
   // HTTP Errors
 
   "FORBIDDEN",
+  "NOT_FOUND",
   "BAD_REQUEST",
   "UNAUTHORIZED",
 
@@ -14,9 +17,6 @@ export const APP_ERROR_CODES = [
   "UNSUPPORTED_GIT_PROVIDER",
 
   // GitHub Integration Errors
-
-  "GITHUB_ACCOUNT_NOT_LINKED",
-  "GITHUB_ACCOUNT_INVALID_ACCESS_TOKEN",
 
   "GITHUB_REPO_NOT_FOUND",
   "GITHUB_REPO_ACCESS_DENIED",
@@ -46,7 +46,7 @@ export function extractErrorCode(error: unknown): AppErrorCode {
   return "UNKNOWN_ERROR";
 }
 
-export function formatErrorCode(error: unknown): string {
+export function formatAppError(error: unknown): string {
   const code = extractErrorCode(error);
 
   switch (code) {
@@ -54,6 +54,8 @@ export function formatErrorCode(error: unknown): string {
       return "Unknown Error";
     case "BAD_REQUEST":
       return "Bad Request";
+    case "NOT_FOUND":
+      return "Resource not found";
     case "INVALID_GIT_URL":
       return "Invalid Git url";
     case "UNSUPPORTED_GIT_PROVIDER":
@@ -68,14 +70,30 @@ export function formatErrorCode(error: unknown): string {
   }
 }
 
-export function isGitHubIntegrationError(error: unknown): boolean {
+export function getAppErrorStatusCode(error: unknown): number {
   const code = extractErrorCode(error);
-
   switch (code) {
-    case "GITHUB_ACCOUNT_NOT_LINKED":
-    case "GITHUB_ACCOUNT_INVALID_ACCESS_TOKEN":
-      return true;
+    case "BAD_REQUEST":
+      return 400;
+    case "UNAUTHORIZED":
+      return 401;
+    case "FORBIDDEN":
+      return 403;
+    case "NOT_FOUND":
+      return 404;
   }
 
-  return false;
+  return 500;
+}
+
+export function useErrorHandler(error: unknown): void {
+  useEffect(() => {
+    const errorCode = !error ? null : extractErrorCode(error);
+
+    if (errorCode === "UNAUTHORIZED") {
+      const callbackUrl = encodeURIComponent(window.location.href);
+
+      window.location.replace(`/api/auth/signin?callbackUrl=${callbackUrl}`);
+    }
+  }, [error]);
 }
