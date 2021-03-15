@@ -5,6 +5,7 @@ import { useErrorHandler } from "@/core/data/AppError";
 import { PageResponse } from "@/core/data/PageResponse";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { formatProjectName } from "@/projects/helpers";
+import { useProject } from "@/projects/queries";
 import {
   Button,
   Pagination,
@@ -18,7 +19,7 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { Project, Run } from "@prisma/client";
+import { Run } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
@@ -27,9 +28,7 @@ import { useQuery } from "react-query";
 export default function ProjectPage(): ReactElement {
   const router = useRouter();
   const projectId = useRouterParam("projectId");
-  const project = useQuery<Project>(`/api/projects/${projectId}`, {
-    enabled: !!projectId,
-  });
+  const project = useProject(projectId);
   const runs = useQuery<PageResponse<Run>>(
     `/api/runs?projectId=${projectId}&page=${router.query.page}`,
     { enabled: project.status === "success" }

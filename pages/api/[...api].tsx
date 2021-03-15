@@ -61,7 +61,7 @@ export default createApiHandler((app) => {
       };
       const response = await createPageResponse(request.query, {
         maxNodesPerPage: 10,
-        defaultNodesPerPage: 10,
+        defaultNodesPerPage: 5,
         getCount: () => prisma.project.count({ where }),
         getNodes: (args) =>
           prisma.project.findMany({

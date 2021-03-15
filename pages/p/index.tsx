@@ -1,8 +1,7 @@
 import { AppLayout } from "@/core/components/AppLayout";
 import { extractErrorCode, formatAppError } from "@/core/data/AppError";
-import { requestJSON } from "@/core/data/Http";
-import { PageResponse } from "@/core/data/PageResponse";
 import { formatProjectName } from "@/projects/helpers";
+import { useAddProject, useProjectsPage } from "@/projects/queries";
 import {
   Alert,
   Button,
@@ -28,7 +27,6 @@ import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const GITHUB_APP =
   process.env.NEXT_PUBLIC_GITHUB_APP || "next-cypress-dashboard";
@@ -44,20 +42,11 @@ export function AddProjectDialog({
   onClose,
   onSubmitSuccess,
 }: AddProjectDialogProps): ReactElement {
-  const open = typeof initialRepo == "string";
-  const queryClient = useQueryClient();
-  const { error, reset, isLoading, mutate } = useMutation(
-    "POST /api/projects",
-    (repo: string) =>
-      requestJSON<Project>("/api/projects", { method: "POST", data: { repo } }),
-    {
-      onSuccess: (project) => {
-        onSubmitSuccess(project);
-        queryClient.setQueryData(`/api/project/${project.id}`, project);
-      },
-    }
-  );
+  const { error, reset, isLoading, mutate } = useAddProject({
+    onSuccess: onSubmitSuccess,
+  });
 
+  const open = typeof initialRepo == "string";
   const errorCode = error && extractErrorCode(error);
 
   useEffect(() => {
@@ -131,11 +120,7 @@ export function AddProjectDialog({
 
 export default function ProjectsPage(): ReactElement {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const response = useQuery<PageResponse<Project>>(
-    `/api/projects?page=${router.query.page}`,
-    { keepPreviousData: true }
-  );
+  const projectsPage = useProjectsPage({ page: router.query.page });
 
   return (
     <AppLayout
@@ -154,6 +139,8 @@ export default function ProjectsPage(): ReactElement {
           void router.replace({ query: { ...router.query, add: [] } });
         }}
         onSubmitSuccess={(project) => {
+          void projectsPage.refetch();
+          void router.replace({ query: { ...router.query, add: [] } });
           void router.replace(`/p/${project.id}`);
         }}
       />
@@ -167,7 +154,7 @@ export default function ProjectsPage(): ReactElement {
             </TableRow>
           </TableHead>
 
-          {response.status !== "success" ? (
+          {projectsPage.status !== "success" ? (
             <TableBody>
               <TableRow>
                 <TableCell>
@@ -182,7 +169,7 @@ export default function ProjectsPage(): ReactElement {
           ) : (
             <>
               <TableBody>
-                {response.data.nodes.map((project) => (
+                {projectsPage.data.nodes.map((project) => (
                   <TableRow key={project.id}>
                     <TableCell>{project.providerId}</TableCell>
 
@@ -195,13 +182,13 @@ export default function ProjectsPage(): ReactElement {
                 ))}
               </TableBody>
 
-              {response.data.maxPage > 1 && (
+              {projectsPage.data.maxPage > 1 && (
                 <TableFooter>
                   <TableRow>
                     <TableCell colSpan={3}>
                       <Pagination
-                        page={response.data.page}
-                        count={response.data.maxPage}
+                        page={projectsPage.data.page}
+                        count={projectsPage.data.maxPage}
                         renderItem={(item) => (
                           <NextLink
                             passHref={true}

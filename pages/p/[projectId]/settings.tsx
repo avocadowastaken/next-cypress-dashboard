@@ -6,9 +6,14 @@ import {
   formatAppError,
   useErrorHandler,
 } from "@/core/data/AppError";
-import { requestJSON } from "@/core/data/Http";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { formatProjectName } from "@/projects/helpers";
+import {
+  useDeleteProject,
+  useProject,
+  useProjectSecrets,
+  useRevokeProjectSecrets,
+} from "@/projects/queries";
 import {
   Alert,
   Button,
@@ -25,11 +30,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
-import { Project, ProjectSecrets } from "@prisma/client";
+import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 
 interface DeleteProjectDialogProps {
   project: Project;
@@ -44,15 +49,9 @@ function DeleteProjectDialog({
   onClose,
   onSubmitSuccess,
 }: DeleteProjectDialogProps) {
-  const {
-    reset,
-    mutate,
-    isLoading,
-  } = useMutation(
-    `DELETE /api/projects/${project.id}`,
-    () => requestJSON(`/api/projects/${project.id}`, { method: "DELETE" }),
-    { onSuccess: onSubmitSuccess }
-  );
+  const { reset, mutate, isLoading } = useDeleteProject({
+    onSuccess: onSubmitSuccess,
+  });
 
   useEffect(() => {
     if (!open) reset();
@@ -77,7 +76,7 @@ function DeleteProjectDialog({
           <LoadingButton
             pending={isLoading}
             onClick={() => {
-              mutate();
+              mutate(project.id);
             }}
           >
             Confirm
@@ -99,23 +98,9 @@ function RevokeSecretsDialog({
   project,
   onClose,
 }: RevokeSecretsDialogProps): ReactElement {
-  const queryClient = useQueryClient();
-  const { reset, mutate, isLoading } = useMutation(
-    `POST /api/projects/${project.id}/secrets`,
-    () =>
-      requestJSON<ProjectSecrets>(`/api/projects/${project.id}/secrets`, {
-        method: "POST",
-      }),
-    {
-      onSuccess: (secrets) => {
-        onClose();
-        queryClient.setQueryData(
-          `/api/projects/${project.id}/secrets`,
-          secrets
-        );
-      },
-    }
-  );
+  const { reset, mutate, isLoading } = useRevokeProjectSecrets({
+    onSuccess: onClose,
+  });
 
   useEffect(() => {
     if (!open) reset();
@@ -140,7 +125,7 @@ function RevokeSecretsDialog({
         <LoadingButton
           pending={isLoading}
           onClick={() => {
-            mutate();
+            mutate(project.id);
           }}
         >
           Confirm
@@ -153,13 +138,9 @@ function RevokeSecretsDialog({
 export default function ProjectSecretsPage(): ReactElement {
   const router = useRouter();
   const projectId = useRouterParam("projectId");
-  const project = useQuery<Project>(`/api/projects/${projectId}`, {
-    enabled: !!projectId,
-  });
-  const projectSecrets = useQuery<ProjectSecrets>(
-    `/api/projects/${projectId}/secrets`,
-    { enabled: project.status === "success" }
-  );
+  const project = useProject(projectId);
+  const projectSecrets = useProjectSecrets(project.data?.id);
+  const queryClient = useQueryClient();
 
   useErrorHandler(project.error || projectSecrets.error);
 
