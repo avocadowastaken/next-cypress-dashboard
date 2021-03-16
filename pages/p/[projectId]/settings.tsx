@@ -34,7 +34,6 @@ import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect } from "react";
-import { useQueryClient } from "react-query";
 
 interface DeleteProjectDialogProps {
   project: Project;
@@ -140,7 +139,6 @@ export default function ProjectSecretsPage(): ReactElement {
   const projectId = useRouterParam("projectId");
   const project = useProject(projectId);
   const projectSecrets = useProjectSecrets(project.data?.id);
-  const queryClient = useQueryClient();
 
   useErrorHandler(project.error || projectSecrets.error);
 

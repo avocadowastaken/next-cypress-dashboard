@@ -1,4 +1,4 @@
-import { createAppError } from "@/core/data/AppError";
+import { AppError } from "@/core/data/AppError";
 import { createApiHandler } from "@/core/helpers/Api";
 import {
   CreateInstanceInput,
@@ -124,7 +124,7 @@ export default createApiHandler((app) => {
       reply
     ) => {
       if (!recordKey || !projectId) {
-        throw createAppError("FORBIDDEN");
+        throw new AppError("FORBIDDEN");
       }
 
       if (!ciBuildId) {
@@ -191,7 +191,7 @@ export default createApiHandler((app) => {
     Params: { runId: string };
     Body: CreateInstanceInput;
     Reply: CreateInstanceResponse;
-  }>("/runs/:runId/instances", async (request, reply) => {
+  }>("/runs/:runId/instances", async (request) => {
     const { runId } = request.params;
     const { groupId } = request.body;
 
@@ -247,7 +247,7 @@ export default createApiHandler((app) => {
       }
     }
 
-    reply.send(response);
+    return response;
   });
 
   //

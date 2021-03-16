@@ -36,6 +36,8 @@ async function findDeploymentURL(): Promise<string | undefined> {
       }
     }
   }
+
+  return undefined;
 }
 
 async function main(): Promise<void> {

@@ -47,7 +47,7 @@ export function createApiHandler(
 
   app.register(fastifyCookie);
 
-  app.setErrorHandler((error, request, reply) => {
+  app.setErrorHandler((error, _, reply) => {
     if (error.name === "NotFoundError") {
       reply.status(404).send(new AppError("NOT_FOUND"));
     }

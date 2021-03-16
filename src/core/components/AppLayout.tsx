@@ -41,7 +41,7 @@ export function AppTitle({ breadcrumbs }: AppTitleProps) {
 export function AppBreadcrumb({ breadcrumbs }: AppTitleProps): ReactElement {
   return (
     <Breadcrumbs>
-      {breadcrumbs.map((breadcrumb, idx) => {
+      {breadcrumbs.map((breadcrumb) => {
         if (typeof breadcrumb == "string") {
           return (
             <Typography key={breadcrumb} color="textPrimary">

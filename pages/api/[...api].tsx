@@ -8,7 +8,7 @@ import { deserialize, serialize } from "superjson";
 import { SuperJSONResult } from "superjson/dist/types";
 
 export default createApiHandler((app) => {
-  app.addHook("preValidation", (request, reply, done) => {
+  app.addHook("preValidation", (request, _, done) => {
     if (
       typeof request.body == "object" &&
       request.body != null &&
@@ -20,7 +20,7 @@ export default createApiHandler((app) => {
     done();
   });
 
-  app.addHook("preSerialization", (request, reply, payload, done) => {
+  app.addHook("preSerialization", (_, __, payload, done) => {
     try {
       done(null, serialize(payload));
     } catch (e) {

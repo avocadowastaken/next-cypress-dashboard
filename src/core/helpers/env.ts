@@ -1,16 +1,3 @@
-function resolveOptional<T extends string | null>(
-  key: string,
-  defaultValue: T
-): T {
-  const value = process.env[key];
-
-  if (value) {
-    return value.trim() as T;
-  }
-
-  return defaultValue;
-}
-
 function resolveRequired(key: string): string {
   const value = process.env[key];
 
