@@ -41,7 +41,9 @@ export default createApiHandler((app) => {
       const avatarUrl = await findGitHubUserAvatar(userId, email);
 
       if (avatarUrl) {
-        return reply.redirect(301, avatarUrl);
+        return reply
+          .header("Cache-Control", "public, immutable")
+          .redirect(301, avatarUrl);
       }
 
       // Fallback to Gravatar.
@@ -180,7 +182,8 @@ export default createApiHandler((app) => {
 
     return createPageResponse(request.query, {
       getCount: () => prisma.run.count({ where }),
-      getNodes: (args) => prisma.run.findMany({ ...args, where }),
+      getNodes: (args) =>
+        prisma.run.findMany({ ...args, where, orderBy: { createdAt: "desc" } }),
     });
   });
 
