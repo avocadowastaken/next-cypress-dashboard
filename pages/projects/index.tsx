@@ -1,5 +1,6 @@
-import { AppLayout } from "@/core/components/AppLayout";
+import { TablePager } from "@/core/components/TablePager";
 import { extractErrorCode, formatAppError } from "@/core/data/AppError";
+import { AppLayout } from "@/core/layout/AppLayout";
 import { formatProjectName } from "@/projects/helpers";
 import { useAddProject, useProjectsPage } from "@/projects/queries";
 import {
@@ -9,14 +10,11 @@ import {
   DialogActions,
   DialogContent,
   Link,
-  Pagination,
-  PaginationItem,
   Skeleton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
   TableRow,
   TextField,
@@ -120,7 +118,7 @@ export function AddProjectDialog({
 
 export default function ProjectsPage(): ReactElement {
   const router = useRouter();
-  const projectsPage = useProjectsPage({ page: router.query.page });
+  const projects = useProjectsPage({ page: router.query.page });
 
   return (
     <AppLayout
@@ -142,7 +140,7 @@ export default function ProjectsPage(): ReactElement {
           void router.replace({ query: { ...router.query, add: [] } });
         }}
         onSubmitSuccess={(project) => {
-          void projectsPage.refetch();
+          void projects.refetch();
           void router.replace({ query: { ...router.query, add: [] } });
           void router.replace(`/projects/${project.id}`);
         }}
@@ -157,7 +155,7 @@ export default function ProjectsPage(): ReactElement {
             </TableRow>
           </TableHead>
 
-          {projectsPage.status !== "success" ? (
+          {projects.status !== "success" ? (
             <TableBody>
               <TableRow>
                 <TableCell>
@@ -172,7 +170,7 @@ export default function ProjectsPage(): ReactElement {
           ) : (
             <>
               <TableBody>
-                {projectsPage.data.nodes.map((project) => (
+                {projects.data.nodes.map((project) => (
                   <TableRow key={project.id}>
                     <TableCell>{project.providerId}</TableCell>
 
@@ -188,28 +186,11 @@ export default function ProjectsPage(): ReactElement {
                 ))}
               </TableBody>
 
-              {projectsPage.data.maxPage > 1 && (
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={3}>
-                      <Pagination
-                        page={projectsPage.data.page}
-                        count={projectsPage.data.maxPage}
-                        renderItem={(item) => (
-                          <NextLink
-                            passHref={true}
-                            href={{
-                              pathname: router.pathname,
-                              query: { ...router.query, page: item.page },
-                            }}
-                          >
-                            <PaginationItem {...item} />
-                          </NextLink>
-                        )}
-                      />
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
+              {projects.data.maxPage > 1 && (
+                <TablePager
+                  page={projects.data.page}
+                  maxPage={projects.data.maxPage}
+                />
               )}
             </>
           )}

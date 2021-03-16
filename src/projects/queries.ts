@@ -31,6 +31,7 @@ export function useProject(
     ["project", projectId],
     () => requestJSON(`/api/projects/${projectId}`),
     {
+      staleTime: Infinity,
       enabled: !!projectId,
       initialData: () => {
         for (const query of queryClient.getQueryCache().findAll("projects")) {

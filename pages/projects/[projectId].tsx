@@ -1,14 +1,10 @@
-import { AppLayout } from "@/core/components/AppLayout";
-import { ErrorPage } from "@/core/components/ErrorPage";
-import { Inline } from "@/core/components/Inline";
 import { Pre } from "@/core/components/Pre";
-import { RunAttributes } from "@/core/components/RunAttributes";
-import { Stack } from "@/core/components/Stack";
-import {
-  extractErrorCode,
-  formatAppError,
-  useErrorHandler,
-} from "@/core/data/AppError";
+import { TablePager } from "@/core/components/TablePager";
+import { extractErrorCode, formatAppError } from "@/core/data/AppError";
+import { AppLayout } from "@/core/layout/AppLayout";
+import { ErrorPage, useErrorHandler } from "@/core/layout/ErrorPage";
+import { Inline } from "@/core/layout/Inline";
+import { Stack } from "@/core/layout/Stack";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { formatProjectName } from "@/projects/helpers";
 import {
@@ -17,7 +13,8 @@ import {
   useProjectSecrets,
   useRevokeProjectSecrets,
 } from "@/projects/queries";
-import { useRunsPage } from "@/runs/queries";
+import { RunAttributes } from "@/test-runs/components/RunAttributes";
+import { useRunsPage } from "@/test-runs/queries";
 import {
   Alert,
   Button,
@@ -25,14 +22,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Pagination,
-  PaginationItem,
   Skeleton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableRow,
   Typography,
 } from "@material-ui/core";
@@ -240,13 +234,11 @@ export default function ProjectPage(): ReactElement {
   const project = useProject(projectId);
   const runs = useRunsPage(project.data?.id, { page: router.query.page });
 
-  useErrorHandler(project.error || runs.error);
-
-  if (project.status === "error") {
+  if (project.error) {
     return <ErrorPage error={project.error} />;
   }
 
-  if (project.status !== "success") {
+  if (!project.data) {
     return <AppLayout breadcrumbs={[["Projects", "/projects"], "…"]} />;
   }
 
@@ -349,27 +341,7 @@ export default function ProjectPage(): ReactElement {
               </TableBody>
 
               {runs.data.maxPage > 1 && (
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={3}>
-                      <Pagination
-                        page={runs.data.page}
-                        count={runs.data.maxPage}
-                        renderItem={(item) => (
-                          <NextLink
-                            passHref={true}
-                            href={{
-                              pathname: router.pathname,
-                              query: { ...router.query, page: item.page },
-                            }}
-                          >
-                            <PaginationItem {...item} />
-                          </NextLink>
-                        )}
-                      />
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
+                <TablePager page={runs.data.page} maxPage={runs.data.maxPage} />
               )}
             </>
           )}

@@ -10,6 +10,7 @@ export async function verifyGitHubRepoAccess(
   repo: string
 ): Promise<void> {
   const account = await prisma.userAccount.findUnique({
+    select: { accessToken: true },
     where: { userId_providerId: { userId, providerId: "github" } },
   });
 

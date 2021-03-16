@@ -56,7 +56,7 @@ export async function createPageResponse<TData>(
     getCount,
     getNodes,
     maxNodesPerPage = 100,
-    defaultNodesPerPage = 10,
+    defaultNodesPerPage = 50,
   }: PageResponseOptions<TData>
 ): Promise<PageResponse<TData>> {
   const page = toPositiveNumber(input.page);

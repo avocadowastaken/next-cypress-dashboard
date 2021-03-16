@@ -54,8 +54,6 @@ export default createApiHandler((app) => {
     };
 
     return createPageResponse(request.query, {
-      maxNodesPerPage: 10,
-      defaultNodesPerPage: 5,
       getCount: () => prisma.project.count({ where }),
       getNodes: (args) =>
         prisma.project.findMany({
@@ -228,7 +226,6 @@ export default createApiHandler((app) => {
     const where: Prisma.RunInstanceWhereInput = { runId };
 
     return createPageResponse(request.query, {
-      maxNodesPerPage: 100,
       defaultNodesPerPage: 100,
       getCount: () => prisma.runInstance.count({ where }),
       getNodes: (args) =>
@@ -239,4 +236,70 @@ export default createApiHandler((app) => {
         }),
     });
   });
+
+  app.get<{
+    Params: { runId: string; projectId: string; runInstanceId: string };
+  }>(
+    "/api/projects/:projectId/runs/:runId/instances/:runInstanceId",
+    async (request) => {
+      const { runId, projectId, runInstanceId } = request.params;
+      const { userId } = await getRequestSession(request);
+
+      const { run, ...runInstance } = await prisma.runInstance.findFirst({
+        rejectOnNotFound: true,
+        include: { run: { select: { project: true } } },
+        where: {
+          id: runInstanceId,
+          run: {
+            id: runId,
+            project: { id: projectId, users: { some: { id: userId } } },
+          },
+        },
+      });
+
+      await verifyGitHubRepoAccess(userId, run.project.org, run.project.repo);
+
+      return runInstance;
+    }
+  );
+
+  app.get<{
+    Querystring: PageInput;
+    Params: { runId: string; projectId: string; runInstanceId: string };
+  }>(
+    "/api/projects/:projectId/runs/:runId/instances/:runInstanceId/results",
+    async (request) => {
+      const { runId, projectId, runInstanceId } = request.params;
+      const { userId } = await getRequestSession(request);
+
+      const {
+        run: { project },
+      } = await prisma.runInstance.findFirst({
+        rejectOnNotFound: true,
+        select: { run: { select: { project: true } } },
+        where: {
+          id: runInstanceId,
+          run: {
+            id: runId,
+            project: { id: projectId, users: { some: { id: userId } } },
+          },
+        },
+      });
+
+      await verifyGitHubRepoAccess(userId, project.org, project.repo);
+
+      const where: Prisma.TestResultWhereInput = { runInstanceId };
+
+      return createPageResponse(request.query, {
+        defaultNodesPerPage: 100,
+        getCount: () => prisma.testResult.count({ where }),
+        getNodes: (args) =>
+          prisma.testResult.findMany({
+            ...args,
+            where,
+            orderBy: { testId: "asc" },
+          }),
+      });
+    }
+  );
 });

@@ -3,7 +3,6 @@ import {
   JWT_SECRET,
   JWT_SIGNING_KEY,
 } from "@/core/helpers/env";
-import debug from "debug";
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
@@ -12,19 +11,14 @@ import {
 } from "next";
 import { getToken } from "next-auth/jwt";
 import { ParsedUrlQuery } from "querystring";
-import getRawBody from "raw-body";
 
 interface UserSession {
   userId: string;
 }
 
-const sspJWTLogger = debug("app:ssp:jwt");
-
 async function getUserSession(
   context: GetServerSidePropsContext
 ): Promise<null | UserSession> {
-  sspJWTLogger("parsing token");
-
   try {
     const session = await getToken({
       secret: JWT_SECRET,
@@ -33,11 +27,8 @@ async function getUserSession(
       req: context.req as NextApiRequest,
     });
 
-    sspJWTLogger("access granted");
     return { userId: session["sub"] };
   } catch {
-    sspJWTLogger("access denied");
-
     return null;
   }
 }
@@ -58,23 +49,6 @@ export function redirectToSignIn<TProps>(
   };
 }
 
-const sspBodyLogger = debug("app:ssp:body");
-
-export async function getRequestBody(
-  context: GetServerSidePropsContext
-): Promise<URLSearchParams> {
-  sspBodyLogger("starting parsing");
-
-  const body = await getRawBody(context.req, { encoding: "utf8" });
-  const params = new URLSearchParams(body);
-
-  sspBodyLogger("parsing finished");
-
-  return params;
-}
-
-const sspLogger = debug("app:ssp");
-
 export function createServerSideProps<
   TProps,
   TParams extends ParsedUrlQuery = ParsedUrlQuery
@@ -93,12 +67,6 @@ export function createServerSideProps<
       return redirectToSignIn(context);
     }
 
-    sspLogger("getting server side props");
-
-    const response = await fn(session, context);
-
-    sspLogger("sending server side props to the client");
-
-    return response;
+    return fn(session, context);
   };
 }

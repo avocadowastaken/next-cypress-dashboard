@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 export type AppErrorCode = typeof APP_ERROR_CODES[number];
 export const APP_ERROR_CODES = [
   "UNKNOWN_ERROR",
@@ -84,16 +82,4 @@ export function getAppErrorStatusCode(error: unknown): number {
   }
 
   return 500;
-}
-
-export function useErrorHandler(error: unknown): void {
-  useEffect(() => {
-    const errorCode = !error ? null : extractErrorCode(error);
-
-    if (errorCode === "UNAUTHORIZED") {
-      const callbackUrl = encodeURIComponent(window.location.href);
-
-      window.location.replace(`/api/auth/signin?callbackUrl=${callbackUrl}`);
-    }
-  }, [error]);
 }

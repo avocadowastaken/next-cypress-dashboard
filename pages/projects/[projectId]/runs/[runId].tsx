@@ -1,13 +1,13 @@
-import { AppLayout } from "@/core/components/AppLayout";
-import { ErrorPage } from "@/core/components/ErrorPage";
-import { RunAttributes } from "@/core/components/RunAttributes";
-import { RunInstanceAttributes } from "@/core/components/RunInstanceAttributes";
-import { useErrorHandler } from "@/core/data/AppError";
+import { TablePager } from "@/core/components/TablePager";
+import { AppLayout } from "@/core/layout/AppLayout";
+import { ErrorPage } from "@/core/layout/ErrorPage";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { formatProjectName } from "@/projects/helpers";
 import { useProject } from "@/projects/queries";
-import { useRunInstancesPage } from "@/run-instances/queries";
-import { useDeleteRun, useRun } from "@/runs/queries";
+import { RunInstanceAttributes } from "@/test-run-instances/components/RunInstanceAttributes";
+import { useRunInstancesPage } from "@/test-run-instances/queries";
+import { RunAttributes } from "@/test-runs/components/RunAttributes";
+import { useDeleteRun, useRun } from "@/test-runs/queries";
 import {
   Button,
   Dialog,
@@ -15,14 +15,11 @@ import {
   DialogContent,
   Divider,
   Grid,
-  Pagination,
-  PaginationItem,
   Skeleton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableRow,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
@@ -89,8 +86,6 @@ export default function RunPage(): ReactElement {
   });
 
   const pageError = run.error || project.error || runInstances.error;
-
-  useErrorHandler(pageError);
 
   if (pageError) {
     return <ErrorPage error={pageError} />;
@@ -173,27 +168,10 @@ export default function RunPage(): ReactElement {
                   </TableBody>
 
                   {runInstances.data.maxPage > 1 && (
-                    <TableFooter>
-                      <TableRow>
-                        <TableCell colSpan={3}>
-                          <Pagination
-                            page={runInstances.data.page}
-                            count={runInstances.data.maxPage}
-                            renderItem={(item) => (
-                              <NextLink
-                                passHref={true}
-                                href={{
-                                  pathname: router.pathname,
-                                  query: { ...router.query, page: item.page },
-                                }}
-                              >
-                                <PaginationItem {...item} />
-                              </NextLink>
-                            )}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    </TableFooter>
+                    <TablePager
+                      page={runInstances.data.page}
+                      maxPage={runInstances.data.maxPage}
+                    />
                   )}
                 </>
               )}
