@@ -28,72 +28,62 @@ export default createApiHandler((app) => {
     }
   });
 
-  app.post<{ Body: { repo: string } }>(
-    "/api/projects",
-    async (request, reply) => {
-      const { userId } = await getRequestSession(request);
-      const [providerId, org, repo] = parseGitUrl(request.body.repo);
+  app.post<{ Body: { repo: string } }>("/api/projects", async (request) => {
+    const { userId } = await getRequestSession(request);
+    const [providerId, org, repo] = parseGitUrl(request.body.repo);
 
-      await verifyGitHubRepoAccess(userId, org, repo);
+    await verifyGitHubRepoAccess(userId, org, repo);
 
-      const project = await prisma.project.upsert({
-        update: { users: { connect: { id: userId } } },
-        where: { org_repo_providerId: { org, repo, providerId } },
-        create: {
-          org,
-          repo,
-          providerId,
-          secrets: { create: {} },
-          users: { connect: { id: userId } },
-        },
-      });
+    return prisma.project.upsert({
+      update: { users: { connect: { id: userId } } },
+      where: { org_repo_providerId: { org, repo, providerId } },
+      create: {
+        org,
+        repo,
+        providerId,
+        secrets: { create: {} },
+        users: { connect: { id: userId } },
+      },
+    });
+  });
 
-      reply.send(project);
-    }
-  );
+  app.get<{ Querystring: PageInput }>("/api/projects", async (request) => {
+    const { userId } = await getRequestSession(request);
+    const where: Prisma.ProjectWhereInput = {
+      users: { some: { id: userId } },
+    };
 
-  app.get<{ Querystring: PageInput }>(
-    "/api/projects",
-    async (request, reply) => {
-      const { userId } = await getRequestSession(request);
-      const where: Prisma.ProjectWhereInput = {
-        users: { some: { id: userId } },
-      };
-      const response = await createPageResponse(request.query, {
-        maxNodesPerPage: 10,
-        defaultNodesPerPage: 5,
-        getCount: () => prisma.project.count({ where }),
-        getNodes: (args) =>
-          prisma.project.findMany({
-            ...args,
-            where,
-            orderBy: { createdAt: "desc" },
-          }),
-      });
-
-      reply.send(response);
-    }
-  );
+    return createPageResponse(request.query, {
+      maxNodesPerPage: 10,
+      defaultNodesPerPage: 5,
+      getCount: () => prisma.project.count({ where }),
+      getNodes: (args) =>
+        prisma.project.findMany({
+          ...args,
+          where,
+          orderBy: { createdAt: "desc" },
+        }),
+    });
+  });
 
   app.get<{ Params: { projectId: string } }>(
     "/api/projects/:projectId",
-    async (request, reply) => {
+    async (request) => {
       const { userId } = await getRequestSession(request);
-      const project = await prisma.project.findFirst({
+
+      return prisma.project.findFirst({
         rejectOnNotFound: true,
         where: {
           id: request.params.projectId,
           users: { some: { id: userId } },
         },
       });
-
-      reply.send(project);
     }
   );
 
   app.delete<{ Params: { projectId: string } }>(
     "/api/projects/:projectId",
-    async (request, reply) => {
+    async (request) => {
       const { projectId } = request.params;
       const { userId } = await getRequestSession(request);
 
@@ -102,13 +92,13 @@ export default createApiHandler((app) => {
         data: { users: { disconnect: { id: userId } } },
       });
 
-      reply.send({ projectId });
+      return { projectId };
     }
   );
 
   app.post<{ Params: { projectId: string } }>(
     "/api/projects/:projectId/secrets",
-    async (request, reply) => {
+    async (request) => {
       const { projectId } = request.params;
       const { userId } = await getRequestSession(request);
       const project = await prisma.project.findFirst({
@@ -120,17 +110,13 @@ export default createApiHandler((app) => {
 
       await prisma.projectSecrets.deleteMany({ where: { projectId } });
 
-      const projectSecrets = await prisma.projectSecrets.create({
-        data: { projectId },
-      });
-
-      reply.send(projectSecrets);
+      return prisma.projectSecrets.create({ data: { projectId } });
     }
   );
 
   app.get<{ Params: { projectId: string } }>(
     "/api/projects/:projectId/secrets",
-    async (request, reply) => {
+    async (request) => {
       const { userId } = await getRequestSession(request);
       const project = await prisma.project.findFirst({
         rejectOnNotFound: true,
@@ -142,18 +128,16 @@ export default createApiHandler((app) => {
 
       await verifyGitHubRepoAccess(userId, project.org, project.repo);
 
-      const projectSecrets = await prisma.projectSecrets.findUnique({
+      return prisma.projectSecrets.findUnique({
         rejectOnNotFound: true,
         where: { projectId: project.id },
       });
-
-      reply.send(projectSecrets);
     }
   );
 
   app.get<{ Querystring: PageInput & { projectId?: string } }>(
     "/api/runs",
-    async (request, reply) => {
+    async (request) => {
       const { projectId, ...pageInput } = request.query;
       const { userId } = await getRequestSession(request);
       const where: Prisma.RunWhereInput = {
@@ -163,12 +147,79 @@ export default createApiHandler((app) => {
         },
       };
 
-      const response = await createPageResponse(pageInput, {
+      return createPageResponse(pageInput, {
         getCount: () => prisma.run.count({ where }),
         getNodes: (args) => prisma.run.findMany({ ...args, where }),
       });
+    }
+  );
 
-      reply.send(response);
+  app.get<{ Params: { runId: string } }>(
+    "/api/runs/:runId",
+    async (request) => {
+      const { runId } = request.params;
+      const { userId } = await getRequestSession(request);
+
+      const { project, ...run } = await prisma.run.findFirst({
+        rejectOnNotFound: true,
+        include: { project: true },
+        where: {
+          id: runId,
+          project: { users: { some: { id: userId } } },
+        },
+      });
+
+      await verifyGitHubRepoAccess(userId, project.org, project.repo);
+
+      return run;
+    }
+  );
+
+  app.delete<{ Params: { runId: string } }>(
+    "/api/runs/:runId",
+    async (request) => {
+      const { runId } = request.params;
+      const { userId } = await getRequestSession(request);
+
+      const run = await prisma.run.findFirst({
+        rejectOnNotFound: true,
+        select: { project: true },
+        where: {
+          id: runId,
+          project: { users: { some: { id: userId } } },
+        },
+      });
+
+      await verifyGitHubRepoAccess(userId, run.project.org, run.project.repo);
+
+      await prisma.testResult.deleteMany({ where: { runInstance: { runId } } });
+      await prisma.runInstance.deleteMany({ where: { runId } });
+      await prisma.run.deleteMany({ where: { id: runId } });
+
+      return run;
+    }
+  );
+
+  app.get<{ Querystring: PageInput & { runId?: string } }>(
+    "/api/instances",
+    async (request) => {
+      const { runId, ...pageInput } = request.query;
+      const { userId } = await getRequestSession(request);
+      const where: Prisma.RunInstanceWhereInput = {
+        run: { id: runId, project: { users: { some: { id: userId } } } },
+      };
+
+      return createPageResponse(pageInput, {
+        maxNodesPerPage: 100,
+        defaultNodesPerPage: 100,
+        getCount: () => prisma.runInstance.count({ where }),
+        getNodes: (args) =>
+          prisma.runInstance.findMany({
+            ...args,
+            where,
+            orderBy: [{ totalFailed: "desc" }, { claimedAt: "asc" }],
+          }),
+      });
     }
   );
 });

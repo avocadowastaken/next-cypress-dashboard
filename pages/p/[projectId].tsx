@@ -9,7 +9,6 @@ import {
   formatAppError,
   useErrorHandler,
 } from "@/core/data/AppError";
-import { PageResponse } from "@/core/data/PageResponse";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { formatProjectName } from "@/projects/helpers";
 import {
@@ -18,6 +17,7 @@ import {
   useProjectSecrets,
   useRevokeProjectSecrets,
 } from "@/projects/queries";
+import { useRunsPage } from "@/runs/queries";
 import {
   Alert,
   Button,
@@ -37,11 +37,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
-import { Project, Run } from "@prisma/client";
+import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect } from "react";
-import { useQuery } from "react-query";
 
 interface DeleteProjectDialogProps {
   project: Project;
@@ -157,7 +156,7 @@ function ProjectSettingsDialog({
   onRemoveClick,
   onRevokeClick,
 }: ProjectSettingsDialogProps): ReactElement {
-  const projectSecrets = useProjectSecrets(project.id);
+  const projectSecrets = useProjectSecrets(project.id, { enabled: open });
   const errorCode = !projectSecrets.error
     ? null
     : extractErrorCode(projectSecrets.error);
@@ -239,8 +238,8 @@ export default function ProjectPage(): ReactElement {
   const router = useRouter();
   const projectId = useRouterParam("projectId");
   const project = useProject(projectId);
-  const runs = useQuery<PageResponse<Run>>(
-    `/api/runs?projectId=${projectId}&page=${router.query.page}`,
+  const runs = useRunsPage(
+    { projectId, page: router.query.page },
     { enabled: project.status === "success" }
   );
 

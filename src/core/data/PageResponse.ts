@@ -15,6 +15,20 @@ export interface PageInput {
   nodesPerPage?: unknown;
 }
 
+export function createPageInputParams(input: PageInput): URLSearchParams {
+  const params = new URLSearchParams();
+
+  if (input.page) {
+    params.set("page", String(input.page));
+  }
+
+  if (input.nodesPerPage) {
+    params.set("nodesPerPage", String(input.nodesPerPage));
+  }
+
+  return params;
+}
+
 interface PageResponseNodesArgs {
   take: number;
   skip: number;

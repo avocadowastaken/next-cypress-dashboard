@@ -1,7 +1,6 @@
 import { requestJSON } from "@/core/data/Http";
 import { PageInput, PageResponse } from "@/core/data/PageResponse";
 import { Project, ProjectSecrets } from "@prisma/client";
-import { useCallback } from "react";
 import {
   useMutation,
   UseMutationResult,
@@ -9,7 +8,10 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "react-query";
-import { UseMutationOptions } from "react-query/types/react/types";
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+} from "react-query/types/react/types";
 
 export function useProjectsPage(
   input: PageInput
@@ -19,14 +21,6 @@ export function useProjectsPage(
     () => requestJSON(`/api/projects?page=${input.page || 1}`),
     { keepPreviousData: true }
   );
-}
-
-export function useRefetchProjectPages(): () => Promise<void> {
-  const queryClient = useQueryClient();
-
-  return useCallback(() => queryClient.invalidateQueries(["projects"]), [
-    queryClient,
-  ]);
 }
 
 export function useProject(
@@ -80,10 +74,10 @@ export function useAddProject(
 
 export function useDeleteProject(
   options?: Pick<UseMutationOptions<Project, Error, string>, "onSuccess">
-) {
+): UseMutationResult<Project, Error, string> {
   return useMutation(
     ["project", "delete"],
-    async (projectId: string) =>
+    (projectId: string) =>
       requestJSON<Project>(`/api/projects/${projectId}`, {
         method: "DELETE",
       }),
@@ -92,12 +86,16 @@ export function useDeleteProject(
 }
 
 export function useProjectSecrets(
-  projectId: string | undefined
+  projectId: string | undefined,
+  {
+    enabled = !!projectId,
+    ...options
+  }: Pick<UseQueryOptions<ProjectSecrets>, "enabled"> = {}
 ): UseQueryResult<ProjectSecrets> {
   return useQuery(
     ["project", projectId, "secrets"],
     () => requestJSON(`/api/projects/${projectId}/secrets`),
-    { enabled: !!projectId }
+    { ...options, enabled }
   );
 }
 
