@@ -109,7 +109,7 @@ export function RunAttributes({
           avatar={
             <Avatar
               alt={run.commitAuthorName}
-              src={`/avatar?email=${encodeURIComponent(run.commitAuthorEmail)}`}
+              src={`/api/avatar/${encodeURIComponent(run.commitAuthorEmail)}`}
             />
           }
         />

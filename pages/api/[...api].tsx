@@ -2,8 +2,12 @@ import { createPageResponse, PageInput } from "@/core/data/PageResponse";
 import { createApiHandler, getRequestSession } from "@/core/helpers/Api";
 import { prisma } from "@/core/helpers/db";
 import { parseGitUrl } from "@/core/helpers/Git";
-import { verifyGitHubRepoAccess } from "@/core/helpers/GitHub";
+import {
+  findGitHubUserAvatar,
+  verifyGitHubRepoAccess,
+} from "@/core/helpers/GitHub";
 import { Prisma } from "@prisma/client";
+import { createHash } from "crypto";
 import { deserialize, serialize } from "superjson";
 import { SuperJSONResult } from "superjson/dist/types";
 
@@ -27,6 +31,27 @@ export default createApiHandler((app) => {
       done(e);
     }
   });
+
+  app.get<{ Params: { email: string } }>(
+    "/api/avatar/:email",
+    async (request, reply) => {
+      const { email } = request.params;
+
+      const { userId } = await getRequestSession(request);
+      const avatarUrl = await findGitHubUserAvatar(userId, email);
+
+      if (avatarUrl) {
+        return reply.redirect(301, avatarUrl);
+      }
+
+      // Fallback to Gravatar.
+      const hash = createHash("md5").update(email.trim()).digest("hex");
+      return reply.redirect(
+        302,
+        `https://www.gravatar.com/avatar/${hash}?s=256`
+      );
+    }
+  );
 
   app.post<{ Body: { repo: string } }>("/api/projects", async (request) => {
     const { userId } = await getRequestSession(request);
