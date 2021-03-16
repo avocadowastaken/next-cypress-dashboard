@@ -250,12 +250,12 @@ export default function ProjectPage(): ReactElement {
   }
 
   if (project.status !== "success") {
-    return <AppLayout breadcrumbs={[["Projects", "/p"], "…"]} />;
+    return <AppLayout breadcrumbs={[["Projects", "/projects"], "…"]} />;
   }
 
   return (
     <AppLayout
-      breadcrumbs={[["Projects", "/p"], formatProjectName(project.data)]}
+      breadcrumbs={[["Projects", "/projects"], formatProjectName(project.data)]}
       actions={
         <NextLink
           passHref={true}
@@ -313,7 +313,7 @@ export default function ProjectPage(): ReactElement {
         }}
         onSubmitSuccess={() => {
           void router.replace({
-            pathname: "/p",
+            pathname: "/projects",
             query: { success: `${formatProjectName(project.data)} removed` },
           });
         }}

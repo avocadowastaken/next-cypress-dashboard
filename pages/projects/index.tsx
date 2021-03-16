@@ -126,7 +126,10 @@ export default function ProjectsPage(): ReactElement {
     <AppLayout
       breadcrumbs={["Projects"]}
       actions={
-        <NextLink passHref={true} href={{ pathname: "/p", query: { add: "" } }}>
+        <NextLink
+          passHref={true}
+          href={{ pathname: router.pathname, query: { add: "" } }}
+        >
           <Button size="small" endIcon={<Add />}>
             Add
           </Button>
@@ -141,7 +144,7 @@ export default function ProjectsPage(): ReactElement {
         onSubmitSuccess={(project) => {
           void projectsPage.refetch();
           void router.replace({ query: { ...router.query, add: [] } });
-          void router.replace(`/p/${project.id}`);
+          void router.replace(`/projects/${project.id}`);
         }}
       />
 
@@ -174,7 +177,10 @@ export default function ProjectsPage(): ReactElement {
                     <TableCell>{project.providerId}</TableCell>
 
                     <TableCell>
-                      <NextLink passHref={true} href={`/p/${project.id}`}>
+                      <NextLink
+                        passHref={true}
+                        href={`/projects/${project.id}`}
+                      >
                         <Link>{formatProjectName(project)}</Link>
                       </NextLink>
                     </TableCell>
@@ -193,7 +199,7 @@ export default function ProjectsPage(): ReactElement {
                           <NextLink
                             passHref={true}
                             href={{
-                              pathname: "/p",
+                              pathname: router.pathname,
                               query: { ...router.query, page: item.page },
                             }}
                           >

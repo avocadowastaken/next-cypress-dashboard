@@ -41,7 +41,7 @@ export function PublicLayout({
             {!!action && <Grid item={true}>{action}</Grid>}
 
             <Grid item={true}>
-              <NextLink href="/p" passHref={true}>
+              <NextLink href="/projects" passHref={true}>
                 <Button color="inherit">Dashboard</Button>
               </NextLink>
             </Grid>

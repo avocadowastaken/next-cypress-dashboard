@@ -2,18 +2,21 @@ import { DurationChip } from "@/core/components/DurationChip";
 import { DebugStepOver, SyncCircle } from "@/core/components/icons";
 import { Chip, Grid, Link, Tooltip } from "@material-ui/core";
 import { Check, Error } from "@material-ui/icons";
-import { RunInstance } from "@prisma/client";
+import { Run, RunInstance } from "@prisma/client";
 import NextLink from "next/link";
 import React, { ReactElement } from "react";
 
 export interface RunInstanceAttributesProps {
+  run: Run;
   runInstance: RunInstance;
 }
 
 export function RunInstanceAttributes({
+  run: { projectId },
   runInstance: {
     id,
     spec,
+    runId,
     claimedAt,
     completedAt,
     totalPassed,
@@ -61,7 +64,10 @@ export function RunInstanceAttributes({
       )}
 
       <Grid item={true}>
-        <NextLink passHref={true} href={`/i/${id}`}>
+        <NextLink
+          passHref={true}
+          href={`/projects/${projectId}/runs/${runId}/instances/${id}`}
+        >
           <Link>{spec}</Link>
         </NextLink>
       </Grid>

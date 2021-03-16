@@ -106,8 +106,8 @@ export default function RunPage(): ReactElement {
   return (
     <AppLayout
       breadcrumbs={[
-        ["Projects", "/p"],
-        [formatProjectName(project.data), `/p/${project.data.id}`],
+        ["Projects", "/projects"],
+        [formatProjectName(project.data), `/projects/${project.data.id}`],
       ]}
       actions={
         <NextLink
@@ -131,7 +131,7 @@ export default function RunPage(): ReactElement {
         }}
         onSubmitSuccess={() => {
           void router.replace({
-            pathname: `/p/${run.data.projectId}`,
+            pathname: `/projects/${run.data.projectId}`,
             query: {
               ...router.query,
               success: `"${run.data.ciBuildId}" run removed`,
@@ -166,7 +166,10 @@ export default function RunPage(): ReactElement {
                     {runInstances.data.nodes.map((runInstance) => (
                       <TableRow key={runInstance.id}>
                         <TableCell>
-                          <RunInstanceAttributes runInstance={runInstance} />
+                          <RunInstanceAttributes
+                            run={run.data}
+                            runInstance={runInstance}
+                          />
                         </TableCell>
                       </TableRow>
                     ))}

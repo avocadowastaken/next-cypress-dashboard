@@ -63,7 +63,10 @@ export function RunAttributes({
   return (
     <Grid container={true} spacing={1}>
       <Grid item={true} xs={12}>
-        <NextLink passHref={true} href={`/r/${run.id}`}>
+        <NextLink
+          passHref={true}
+          href={`/projects/${project.id}/runs/${run.id}`}
+        >
           <Link variant="subtitle1">{run.commitMessage || run.ciBuildId}</Link>
         </NextLink>
       </Grid>

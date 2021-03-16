@@ -88,8 +88,8 @@ export default function RunInstancePage({
   return (
     <AppLayout
       breadcrumbs={[
-        ["Projects", "/p"],
-        [`${project.org}/${project.repo}`, `/p/${project.id}`],
+        ["Projects", "/projects"],
+        [`${project.org}/${project.repo}`, `/projects/${project.id}`],
       ]}
     >
       <Grid container={true} spacing={2}>
@@ -102,7 +102,7 @@ export default function RunInstancePage({
         </Grid>
 
         <Grid item={true} xs={12}>
-          <RunInstanceAttributes runInstance={runInstance} />
+          <RunInstanceAttributes run={run} runInstance={runInstance} />
         </Grid>
 
         <Grid item={true} xs={12}>
