@@ -6,26 +6,21 @@ import {
 } from "@/core/data/PageResponse";
 import { RunInstance } from "@prisma/client";
 import { useQuery, UseQueryResult } from "react-query";
-import { UseQueryOptions } from "react-query/types/react/types";
 
 export function useRunInstancesPage(
-  input: PageInput & { runId?: string },
-  options?: Pick<
-    UseQueryOptions<PageResponse<RunInstance>>,
-    "enabled" | "keepPreviousData"
-  >
+  projectId: string | undefined,
+  runId: string | undefined,
+  input: PageInput
 ): UseQueryResult<PageResponse<RunInstance>> {
   return useQuery(
-    ["instances", input],
+    ["instances", projectId, runId, input],
     () => {
       const params = createPageInputParams(input);
 
-      if (input.runId) {
-        params.set("runId", input.runId);
-      }
-
-      return requestJSON(`/api/instances?${params.toString()}`);
+      return requestJSON(
+        `/api/projects/${projectId}/runs/${runId}/instances?${params}`
+      );
     },
-    options
+    { keepPreviousData: true, enabled: !!projectId && !!runId }
   );
 }

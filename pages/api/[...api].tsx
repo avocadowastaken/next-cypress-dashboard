@@ -88,6 +88,7 @@ export default createApiHandler((app) => {
       const { userId } = await getRequestSession(request);
 
       await prisma.project.update({
+        select: null,
         where: { id: projectId },
         data: { users: { disconnect: { id: userId } } },
       });
@@ -135,29 +136,35 @@ export default createApiHandler((app) => {
     }
   );
 
-  app.get<{ Querystring: PageInput & { projectId?: string } }>(
-    "/api/runs",
-    async (request) => {
-      const { projectId, ...pageInput } = request.query;
-      const { userId } = await getRequestSession(request);
-      const where: Prisma.RunWhereInput = {
-        project: {
-          id: projectId,
-          users: { some: { id: userId } },
-        },
-      };
+  app.get<{
+    Querystring: PageInput;
+    Params: { projectId: string };
+  }>("/api/projects/:projectId/runs", async (request) => {
+    const { projectId } = request.params;
+    const { userId } = await getRequestSession(request);
 
-      return createPageResponse(pageInput, {
-        getCount: () => prisma.run.count({ where }),
-        getNodes: (args) => prisma.run.findMany({ ...args, where }),
-      });
-    }
-  );
+    const project = await prisma.project.findFirst({
+      rejectOnNotFound: true,
+      where: {
+        id: projectId,
+        users: { some: { id: userId } },
+      },
+    });
 
-  app.get<{ Params: { runId: string } }>(
-    "/api/runs/:runId",
+    await verifyGitHubRepoAccess(userId, project.org, project.repo);
+
+    const where: Prisma.RunWhereInput = { projectId };
+
+    return createPageResponse(request.query, {
+      getCount: () => prisma.run.count({ where }),
+      getNodes: (args) => prisma.run.findMany({ ...args, where }),
+    });
+  });
+
+  app.get<{ Params: { runId: string; projectId: string } }>(
+    "/api/projects/:projectId/runs/:runId",
     async (request) => {
-      const { runId } = request.params;
+      const { runId, projectId } = request.params;
       const { userId } = await getRequestSession(request);
 
       const { project, ...run } = await prisma.run.findFirst({
@@ -165,7 +172,7 @@ export default createApiHandler((app) => {
         include: { project: true },
         where: {
           id: runId,
-          project: { users: { some: { id: userId } } },
+          project: { id: projectId, users: { some: { id: userId } } },
         },
       });
 
@@ -200,26 +207,36 @@ export default createApiHandler((app) => {
     }
   );
 
-  app.get<{ Querystring: PageInput & { runId?: string } }>(
-    "/api/instances",
-    async (request) => {
-      const { runId, ...pageInput } = request.query;
-      const { userId } = await getRequestSession(request);
-      const where: Prisma.RunInstanceWhereInput = {
-        run: { id: runId, project: { users: { some: { id: userId } } } },
-      };
+  app.get<{
+    Querystring: PageInput;
+    Params: { runId: string; projectId: string };
+  }>("/api/projects/:projectId/runs/:runId/instances", async (request) => {
+    const { runId, projectId } = request.params;
+    const { userId } = await getRequestSession(request);
 
-      return createPageResponse(pageInput, {
-        maxNodesPerPage: 100,
-        defaultNodesPerPage: 100,
-        getCount: () => prisma.runInstance.count({ where }),
-        getNodes: (args) =>
-          prisma.runInstance.findMany({
-            ...args,
-            where,
-            orderBy: [{ totalFailed: "desc" }, { claimedAt: "asc" }],
-          }),
-      });
-    }
-  );
+    const { project } = await prisma.run.findFirst({
+      rejectOnNotFound: true,
+      select: { project: true },
+      where: {
+        id: runId,
+        project: { id: projectId, users: { some: { id: userId } } },
+      },
+    });
+
+    await verifyGitHubRepoAccess(userId, project.org, project.repo);
+
+    const where: Prisma.RunInstanceWhereInput = { runId };
+
+    return createPageResponse(request.query, {
+      maxNodesPerPage: 100,
+      defaultNodesPerPage: 100,
+      getCount: () => prisma.runInstance.count({ where }),
+      getNodes: (args) =>
+        prisma.runInstance.findMany({
+          ...args,
+          where,
+          orderBy: [{ totalFailed: "desc" }, { claimedAt: "asc" }],
+        }),
+    });
+  });
 });

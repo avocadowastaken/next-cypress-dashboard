@@ -81,15 +81,12 @@ function DeleteRunDialog({
 export default function RunPage(): ReactElement {
   const router = useRouter();
   const runId = useRouterParam("runId");
-  const run = useRun(runId);
-  const project = useProject(run.data?.projectId);
-  const runInstances = useRunInstancesPage(
-    { runId, page: router.query.page },
-    {
-      keepPreviousData: true,
-      enabled: run.status === "success",
-    }
-  );
+  const projectId = useRouterParam("projectId");
+  const run = useRun(projectId, runId);
+  const project = useProject(projectId);
+  const runInstances = useRunInstancesPage(projectId, runId, {
+    page: router.query.page,
+  });
 
   const pageError = run.error || project.error || runInstances.error;
 

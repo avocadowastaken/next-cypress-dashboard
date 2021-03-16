@@ -238,10 +238,7 @@ export default function ProjectPage(): ReactElement {
   const router = useRouter();
   const projectId = useRouterParam("projectId");
   const project = useProject(projectId);
-  const runs = useRunsPage(
-    { projectId, page: router.query.page },
-    { enabled: project.status === "success" }
-  );
+  const runs = useRunsPage(project.data?.id, { page: router.query.page });
 
   useErrorHandler(project.error || runs.error);
 

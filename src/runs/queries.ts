@@ -12,51 +12,55 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "react-query";
-import {
-  UseMutationOptions,
-  UseQueryOptions,
-} from "react-query/types/react/types";
+import { UseMutationOptions } from "react-query/types/react/types";
 
 export function useRunsPage(
-  input: PageInput & { projectId?: string },
-  options?: Pick<UseQueryOptions<PageResponse<Run>>, "enabled">
+  projectId: string | undefined,
+  input: PageInput
 ): UseQueryResult<PageResponse<Run>> {
   return useQuery(
-    ["runs", input],
+    ["runs", projectId, input],
     () => {
-      const params = createPageInputParams(input);
-
-      if (input.projectId) {
-        params.set("projectId", input.projectId);
-      }
-
-      return requestJSON(`/api/runs?${params.toString()}`);
+      return requestJSON(
+        `/api/projects/${projectId}/runs?${createPageInputParams(
+          input
+        ).toString()}`
+      );
     },
-    options
+    { enabled: !!projectId, keepPreviousData: true }
   );
 }
 
-export function useRun(runId: string | undefined): UseQueryResult<Run> {
+export function useRun(
+  projectId: string | undefined,
+  runId: string | undefined
+): UseQueryResult<Run> {
   const queryClient = useQueryClient();
 
-  return useQuery(["run", runId], () => requestJSON(`/api/runs/${runId}`), {
-    enabled: !!runId,
-    initialData: () => {
-      for (const query of queryClient.getQueryCache().findAll("runs")) {
-        if (query.state.data != null) {
-          const runs = query.state.data as PageResponse<Run>;
+  return useQuery(
+    ["run", projectId, runId],
+    () => requestJSON(`/api/projects/${projectId}/runs/${runId}`),
+    {
+      enabled: !!runId && !!projectId,
+      initialData: () => {
+        for (const query of queryClient
+          .getQueryCache()
+          .findAll(["runs", projectId])) {
+          if (query.state.data != null) {
+            const runs = query.state.data as PageResponse<Run>;
 
-          for (const run of runs.nodes) {
-            if (run.id === runId) {
-              return run;
+            for (const run of runs.nodes) {
+              if (run.id === runId) {
+                return run;
+              }
             }
           }
         }
-      }
 
-      return undefined;
-    },
-  });
+        return undefined;
+      },
+    }
+  );
 }
 
 export function useDeleteRun(

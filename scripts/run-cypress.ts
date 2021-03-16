@@ -3,7 +3,7 @@ import { exec } from "@actions/exec";
 async function main() {
   await exec(
     "cypress",
-    ["run", "--record", "--parallel", "--ci-build-id", "id12"],
+    ["run", "--record", "--parallel", "--ci-build-id", "id2"],
     {
       env: {
         ...process.env,
