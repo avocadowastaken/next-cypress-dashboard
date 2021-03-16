@@ -31,19 +31,17 @@ const theme = createMuiTheme({
         root: {
           "& pre": {
             fontSize: "12px",
-            lineHeight: 1.45,
-            fontFamily:
-              "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
-
-            margin: 0,
-            padding: "16px",
-            overflow: "auto",
             borderRadius: "4px",
+          },
 
-            "& code": {
-              padding: 0,
-              fontFamily: "inherit",
-            },
+          "& code": {
+            margin: 0,
+            backgroundColor: "#2d2d2d",
+            fontSize: "85%",
+            padding: ".2em .4em",
+            borderRadius: "4px",
+            fontFamily:
+              "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
           },
 
           "& blockquote": {
@@ -79,6 +77,12 @@ const theme = createMuiTheme({
       },
     },
 
+    MuiButtonBase: {
+      defaultProps: {
+        type: "button",
+      },
+    },
+
     MuiButton: {
       defaultProps: {
         disableElevation: true,
@@ -93,12 +97,6 @@ const theme = createMuiTheme({
         root: {
           backgroundColor: grey[800],
         },
-      },
-    },
-
-    MuiTextField: {
-      defaultProps: {
-        size: "small",
       },
     },
 
@@ -120,6 +118,12 @@ const theme = createMuiTheme({
         boundaryCount: 1,
         color: "primary",
         variant: "outlined",
+      },
+    },
+
+    MuiModal: {
+      defaultProps: {
+        container: () => document.querySelector(".MuiScopedCssBaseline-root"),
       },
     },
   },

@@ -19,6 +19,7 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "noEmit": true,
     "strict": true,
+    "allowJs": true,
     "skipLibCheck": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
