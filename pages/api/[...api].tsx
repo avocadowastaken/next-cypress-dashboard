@@ -225,7 +225,6 @@ export default createApiHandler((app) => {
 
       await verifyGitHubRepoAccess(userId, run.project.org, run.project.repo);
 
-      await prisma.testResult.deleteMany({ where: { runInstance: { runId } } });
       await prisma.runInstance.deleteMany({ where: { runId } });
       await prisma.run.deleteMany({ where: { id: runId } });
 
@@ -288,46 +287,6 @@ export default createApiHandler((app) => {
       await verifyGitHubRepoAccess(userId, run.project.org, run.project.repo);
 
       return runInstance;
-    }
-  );
-
-  app.get<{
-    Querystring: PageInput;
-    Params: { runId: string; projectId: string; runInstanceId: string };
-  }>(
-    "/api/projects/:projectId/runs/:runId/instances/:runInstanceId/results",
-    async (request) => {
-      const { runId, projectId, runInstanceId } = request.params;
-      const { userId } = await getRequestSession(request);
-
-      const {
-        run: { project },
-      } = await prisma.runInstance.findFirst({
-        rejectOnNotFound: true,
-        select: { run: { select: { project: true } } },
-        where: {
-          id: runInstanceId,
-          run: {
-            id: runId,
-            project: { id: projectId, users: { some: { id: userId } } },
-          },
-        },
-      });
-
-      await verifyGitHubRepoAccess(userId, project.org, project.repo);
-
-      const where: Prisma.TestResultWhereInput = { runInstanceId };
-
-      return createPageResponse(request.query, {
-        defaultNodesPerPage: 100,
-        getCount: () => prisma.testResult.count({ where }),
-        getNodes: (args) =>
-          prisma.testResult.findMany({
-            ...args,
-            where,
-            orderBy: { testId: "asc" },
-          }),
-      });
     }
   );
 });

@@ -150,41 +150,20 @@ model RunInstance {
   spec    String
   groupId String
 
+  claimedAt   DateTime?
+  completedAt DateTime?
+
   error        String?
-  claimedAt    DateTime?
-  completedAt  DateTime?
-  totalPassed  Int       @default(0)
-  totalFailed  Int       @default(0)
-  totalPending Int       @default(0)
-  totalSkipped Int       @default(0)
+  testResults  Json?
+  totalPassed  Int     @default(0)
+  totalFailed  Int     @default(0)
+  totalPending Int     @default(0)
+  totalSkipped Int     @default(0)
 
   runId String
   run   Run    @relation(fields: [runId], references: [id])
 
-  testResults TestResult[]
-
   @@unique([spec, runId, groupId])
   @@index([id, claimedAt])
   @@index([runId, groupId, claimedAt])
-}
-
-enum TestResultState {
-  passed
-  failed
-  skipped
-}
-
-model TestResult {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  state        TestResultState
-  testId       String
-  titleParts   String[]
-  displayError String?
-
-  runInstanceId String
-  runInstance   RunInstance @relation(fields: [runInstanceId], references: [id])
-
-  @@unique([testId, runInstanceId])
 }

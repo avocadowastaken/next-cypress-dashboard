@@ -1,10 +1,11 @@
-import { Button, Divider, Grid } from "@material-ui/core";
+import { Button, Divider } from "@material-ui/core";
 import NextLink from "next/link";
 import { PublicLayout } from "../src/core/layout/PublicLayout";
 import Deployment from "../docs/deployment.md";
 import Secrets from "../docs/secrets.md";
 import Privacy from "../docs/privacy.md";
 import Ci from "../docs/ci.md";
+import { Stack } from "../src/core/layout/Stack";
 
 <PublicLayout title="Docs" maxWidth="md" action={
   <NextLink passHref={true} href="/">
@@ -19,40 +20,18 @@ import Ci from "../docs/ci.md";
 - [Continuous integration](#continuous_integration)
 - [Privacy](#privacy)
 
-<Grid container={true} spacing={1}>
-<Grid item={true} xs={12}>
-  <Divider />
-</Grid>
-
-<Grid item={true} xs={12}>
-  <Deployment />
-</Grid>
-
-<Grid item={true} xs={12}>
-  <Divider />
-</Grid>
-
-<Grid item={true} xs={12}>
-  <Secrets />
-</Grid>
-
-<Grid item={true} xs={12}>
-  <Divider />
-</Grid>
-
-<Grid item={true} xs={12}>
-  <Ci />
-</Grid>
-
-<Grid item={true} xs={12}>
-  <Divider />
-</Grid>
-
-<Grid item={true} xs={12}>
-  <Privacy />
-</Grid>
-</Grid>
+<Stack>
+<Divider />
+<Deployment />
+<Divider />
+<Secrets />
+<Divider />
+<Ci />
+<Divider />
+<Privacy />
 
 [Back to top ⬆](#table_of_content)
+
+</Stack>
 
 </PublicLayout>

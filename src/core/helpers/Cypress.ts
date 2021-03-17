@@ -1,4 +1,34 @@
+import { trim } from "@/core/helpers/Text";
+import { Browser, OS } from "@prisma/client";
 import { JsonObject } from "type-fest";
+
+export function toOS(input: unknown): OS {
+  const os = trim(input).toLocaleLowerCase() as OS;
+
+  switch (os) {
+    case "linux":
+    case "darwin":
+    case "windows":
+      return os;
+  }
+
+  return "unknown";
+}
+
+export function toBrowser(input: unknown): Browser {
+  const browser = trim(input).toLocaleLowerCase() as Browser;
+
+  switch (browser) {
+    case "chrome":
+    case "chromium":
+    case "edge":
+    case "electron":
+    case "firefox":
+      return browser;
+  }
+
+  return "unknown";
+}
 
 export interface CreateRunInput {
   specs: string[];
@@ -66,8 +96,8 @@ export interface UpdateInstanceInput {
     state: string;
     title: string[];
     testId: string;
-    displayError: string;
     attempts: JsonObject[];
+    displayError: null | string;
   }>;
 
   video: boolean;
@@ -80,4 +110,23 @@ export interface UpdateInstanceInput {
 export interface UpdateInstanceResponse {
   videoUploadUrl?: string;
   screenshotUploadUrls: unknown[];
+}
+
+export const TEST_RESULT_STATES = [
+  "started",
+  "passed",
+  "failed",
+  "skipped",
+] as const;
+export type TestResultState = typeof TEST_RESULT_STATES[number];
+export function toTestResultState(input: unknown): TestResultState {
+  const state = trim(input).toLocaleLowerCase() as TestResultState;
+  return TEST_RESULT_STATES.includes(state) ? state : "started";
+}
+
+export interface TestResult {
+  id: string;
+  titleParts: string[];
+  state: TestResultState;
+  displayError: null | string;
 }

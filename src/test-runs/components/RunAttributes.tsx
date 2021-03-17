@@ -10,7 +10,10 @@ import {
   SourceCommit,
   SourcePull,
 } from "@/core/components/icons";
-import { Avatar, Chip, Grid, Link, Tooltip } from "@material-ui/core";
+import { capitalize } from "@/core/helpers/Text";
+import { Inline } from "@/core/layout/Inline";
+import { Stack } from "@/core/layout/Stack";
+import { Avatar, Chip, Link, Tooltip } from "@material-ui/core";
 import { AccessTime, Apple, Check, Error } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -61,31 +64,20 @@ export function RunAttributes({
   }, [project.org, project.repo, run.commitSha, run.commitBranch]);
 
   return (
-    <Grid container={true} spacing={1}>
-      <Grid item={true} xs={12}>
-        <NextLink
-          passHref={true}
-          href={`/projects/${project.id}/runs/${run.id}`}
-        >
-          <Link variant="subtitle1">{run.commitMessage || run.ciBuildId}</Link>
-        </NextLink>
-      </Grid>
+    <Stack>
+      <NextLink passHref={true} href={`/projects/${project.id}/runs/${run.id}`}>
+        <Link variant="subtitle1">{run.commitMessage || run.ciBuildId}</Link>
+      </NextLink>
 
-      {run.totalFailed > 0 ? (
-        <Grid item={true}>
+      <Inline>
+        {run.totalFailed > 0 ? (
           <Chip icon={<Error />} label="Failed" />
-        </Grid>
-      ) : run.totalPassed > 0 ? (
-        <Grid item={true}>
+        ) : run.totalPassed > 0 ? (
           <Chip icon={<Check />} label="Passed" />
-        </Grid>
-      ) : null}
+        ) : null}
 
-      <Grid item={true}>
         <DurationChip start={run.createdAt} finish={run.completedAt} />
-      </Grid>
 
-      <Grid item={true}>
         <Tooltip title={run.createdAt.toLocaleString()}>
           <Chip
             icon={<AccessTime />}
@@ -94,9 +86,7 @@ export function RunAttributes({
             })}
           />
         </Tooltip>
-      </Grid>
 
-      <Grid item={true}>
         <Chip
           component="a"
           clickable={true}
@@ -113,9 +103,7 @@ export function RunAttributes({
             />
           }
         />
-      </Grid>
 
-      <Grid item={true}>
         <Chip
           component="a"
           target="_blank"
@@ -125,10 +113,8 @@ export function RunAttributes({
           label={branchLabel}
           rel="noopener noreferrer"
         />
-      </Grid>
 
-      <Grid item={true}>
-        <Tooltip title={`${run.os} ${run.osVersion}`}>
+        <Tooltip title={`${capitalize(run.os)} ${run.osVersion}`}>
           <Chip
             label={run.osVersion}
             icon={
@@ -142,10 +128,8 @@ export function RunAttributes({
             }
           />
         </Tooltip>
-      </Grid>
 
-      <Grid item={true}>
-        <Tooltip title={`${run.browser} ${run.browserVersion}`}>
+        <Tooltip title={`${capitalize(run.browser)} ${run.browserVersion}`}>
           <Chip
             label={run.browserVersion}
             icon={
@@ -161,7 +145,7 @@ export function RunAttributes({
             }
           />
         </Tooltip>
-      </Grid>
-    </Grid>
+      </Inline>
+    </Stack>
   );
 }

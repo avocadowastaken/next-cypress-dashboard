@@ -29,12 +29,12 @@ const theme = createMuiTheme({
     MuiScopedCssBaseline: {
       styleOverrides: {
         root: {
-          "& pre": {
+          '& pre[class*="language-"]': {
             fontSize: "12px",
             borderRadius: "4px",
           },
 
-          "& code": {
+          '& code:not([class*="language-"])': {
             margin: 0,
             backgroundColor: "#2d2d2d",
             fontSize: "85%",

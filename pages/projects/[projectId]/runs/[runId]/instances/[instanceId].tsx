@@ -1,12 +1,13 @@
 import { DebugStepOver } from "@/core/components/icons";
 import { Pre } from "@/core/components/Pre";
-import { TablePager } from "@/core/components/TablePager";
+import { TestResult } from "@/core/helpers/Cypress";
 import { AppLayout } from "@/core/layout/AppLayout";
 import { ErrorPage } from "@/core/layout/ErrorPage";
+import { Inline } from "@/core/layout/Inline";
+import { Stack } from "@/core/layout/Stack";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { formatProjectName } from "@/projects/helpers";
 import { useProject } from "@/projects/queries";
-import { useTestResults } from "@/test-results/queries";
 import { RunInstanceAttributes } from "@/test-run-instances/components/RunInstanceAttributes";
 import { useRunInstance } from "@/test-run-instances/queries";
 import { RunAttributes } from "@/test-runs/components/RunAttributes";
@@ -15,7 +16,6 @@ import {
   Box,
   Collapse,
   Divider,
-  Grid,
   IconButton,
   Skeleton,
   Table,
@@ -31,11 +31,9 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@material-ui/icons";
-import { useRouter } from "next/router";
 import React, { Fragment, ReactElement, useState } from "react";
 
 export default function RunInstancePage(): ReactElement {
-  const router = useRouter();
   const runId = useRouterParam("runId");
   const projectId = useRouterParam("projectId");
   const instanceId = useRouterParam("instanceId");
@@ -43,14 +41,10 @@ export default function RunInstancePage(): ReactElement {
   const project = useProject(projectId);
   const run = useRun(projectId, runId);
   const runInstance = useRunInstance(projectId, runId, instanceId);
-  const testResults = useTestResults(projectId, runId, instanceId, {
-    page: router.query.page,
-  });
 
   const [selectedResult, setSelectedResult] = useState<string>();
 
-  const pageError =
-    run.error || project.error || runInstance.error || testResults.error;
+  const pageError = run.error || project.error || runInstance.error;
 
   if (pageError) {
     return <ErrorPage error={pageError} />;
@@ -60,6 +54,8 @@ export default function RunInstancePage(): ReactElement {
     return <AppLayout breadcrumbs={[["Projects", "/projects"], "…"]} />;
   }
 
+  const testResults = runInstance.data.testResults as null | TestResult[];
+
   return (
     <AppLayout
       breadcrumbs={[
@@ -67,143 +63,104 @@ export default function RunInstancePage(): ReactElement {
         [formatProjectName(project.data), `/projects/${projectId}`],
       ]}
     >
-      <Grid container={true} spacing={2}>
-        <Grid item={true} xs={12}>
-          <RunAttributes run={run.data} project={project.data} />
-        </Grid>
+      <Stack spacing={2}>
+        <RunAttributes run={run.data} project={project.data} />
 
-        <Grid item={true} xs={12}>
-          <Divider />
-        </Grid>
+        <Divider />
 
-        <Grid item={true} xs={12}>
-          <RunInstanceAttributes
-            run={run.data}
-            runInstance={runInstance.data}
-          />
-        </Grid>
+        <RunInstanceAttributes run={run.data} runInstance={runInstance.data} />
 
-        <Grid item={true} xs={12}>
-          <Divider />
-        </Grid>
+        <Divider />
 
         {runInstance.data.error ? (
-          <Grid item={true} xs={12}>
-            <Pre code={runInstance.data.error} language="bash" />
-          </Grid>
+          <Pre code={runInstance.data.error} language="bash" />
         ) : (
-          <Grid item={true} xs={12}>
-            <TableContainer>
-              <Table>
-                {!testResults.data ? (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        <Skeleton />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                ) : (
-                  <>
-                    <TableBody>
-                      {testResults.data.nodes.map((testResult) => {
-                        const isSelected = selectedResult === testResult.id;
+          <TableContainer>
+            <Table>
+              {!testResults ? (
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              ) : (
+                <TableBody>
+                  {testResults.map((testResult) => {
+                    const isSelected = selectedResult === testResult.id;
 
-                        return (
-                          <Fragment key={testResult.id}>
-                            <TableRow
-                              sx={{ "& > td": { borderBottom: "none" } }}
-                            >
-                              <TableCell>
-                                <Grid
-                                  spacing={1}
-                                  container={true}
-                                  alignItems="center"
+                    return (
+                      <Fragment key={testResult.id}>
+                        <TableRow sx={{ "& > td": { borderBottom: "none" } }}>
+                          <TableCell>
+                            <Inline>
+                              {testResult.state === "failed" ? (
+                                <Tooltip title="Failed">
+                                  <Error color="error" fontSize="small" />
+                                </Tooltip>
+                              ) : testResult.state === "skipped" ? (
+                                <Tooltip title="Skipped">
+                                  <DebugStepOver
+                                    color="disabled"
+                                    fontSize="small"
+                                  />
+                                </Tooltip>
+                              ) : (
+                                <Check color="primary" fontSize="small" />
+                              )}
+
+                              <span>{testResult.titleParts.join(" – ")}</span>
+
+                              {testResult.state === "failed" && (
+                                <IconButton
+                                  size="small"
+                                  onClick={() => {
+                                    setSelectedResult(
+                                      !isSelected ? testResult.id : undefined
+                                    );
+                                  }}
                                 >
-                                  <Grid item={true}>
-                                    {testResult.state === "failed" ? (
-                                      <Tooltip title="Failed">
-                                        <Error color="error" fontSize="small" />
-                                      </Tooltip>
-                                    ) : testResult.state === "skipped" ? (
-                                      <Tooltip title="Skipped">
-                                        <DebugStepOver
-                                          color="disabled"
-                                          fontSize="small"
-                                        />
-                                      </Tooltip>
-                                    ) : (
-                                      <Check color="primary" fontSize="small" />
-                                    )}
-                                  </Grid>
-
-                                  <Grid item={true}>
-                                    {testResult.titleParts.join(" – ")}
-                                  </Grid>
-
-                                  {testResult.state === "failed" && (
-                                    <Grid item={true}>
-                                      <IconButton
-                                        size="small"
-                                        onClick={() => {
-                                          setSelectedResult(
-                                            !isSelected
-                                              ? testResult.id
-                                              : undefined
-                                          );
-                                        }}
-                                      >
-                                        {isSelected ? (
-                                          <KeyboardArrowUp fontSize="small" />
-                                        ) : (
-                                          <KeyboardArrowDown fontSize="small" />
-                                        )}
-                                      </IconButton>
-                                    </Grid>
+                                  {isSelected ? (
+                                    <KeyboardArrowUp fontSize="small" />
+                                  ) : (
+                                    <KeyboardArrowDown fontSize="small" />
                                   )}
-                                </Grid>
-                              </TableCell>
-                            </TableRow>
+                                </IconButton>
+                              )}
+                            </Inline>
+                          </TableCell>
+                        </TableRow>
 
-                            <TableRow sx={{ "& > td": { paddingY: 0 } }}>
-                              <TableCell>
-                                <Collapse
-                                  in={isSelected}
-                                  timeout="auto"
-                                  unmountOnExit
-                                >
-                                  <Box paddingY={2}>
-                                    {testResult.state === "failed" && (
-                                      <Pre
-                                        language="bash"
-                                        code={
-                                          testResult.displayError ||
-                                          "Unknown error"
-                                        }
-                                      />
-                                    )}
-                                  </Box>
-                                </Collapse>
-                              </TableCell>
-                            </TableRow>
-                          </Fragment>
-                        );
-                      })}
-                    </TableBody>
-
-                    {testResults.data.maxPage > 1 && (
-                      <TablePager
-                        page={testResults.data.page}
-                        maxPage={testResults.data.maxPage}
-                      />
-                    )}
-                  </>
-                )}
-              </Table>
-            </TableContainer>
-          </Grid>
+                        <TableRow sx={{ "& > td": { paddingY: 0 } }}>
+                          <TableCell>
+                            <Collapse
+                              in={isSelected}
+                              timeout="auto"
+                              unmountOnExit
+                            >
+                              <Box paddingY={2}>
+                                {testResult.state === "failed" && (
+                                  <Pre
+                                    language="bash"
+                                    code={
+                                      testResult.displayError || "Unknown error"
+                                    }
+                                  />
+                                )}
+                              </Box>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      </Fragment>
+                    );
+                  })}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
         )}
-      </Grid>
+      </Stack>
     </AppLayout>
   );
 }

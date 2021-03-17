@@ -1,3 +1,5 @@
+import { Inline } from "@/core/layout/Inline";
+import { Stack } from "@/core/layout/Stack";
 import {
   Alert,
   AppBar,
@@ -5,7 +7,6 @@ import {
   Breadcrumbs,
   Button,
   Container,
-  Grid,
   Link,
   Toolbar,
   Typography,
@@ -82,86 +83,72 @@ export function AppLayout({
 
       <AppBar position="sticky">
         <Toolbar>
-          <Grid container={true} spacing={1} justifyContent="flex-end">
-            <Grid item={true}>
-              <NextLink passHref={true} href="/docs">
-                <Button color="inherit">Docs</Button>
-              </NextLink>
-            </Grid>
+          <Inline justifyContent="flex-end">
+            <NextLink passHref={true} href="/docs">
+              <Button color="inherit">Docs</Button>
+            </NextLink>
 
-            <Grid item={true}>
-              <NextLink
-                passHref={true}
-                href={{
-                  pathname: "/api/auth/signout",
-                  query: { callbackUrl: "/" },
-                }}
-              >
-                <Button color="inherit">Sign Out</Button>
-              </NextLink>
-            </Grid>
-          </Grid>
+            <NextLink
+              passHref={true}
+              href={{
+                pathname: "/api/auth/signout",
+                query: { callbackUrl: "/" },
+              }}
+            >
+              <Button color="inherit">Sign Out</Button>
+            </NextLink>
+          </Inline>
         </Toolbar>
       </AppBar>
 
       <Container maxWidth={maxWidth}>
         <Box paddingY={2}>
-          <Grid container={true} spacing={1} alignItems="center">
-            <Grid item={true}>
-              <AppBreadcrumb breadcrumbs={breadcrumbs} />
-            </Grid>
+          <Inline alignItems="center" justifyContent="space-between">
+            <AppBreadcrumb breadcrumbs={breadcrumbs} />
 
-            <Grid item={true} xs={true} />
-
-            {!!actions && <Grid item={true}>{actions}</Grid>}
-          </Grid>
+            {!!actions && actions}
+          </Inline>
         </Box>
 
-        <Grid container={true} spacing={2}>
+        <Stack spacing={2}>
           {!!router.query.error && (
-            <Grid item={true} xs={12}>
-              <Alert
-                severity="error"
-                action={
-                  <NextLink
-                    href={{
-                      pathname: router.pathname,
-                      query: { ...router.query, error: [] },
-                    }}
-                  >
-                    <Button color="inherit">Close</Button>
-                  </NextLink>
-                }
-              >
-                {router.query.error}
-              </Alert>
-            </Grid>
+            <Alert
+              severity="error"
+              action={
+                <NextLink
+                  href={{
+                    pathname: router.pathname,
+                    query: { ...router.query, error: [] },
+                  }}
+                >
+                  <Button color="inherit">Close</Button>
+                </NextLink>
+              }
+            >
+              {router.query.error}
+            </Alert>
           )}
 
           {!!router.query.success && (
-            <Grid item={true} xs={12}>
-              <Alert
-                severity="success"
-                action={
-                  <NextLink
-                    href={{
-                      pathname: router.pathname,
-                      query: { ...router.query, success: [] },
-                    }}
-                  >
-                    <Button color="inherit">Close</Button>
-                  </NextLink>
-                }
-              >
-                {router.query.success}
-              </Alert>
-            </Grid>
+            <Alert
+              severity="success"
+              action={
+                <NextLink
+                  href={{
+                    pathname: router.pathname,
+                    query: { ...router.query, success: [] },
+                  }}
+                >
+                  <Button color="inherit">Close</Button>
+                </NextLink>
+              }
+            >
+              {router.query.success}
+            </Alert>
           )}
 
-          <Grid item={true} xs={12}>
-            {children}
-          </Grid>
-        </Grid>
+          <div>{children}</div>
+        </Stack>
       </Container>
     </>
   );

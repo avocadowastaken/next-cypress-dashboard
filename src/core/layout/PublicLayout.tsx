@@ -1,30 +1,26 @@
+import { Inline } from "@/core/layout/Inline";
 import {
   AppBar,
-  Box,
   Button,
   Container,
   ContainerProps,
-  Grid,
   Toolbar,
 } from "@material-ui/core";
 import Head from "next/head";
 import NextLink from "next/link";
 import React, { ReactElement, ReactNode } from "react";
-import { AppBreadcrumb, AppTitleProps } from "./AppLayout";
 
 export interface PublicLayoutProps {
   title?: string;
   action?: ReactNode;
   children?: ReactNode;
   maxWidth?: ContainerProps["maxWidth"];
-  breadcrumbs?: AppTitleProps["breadcrumbs"];
 }
 
 export function PublicLayout({
   title,
   action,
   children,
-  breadcrumbs,
   maxWidth = "sm",
 }: PublicLayoutProps): ReactElement {
   return (
@@ -37,33 +33,17 @@ export function PublicLayout({
 
       <AppBar position="sticky">
         <Toolbar>
-          <Grid container={true} spacing={1} justifyContent="flex-end">
-            {!!action && <Grid item={true}>{action}</Grid>}
+          <Inline justifyContent="flex-end">
+            {!!action && action}
 
-            <Grid item={true}>
-              <NextLink href="/projects" passHref={true}>
-                <Button color="inherit">Dashboard</Button>
-              </NextLink>
-            </Grid>
-          </Grid>
+            <NextLink href="/projects" passHref={true}>
+              <Button color="inherit">Dashboard</Button>
+            </NextLink>
+          </Inline>
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth={maxWidth}>
-        <Grid container={true} spacing={1}>
-          {!!breadcrumbs && (
-            <Grid item={true} xs={12}>
-              <Box paddingY={2}>
-                <AppBreadcrumb breadcrumbs={breadcrumbs} />
-              </Box>
-            </Grid>
-          )}
-
-          <Grid item={true} xs={12}>
-            {children}
-          </Grid>
-        </Grid>
-      </Container>
+      <Container maxWidth={maxWidth}>{children}</Container>
     </>
   );
 }

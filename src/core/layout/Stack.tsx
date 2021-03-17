@@ -8,11 +8,15 @@ export interface StackProps {
 export function Stack({ children, spacing = 1 }: StackProps): ReactElement {
   return (
     <Grid container={true} spacing={spacing}>
-      {Children.map(children, (child, idx) => (
-        <Grid key={idx} item={true} xs={12}>
-          {child}
-        </Grid>
-      ))}
+      {Children.map(
+        children,
+        (child, idx) =>
+          !!child && (
+            <Grid key={idx} item={true} xs={12}>
+              {child}
+            </Grid>
+          )
+      )}
     </Grid>
   );
 }

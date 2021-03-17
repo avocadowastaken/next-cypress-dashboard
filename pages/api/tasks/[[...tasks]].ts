@@ -1,4 +1,4 @@
-import { createAppError } from "@/core/data/AppError";
+import { AppError } from "@/core/data/AppError";
 import { createApiHandler } from "@/core/helpers/Api";
 import { prisma } from "@/core/helpers/db";
 import { TASKS_API_SECRET } from "@/core/helpers/env";
@@ -6,19 +6,15 @@ import { startOfYesterday } from "date-fns";
 
 export default createApiHandler((app) => {
   app.post<{
-    Reply: { runs: number; runInstances: number; testResults: number };
-  }>("/api/tasks/cleanup-runs", async (request, reply) => {
+    Reply: { runs: number; runInstances: number };
+  }>("/api/tasks/cleanup-runs", async (request) => {
     const { authorization } = request.headers;
 
     if (authorization !== `Token ${TASKS_API_SECRET}`) {
-      throw createAppError("FORBIDDEN");
+      throw new AppError("FORBIDDEN");
     }
 
     const oneDayAgo = startOfYesterday();
-
-    const { count: testResults } = await prisma.testResult.deleteMany({
-      where: { createdAt: { lte: oneDayAgo } },
-    });
 
     const { count: runInstances } = await prisma.runInstance.deleteMany({
       where: { createdAt: { lte: oneDayAgo } },
@@ -28,6 +24,6 @@ export default createApiHandler((app) => {
       where: { createdAt: { lte: oneDayAgo } },
     });
 
-    reply.send({ runs, runInstances, testResults });
+    return { runs, runInstances };
   });
 });

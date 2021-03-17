@@ -5,67 +5,23 @@ import {
   CreateInstanceResponse,
   CreateRunInput,
   CreateRunResponse,
+  TestResult,
+  toBrowser,
+  toOS,
+  toTestResultState,
   UpdateInstanceInput,
   UpdateInstanceResponse,
-} from "@/core/helpers/cypress-types";
+} from "@/core/helpers/Cypress";
 import { prisma } from "@/core/helpers/db";
 import { TASKS_API_SECRET } from "@/core/helpers/env";
 import { parseGitUrl } from "@/core/helpers/Git";
-import { Browser, OS, Prisma, Run, TestResultState } from "@prisma/client";
+import { trim } from "@/core/helpers/Text";
+import { Prisma, Run } from "@prisma/client";
 
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
-}
-
-function trim(input: unknown): string {
-  if (typeof input == "string") {
-    return input.trim();
-  }
-
-  return "";
-}
-
-function toOS(input: unknown): OS {
-  const os = trim(input).toLocaleLowerCase() as OS;
-
-  switch (os) {
-    case "linux":
-    case "darwin":
-    case "windows":
-      return os;
-  }
-
-  return "unknown";
-}
-
-function toBrowser(input: unknown): Browser {
-  const browser = trim(input).toLocaleLowerCase() as Browser;
-
-  switch (browser) {
-    case "chrome":
-    case "chromium":
-    case "edge":
-    case "electron":
-    case "firefox":
-      return browser;
-  }
-
-  return "unknown";
-}
-
-function toTestResultState(input: unknown): TestResultState {
-  const state = trim(input).toLocaleLowerCase() as TestResultState;
-
-  switch (state) {
-    case "failed":
-    case "passed":
-    case "skipped":
-      return state;
-  }
-
-  return "passed";
 }
 
 async function obtainRun(
@@ -272,21 +228,17 @@ export default createApiHandler((app) => {
         totalPending: stats.pending,
         totalSkipped: stats.skipped,
         completedAt: stats.wallClockEndedAt,
+
+        testResults: tests?.map(
+          (value): TestResult => ({
+            id: value.testId,
+            titleParts: value.title,
+            displayError: value.displayError,
+            state: toTestResultState(value.state),
+          })
+        ) as undefined | Prisma.JsonObject[],
       },
     });
-
-    if (tests) {
-      await prisma.testResult.createMany({
-        skipDuplicates: true,
-        data: tests.map(({ title, state, testId, displayError }) => ({
-          testId,
-          displayError,
-          runInstanceId,
-          titleParts: title,
-          state: toTestResultState(state),
-        })),
-      });
-    }
 
     const incompleteRunInstanceCount = await prisma.runInstance.count({
       where: { runId, completedAt: null },

@@ -1,6 +1,7 @@
 import { TablePager } from "@/core/components/TablePager";
 import { AppLayout } from "@/core/layout/AppLayout";
 import { ErrorPage } from "@/core/layout/ErrorPage";
+import { Stack } from "@/core/layout/Stack";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { formatProjectName } from "@/projects/helpers";
 import { useProject } from "@/projects/queries";
@@ -14,7 +15,6 @@ import {
   DialogActions,
   DialogContent,
   Divider,
-  Grid,
   Skeleton,
   Table,
   TableBody,
@@ -132,53 +132,47 @@ export default function RunPage(): ReactElement {
         }}
       />
 
-      <Grid container={true} spacing={2}>
-        <Grid item={true} xs={12}>
-          <RunAttributes run={run.data} project={project.data} />
-        </Grid>
+      <Stack spacing={2}>
+        <RunAttributes run={run.data} project={project.data} />
 
-        <Grid item={true} xs={12}>
-          <Divider />
-        </Grid>
+        <Divider />
 
-        <Grid item={true} xs={12}>
-          <TableContainer>
-            <Table>
-              {!runInstances.data ? (
+        <TableContainer>
+          <Table>
+            {!runInstances.data ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            ) : (
+              <>
                 <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <Skeleton />
-                    </TableCell>
-                  </TableRow>
+                  {runInstances.data.nodes.map((runInstance) => (
+                    <TableRow key={runInstance.id}>
+                      <TableCell>
+                        <RunInstanceAttributes
+                          run={run.data}
+                          runInstance={runInstance}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
-              ) : (
-                <>
-                  <TableBody>
-                    {runInstances.data.nodes.map((runInstance) => (
-                      <TableRow key={runInstance.id}>
-                        <TableCell>
-                          <RunInstanceAttributes
-                            run={run.data}
-                            runInstance={runInstance}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
 
-                  {runInstances.data.maxPage > 1 && (
-                    <TablePager
-                      page={runInstances.data.page}
-                      maxPage={runInstances.data.maxPage}
-                    />
-                  )}
-                </>
-              )}
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
+                {runInstances.data.maxPage > 1 && (
+                  <TablePager
+                    page={runInstances.data.page}
+                    maxPage={runInstances.data.maxPage}
+                  />
+                )}
+              </>
+            )}
+          </Table>
+        </TableContainer>
+      </Stack>
     </AppLayout>
   );
 }
