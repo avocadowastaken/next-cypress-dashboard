@@ -10,12 +10,12 @@ const API_URL =
   "https://next-cypress-dashboard.vercel.app";
 
 async function resolveCachePath(): Promise<string> {
-  await group("Verify Cypress installation", async () => {
+  await group("Verifying installation", async () => {
     await exec("npx", ["cypress", "install"]);
     await exec("npx", ["cypress", "verify"]);
   });
 
-  return group("Resolve Cypress cache path", async () => {
+  return group("Resolving cache path", async () => {
     let version = "";
     let cacheDir = "";
 
@@ -35,15 +35,22 @@ async function resolveCachePath(): Promise<string> {
       },
     });
 
-    return path.join(cacheDir.trim(), version.trim());
+    const cachePath = path.join(cacheDir.trim(), version.trim());
+
+    info(`Resolved: ${cachePath}`);
+
+    return cachePath;
   });
 }
 
 async function main(): Promise<void> {
   const cachePath = await resolveCachePath();
-  const glob = await createGlob(`${cachePath}/**/app.yml`);
+  const pattern = `${cachePath}/**/app.yml`;
+  const glob = await createGlob(pattern);
 
   await group("Patching config", async () => {
+    info(`Searching for the files with the pattern: ${pattern}`);
+
     for await (const configPath of glob.globGenerator()) {
       const configYaml = await fs.readFile(configPath, "utf-8");
       const config = yaml.parse(configYaml) as {
@@ -53,7 +60,7 @@ async function main(): Promise<void> {
       if (config.production.api_url !== API_URL) {
         config.production.api_url = API_URL;
 
-        info(`Patching ${configPath}`);
+        info(`Patching ${configPath} (from: ${config.production.api_url})`);
 
         await fs.writeFile(configPath, yaml.stringify(config), "utf-8");
       } else {
