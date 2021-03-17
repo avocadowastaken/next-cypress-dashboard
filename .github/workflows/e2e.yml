@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [A, B, C]
+        container: [A, B]
     steps:
       - uses: actions/checkout@v2
       - uses: umidbekk/actions/npm/install@v1
@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [A, B, C]
+        container: [A, B]
     steps:
       - uses: actions/checkout@v2
       - uses: umidbekk/actions/npm/install@v1
