@@ -32,6 +32,10 @@ export default createApiHandler((app) => {
     }
   });
 
+  app.get("/api/health", (_, reply) => {
+    reply.send(Object.keys(prisma));
+  });
+
   app.get<{ Params: { email: string } }>(
     "/api/avatar/:email",
     async (request, reply) => {

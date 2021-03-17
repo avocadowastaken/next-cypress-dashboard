@@ -1,6 +1,7 @@
 import { TablePager } from "@/core/components/TablePager";
 import { extractErrorCode, formatAppError } from "@/core/data/AppError";
 import { AppLayout } from "@/core/layout/AppLayout";
+import { ErrorPage, useErrorHandler } from "@/core/layout/ErrorPage";
 import { formatProjectName } from "@/projects/helpers";
 import { useAddProject, useProjectsPage } from "@/projects/queries";
 import {
@@ -46,6 +47,8 @@ export function AddProjectDialog({
 
   const open = typeof initialRepo == "string";
   const errorCode = error && extractErrorCode(error);
+
+  useErrorHandler(errorCode);
 
   useEffect(() => {
     if (!open) reset();
@@ -120,6 +123,10 @@ export default function ProjectsPage(): ReactElement {
   const router = useRouter();
   const projects = useProjectsPage({ page: router.query.page });
 
+  if (projects.error) {
+    return <ErrorPage error={projects.error} />;
+  }
+
   return (
     <AppLayout
       breadcrumbs={["Projects"]}
@@ -155,7 +162,7 @@ export default function ProjectsPage(): ReactElement {
             </TableRow>
           </TableHead>
 
-          {projects.status !== "success" ? (
+          {!projects.data ? (
             <TableBody>
               <TableRow>
                 <TableCell>
