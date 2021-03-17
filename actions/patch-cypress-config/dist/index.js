@@ -6506,7 +6506,7 @@ async function main() {
     (0, import_core.info)(`Searching for the files with the pattern: ${pattern}`);
     for await (let configPath of glob.globGenerator()) {
       let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = yaml.parse(configYaml);
-      config.production.api_url !== API_URL ? (config.production.api_url = API_URL, (0, import_core.info)(`Patching ${configPath} (from: ${config.production.api_url})`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : (0, import_core.info)(`Skipping ${configPath}`);
+      config.production.api_url !== API_URL ? ((0, import_core.info)(`Patching ${configPath} (from: ${config.production.api_url})`), config.production.api_url = API_URL, await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : (0, import_core.info)(`Skipping ${configPath}`);
     }
   });
 }

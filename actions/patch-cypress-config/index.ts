@@ -58,10 +58,9 @@ async function main(): Promise<void> {
       };
 
       if (config.production.api_url !== API_URL) {
-        config.production.api_url = API_URL;
-
         info(`Patching ${configPath} (from: ${config.production.api_url})`);
 
+        config.production.api_url = API_URL;
         await fs.writeFile(configPath, yaml.stringify(config), "utf-8");
       } else {
         info(`Skipping ${configPath}`);
