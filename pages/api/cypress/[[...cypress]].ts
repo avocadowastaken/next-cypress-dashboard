@@ -1,10 +1,13 @@
 import { AppError } from "@/core/data/AppError";
 import { createApiHandler } from "@/core/helpers/Api";
 import {
+  AddInstanceResultsInput,
+  AddInstanceTestsInput,
   CreateInstanceInput,
   CreateInstanceResponse,
   CreateRunInput,
   CreateRunResponse,
+  InstanceTestResultInput,
   TestResult,
   toBrowser,
   toOS,
@@ -52,6 +55,39 @@ async function obtainRun(
   }
 
   return [run, isNewRun];
+}
+
+async function fulfillRunStats(
+  runId: string,
+  completedAt: string
+): Promise<void> {
+  const incompleteRunInstanceCount = await prisma.runInstance.count({
+    where: { runId, completedAt: null },
+  });
+
+  if (incompleteRunInstanceCount === 0) {
+    const { sum } = await prisma.runInstance.aggregate({
+      where: { runId },
+      sum: {
+        totalFailed: true,
+        totalPassed: true,
+        totalPending: true,
+        totalSkipped: true,
+      },
+    });
+
+    await prisma.run.update({
+      select: null,
+      where: { id: runId },
+      data: {
+        completedAt,
+        totalFailed: sum.totalFailed,
+        totalPassed: sum.totalPassed,
+        totalPending: sum.totalPending,
+        totalSkipped: sum.totalSkipped,
+      },
+    });
+  }
 }
 
 export default createApiHandler((app) => {
@@ -240,35 +276,91 @@ export default createApiHandler((app) => {
       },
     });
 
-    const incompleteRunInstanceCount = await prisma.runInstance.count({
-      where: { runId, completedAt: null },
-    });
-
-    if (incompleteRunInstanceCount === 0) {
-      const { sum } = await prisma.runInstance.aggregate({
-        where: { runId },
-        sum: {
-          totalFailed: true,
-          totalPassed: true,
-          totalPending: true,
-          totalSkipped: true,
-        },
-      });
-
-      await prisma.run.update({
-        select: null,
-        where: { id: runId },
-        data: {
-          totalFailed: sum.totalFailed,
-          totalPassed: sum.totalPassed,
-          totalPending: sum.totalPending,
-          totalSkipped: sum.totalSkipped,
-          completedAt: stats.wallClockEndedAt,
-        },
-      });
-    }
+    await fulfillRunStats(runId, stats.wallClockEndedAt);
 
     reply.send({ screenshotUploadUrls: [] });
+  });
+
+  //
+  // Add Instance Tests (cypress@^6.7.0)
+  //
+
+  app.post<{
+    Body: AddInstanceTestsInput;
+    Params: { runInstanceId: string };
+  }>("/instances/:runInstanceId/tests", async (request) => {
+    const { runInstanceId } = request.params;
+    const { tests } = request.body;
+
+    await prisma.runInstance.update({
+      select: null,
+      where: { id: runInstanceId },
+      data: {
+        testResults: tests?.map(
+          (value): TestResult => ({
+            state: "pending",
+            displayError: null,
+            id: value.clientId,
+            titleParts: value.title,
+          })
+        ) as undefined | Prisma.JsonObject[],
+      },
+    });
+
+    return {};
+  });
+
+  //
+  // Add Instance Results (cypress@^6.7.0)
+  //
+
+  app.post<{
+    Body: AddInstanceResultsInput;
+    Params: { runInstanceId: string };
+  }>("/instances/:runInstanceId/results", async (request) => {
+    const { runInstanceId } = request.params;
+    const { tests, stats, exception } = request.body;
+
+    const runInstance = await prisma.runInstance.findUnique({
+      rejectOnNotFound: true,
+      where: { id: runInstanceId },
+      select: { runId: true, testResults: true },
+    });
+
+    const testResults = runInstance.testResults as null | TestResult[];
+
+    if (tests && testResults) {
+      const testsMap = new Map<string, InstanceTestResultInput>(
+        tests.map((test) => [test.clientId, test])
+      );
+
+      for (const testResult of testResults) {
+        const test = testsMap.get(testResult.id);
+
+        if (test) {
+          testResult.displayError = test.displayError;
+          testResult.state = toTestResultState(test.state);
+        }
+      }
+    }
+
+    await prisma.runInstance.update({
+      select: null,
+      where: { id: runInstanceId },
+      data: {
+        error: exception,
+        totalPassed: stats.passes,
+        totalFailed: stats.failures,
+        totalPending: stats.pending,
+        totalSkipped: stats.skipped,
+        completedAt: stats.wallClockEndedAt,
+        testResults: testResults as null | Prisma.JsonObject[],
+      },
+    });
+
+    await fulfillRunStats(runInstance.runId, stats.wallClockEndedAt);
+
+    return {};
   });
 
   //

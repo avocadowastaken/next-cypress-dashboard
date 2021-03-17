@@ -3,7 +3,7 @@ name: e2e
 on: deployment_status
 
 jobs:
-  e2e:
+  cypress:
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     strategy:
@@ -16,7 +16,30 @@ jobs:
       - uses: ./actions/patch-cypress-config
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
-      - run: npx cypress run --record --parallel --ci-build-id=e2e-${{ github.event.deployment_status.id }}
+      - run: npx cypress run --record --parallel --ci-build-id=cypress-${{ github.event.deployment_status.id }}
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.TASKS_API_SECRET }}
+      - if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-${{ matrix.container }}
+          path: cypress/videos
+
+  cypress@6.6:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [A, B, C]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: umidbekk/actions/npm/install@v1
+      - run: yarn add cypress@6.6
+      - uses: ./actions/patch-cypress-config
+        with:
+          api_url: ${{ github.event.deployment_status.target_url }}
+      - run: npx cypress run --record --parallel --ci-build-id=cypress@6.6-${{ github.event.deployment_status.id }}
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.TASKS_API_SECRET }}
       - if: ${{ failure() }}

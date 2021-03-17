@@ -112,8 +112,41 @@ export interface UpdateInstanceResponse {
   screenshotUploadUrls: unknown[];
 }
 
+export interface InstanceTestInput {
+  title: string[];
+  clientId: string;
+}
+
+export interface AddInstanceTestsInput {
+  tests: null | InstanceTestInput[];
+}
+
+export interface InstanceTestResultInput {
+  state: string;
+  clientId: string;
+  displayError: null | string;
+}
+
+export interface AddInstanceResultsInput {
+  exception: null | string;
+
+  stats: {
+    suites: number;
+    tests: number;
+    passes: number;
+    pending: number;
+    skipped: number;
+    failures: number;
+    wallClockStartedAt: string;
+    wallClockEndedAt: string;
+    wallClockDuration: number;
+  };
+
+  tests: null | InstanceTestResultInput[];
+}
+
 export const TEST_RESULT_STATES = [
-  "started",
+  "pending",
   "passed",
   "failed",
   "skipped",
@@ -121,7 +154,7 @@ export const TEST_RESULT_STATES = [
 export type TestResultState = typeof TEST_RESULT_STATES[number];
 export function toTestResultState(input: unknown): TestResultState {
   const state = trim(input).toLocaleLowerCase() as TestResultState;
-  return TEST_RESULT_STATES.includes(state) ? state : "started";
+  return TEST_RESULT_STATES.includes(state) ? state : "pending";
 }
 
 export interface TestResult {
