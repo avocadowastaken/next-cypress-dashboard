@@ -12,7 +12,7 @@ jobs:
         container: [A, B]
     steps:
       - uses: actions/checkout@v2
-      - uses: umidbekk/actions/npm/install@v1
+      - run: yarn --force
       - uses: ./actions/patch-cypress-config
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
@@ -35,8 +35,8 @@ jobs:
         container: [A, B]
     steps:
       - uses: actions/checkout@v2
-      - uses: umidbekk/actions/npm/install@v1
       - run: yarn add cypress@6.6
+      - run: yarn --force
       - uses: ./actions/patch-cypress-config
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
