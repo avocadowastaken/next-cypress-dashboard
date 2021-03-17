@@ -6478,11 +6478,11 @@ var require_yaml = __commonJS((exports2, module2) => {
 // actions/patch-cypress-config/index.ts
 var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), API_URL = (0, import_core.getInput)("api_url", {required: !1}) || "https://next-cypress-dashboard.vercel.app";
 async function resolveCachePath() {
-  return await (0, import_core.group)("Verify Cypress installation", async () => {
+  return await (0, import_core.group)("Verifying installation", async () => {
     await (0, import_exec.exec)("npx", ["cypress", "install"]), await (0, import_exec.exec)("npx", ["cypress", "verify"]);
-  }), (0, import_core.group)("Resolve Cypress cache path", async () => {
+  }), (0, import_core.group)("Resolving cache path", async () => {
     let version = "", cacheDir = "";
-    return await (0, import_exec.exec)("npx", ["cypress", "cache", "path"], {
+    await (0, import_exec.exec)("npx", ["cypress", "cache", "path"], {
       listeners: {
         stdout: (data) => {
           cacheDir += data.toString("utf8");
@@ -6494,16 +6494,19 @@ async function resolveCachePath() {
           version += data.toString("utf8");
         }
       }
-    }), path.join(cacheDir.trim(), version.trim());
+    });
+    let cachePath = path.join(cacheDir.trim(), version.trim());
+    return (0, import_core.info)(`Resolved: ${cachePath}`), cachePath;
   });
 }
 __name(resolveCachePath, "resolveCachePath");
 async function main() {
-  let cachePath = await resolveCachePath(), glob = await (0, import_glob.create)(`${cachePath}/**/app.yml`);
+  let pattern = `${await resolveCachePath()}/**/app.yml`, glob = await (0, import_glob.create)(pattern);
   await (0, import_core.group)("Patching config", async () => {
+    (0, import_core.info)(`Searching for the files with the pattern: ${pattern}`);
     for await (let configPath of glob.globGenerator()) {
       let configYaml = await import_fs.promises.readFile(configPath, "utf-8"), config = yaml.parse(configYaml);
-      config.production.api_url !== API_URL ? (config.production.api_url = API_URL, (0, import_core.info)(`Patching ${configPath}`), await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : (0, import_core.info)(`Skipping ${configPath}`);
+      config.production.api_url !== API_URL ? ((0, import_core.info)(`Patching ${configPath} (from: ${config.production.api_url})`), config.production.api_url = API_URL, await import_fs.promises.writeFile(configPath, yaml.stringify(config), "utf-8")) : (0, import_core.info)(`Skipping ${configPath}`);
     }
   });
 }

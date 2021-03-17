@@ -26,6 +26,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import {
+  AccessTime,
   Check,
   Error,
   KeyboardArrowDown,
@@ -95,7 +96,9 @@ export default function RunInstancePage(): ReactElement {
                         <TableRow sx={{ "& > td": { borderBottom: "none" } }}>
                           <TableCell>
                             <Inline>
-                              {testResult.state === "failed" ? (
+                              {testResult.state === "passed" ? (
+                                <Check color="primary" fontSize="small" />
+                              ) : testResult.state === "failed" ? (
                                 <Tooltip title="Failed">
                                   <Error color="error" fontSize="small" />
                                 </Tooltip>
@@ -107,7 +110,9 @@ export default function RunInstancePage(): ReactElement {
                                   />
                                 </Tooltip>
                               ) : (
-                                <Check color="primary" fontSize="small" />
+                                <Tooltip title="Pending">
+                                  <AccessTime fontSize="small" />
+                                </Tooltip>
                               )}
 
                               <span>{testResult.titleParts.join(" – ")}</span>

@@ -1,9 +1,11 @@
 import { exec } from "@actions/exec";
 
 async function main() {
+  const [id = "id1"] = process.argv.slice(2);
+
   await exec(
     "cypress",
-    ["run", "--record", "--parallel", "--ci-build-id", "id1"],
+    ["run", "--record", "--parallel", "--ci-build-id", id],
     {
       env: {
         ...process.env,

@@ -35,17 +35,16 @@ export function useRun(
   projectId: string | undefined,
   runId: string | undefined
 ): UseQueryResult<Run> {
-  const key = ["run", projectId, runId] as const;
   const queryClient = useQueryClient();
-  const staleTime = queryClient.getQueryData<Run>(key)?.completedAt
-    ? Infinity
-    : undefined;
+  const key = ["run", projectId, runId] as const;
+  const isComplete = !!queryClient.getQueryData<Run>(key)?.completedAt;
 
   return useQuery(
     key,
     () => requestJSON(`/api/projects/${projectId}/runs/${runId}`),
     {
-      staleTime,
+      refetchInterval: !isComplete && 3 * 1000,
+      staleTime: isComplete ? Infinity : undefined,
       enabled: !!runId && !!projectId,
       initialData: () => {
         for (const query of queryClient
