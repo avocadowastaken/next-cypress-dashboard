@@ -25,7 +25,7 @@ jobs:
           name: cypress-${{ matrix.container }}
           path: cypress/videos
 
-  cypress@6.6:
+  cypress_6-6:
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     strategy:
