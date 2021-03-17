@@ -28,7 +28,7 @@ export function useRunInstancesPage(
     {
       keepPreviousData: true,
       enabled: !!projectId && !!runId,
-      refetchInterval: !isComplete && 3 * 1000,
+      refetchInterval: !isComplete && 5 * 1000,
       staleTime: isComplete ? Infinity : undefined,
     }
   );
@@ -39,11 +39,10 @@ export function useRunInstance(
   runId: string | undefined,
   runInstanceId: string | undefined
 ): UseQueryResult<RunInstance> {
-  const key = ["runInstance", projectId, runId, runInstanceId] as const;
   const queryClient = useQueryClient();
-  const staleTime = queryClient.getQueryData<RunInstance>(key)?.completedAt
-    ? Infinity
-    : undefined;
+  const key = ["runInstance", projectId, runId, runInstanceId] as const;
+  const isComplete = !!queryClient.getQueryData<Run>(["run", projectId, runId])
+    ?.completedAt;
 
   return useQuery(
     key,
@@ -52,7 +51,8 @@ export function useRunInstance(
         `/api/projects/${projectId}/runs/${runId}/instances/${runInstanceId}`
       ),
     {
-      staleTime,
+      refetchInterval: !isComplete && 5 * 1000,
+      staleTime: isComplete ? Infinity : undefined,
       enabled: !!(runId && projectId && runInstanceId),
       initialData: () => {
         for (const query of queryClient

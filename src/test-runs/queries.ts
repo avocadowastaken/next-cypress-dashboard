@@ -43,7 +43,7 @@ export function useRun(
     key,
     () => requestJSON(`/api/projects/${projectId}/runs/${runId}`),
     {
-      refetchInterval: !isComplete && 3 * 1000,
+      refetchInterval: !isComplete && 5 * 1000,
       staleTime: isComplete ? Infinity : undefined,
       enabled: !!runId && !!projectId,
       initialData: () => {
