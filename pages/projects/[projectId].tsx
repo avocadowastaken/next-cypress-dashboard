@@ -34,7 +34,7 @@ import { LoadingButton } from "@material-ui/lab";
 import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement } from "react";
 
 interface DeleteProjectDialogProps {
   project: Project;
@@ -49,40 +49,34 @@ function DeleteProjectDialog({
   onClose,
   onSubmitSuccess,
 }: DeleteProjectDialogProps) {
-  const { reset, mutate, isLoading } = useDeleteProject({
+  const { mutate, isLoading } = useDeleteProject({
     onSuccess: onSubmitSuccess,
   });
 
-  useEffect(() => {
-    if (!open) reset();
-  }, [open, reset]);
-
   return (
-    <Dialog open={open} onClose={onClose}>
-      <form method="POST">
-        <DialogContent>
-          This action cannot be undone. This will permanently revoke your access
-          to the{" "}
-          <Typography color="primary">
-            {project.org}/{project.repo}
-          </Typography>{" "}
-          project.
-        </DialogContent>
+    <Dialog open={open} onClose={!isLoading ? undefined : onClose}>
+      <DialogContent>
+        This action cannot be undone. This will permanently revoke your access
+        to the{" "}
+        <Typography color="primary">
+          {project.org}/{project.repo}
+        </Typography>{" "}
+        project.
+      </DialogContent>
 
-        <DialogActions>
-          <Button onClick={onClose} disabled={isLoading}>
-            Dismiss
-          </Button>
-          <LoadingButton
-            pending={isLoading}
-            onClick={() => {
-              mutate(project.id);
-            }}
-          >
-            Confirm
-          </LoadingButton>
-        </DialogActions>
-      </form>
+      <DialogActions>
+        <Button onClick={onClose} disabled={isLoading}>
+          Dismiss
+        </Button>
+        <LoadingButton
+          pending={isLoading}
+          onClick={() => {
+            mutate(project.id);
+          }}
+        >
+          Confirm
+        </LoadingButton>
+      </DialogActions>
     </Dialog>
   );
 }
@@ -98,13 +92,7 @@ function RevokeSecretsDialog({
   project,
   onClose,
 }: RevokeSecretsDialogProps): ReactElement {
-  const { reset, mutate, isLoading } = useRevokeProjectSecrets({
-    onSuccess: onClose,
-  });
-
-  useEffect(() => {
-    if (!open) reset();
-  }, [open, reset]);
+  const { mutate, isLoading } = useRevokeProjectSecrets({ onSuccess: onClose });
 
   return (
     <Dialog open={open} onClose={isLoading ? undefined : onClose}>

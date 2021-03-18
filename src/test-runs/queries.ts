@@ -71,7 +71,6 @@ export function useDeleteRun(
   options?: Pick<UseMutationOptions<unknown, Error, string>, "onSuccess">
 ): UseMutationResult<Project, Error, string> {
   return useMutation(
-    ["run", "delete"],
     (runId: string) =>
       requestJSON<Project>(`/api/runs/${runId}`, { method: "DELETE" }),
     options

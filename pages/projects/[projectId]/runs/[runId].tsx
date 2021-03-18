@@ -26,28 +26,22 @@ import { LoadingButton } from "@material-ui/lab";
 import { Run } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement } from "react";
 
 export interface DeleteRunDialogProps {
   run: Run;
   open: boolean;
   onClose: () => void;
-  onSubmitSuccess: () => void;
+  onSuccess: () => void;
 }
 
 function DeleteRunDialog({
   run,
   open,
   onClose,
-  onSubmitSuccess,
+  onSuccess,
 }: DeleteRunDialogProps): ReactElement {
-  const { reset, mutate, isLoading } = useDeleteRun({
-    onSuccess: onSubmitSuccess,
-  });
-
-  useEffect(() => {
-    if (!open) reset();
-  }, [open, reset]);
+  const { mutate, isLoading } = useDeleteRun({ onSuccess });
 
   return (
     <Dialog open={open} onClose={isLoading ? undefined : onClose}>
@@ -121,7 +115,7 @@ export default function RunPage(): ReactElement {
             query: { ...router.query, delete: [] },
           });
         }}
-        onSubmitSuccess={() => {
+        onSuccess={() => {
           void router.replace({
             pathname: `/projects/${run.data.projectId}`,
             query: {

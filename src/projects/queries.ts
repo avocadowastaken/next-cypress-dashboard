@@ -57,27 +57,22 @@ export function useAddProject(
 ): UseMutationResult<Project, Error, string> {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    ["project", "add"],
-    async (repo: string) => {
-      const project = await requestJSON<Project>("/api/projects", {
-        method: "POST",
-        data: { repo },
-      });
+  return useMutation(async (repo: string) => {
+    const project = await requestJSON<Project>("/api/projects", {
+      method: "POST",
+      data: { repo },
+    });
 
-      queryClient.setQueryData(["project", project.id], project);
+    queryClient.setQueryData(["project", project.id], project);
 
-      return project;
-    },
-    options
-  );
+    return project;
+  }, options);
 }
 
 export function useDeleteProject(
   options?: Pick<UseMutationOptions<Project, Error, string>, "onSuccess">
 ): UseMutationResult<Project, Error, string> {
   return useMutation(
-    ["project", "delete"],
     (projectId: string) =>
       requestJSON<Project>(`/api/projects/${projectId}`, {
         method: "DELETE",
@@ -105,21 +100,17 @@ export function useRevokeProjectSecrets(
 ): UseMutationResult<ProjectSecrets, Error, string> {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    ["project", "secrets", "revoke"],
-    async (projectId) => {
-      const projectSecrets = await requestJSON<ProjectSecrets>(
-        `/api/projects/${projectId}/secrets`,
-        { method: "POST" }
-      );
+  return useMutation(async (projectId) => {
+    const projectSecrets = await requestJSON<ProjectSecrets>(
+      `/api/projects/${projectId}/secrets`,
+      { method: "POST" }
+    );
 
-      queryClient.setQueryData(
-        ["project", projectSecrets.projectId, "secrets"],
-        projectSecrets
-      );
+    queryClient.setQueryData(
+      ["project", projectSecrets.projectId, "secrets"],
+      projectSecrets
+    );
 
-      return projectSecrets;
-    },
-    options
-  );
+    return projectSecrets;
+  }, options);
 }
