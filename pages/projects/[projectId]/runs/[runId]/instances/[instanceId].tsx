@@ -1,4 +1,4 @@
-import { DebugStepOver } from "@/core/components/icons";
+import { DebugStepOver, SyncCircle } from "@/core/components/icons";
 import { Pre } from "@/core/components/Pre";
 import { TestResult } from "@/core/helpers/Cypress";
 import { AppLayout } from "@/core/layout/AppLayout";
@@ -26,7 +26,6 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import {
-  AccessTime,
   Check,
   Error,
   KeyboardArrowDown,
@@ -111,7 +110,10 @@ export default function RunInstancePage(): ReactElement {
                                 </Tooltip>
                               ) : (
                                 <Tooltip title="Pending">
-                                  <AccessTime fontSize="small" />
+                                  <SyncCircle
+                                    fontSize="small"
+                                    color="disabled"
+                                  />
                                 </Tooltip>
                               )}
 

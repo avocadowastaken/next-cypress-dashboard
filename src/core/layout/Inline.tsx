@@ -21,11 +21,15 @@ export function Inline({
       alignItems={alignItems}
       justifyContent={justifyContent}
     >
-      {Children.map(children, (child, idx) => (
-        <Grid key={idx} item={true}>
-          {child}
-        </Grid>
-      ))}
+      {Children.map(
+        children,
+        (child, idx) =>
+          !!child && (
+            <Grid key={idx} item={true}>
+              {child}
+            </Grid>
+          )
+      )}
     </Grid>
   );
 }

@@ -292,20 +292,23 @@ export default createApiHandler((app) => {
     const { runInstanceId } = request.params;
     const { tests } = request.body;
 
-    await prisma.runInstance.update({
-      select: null,
-      where: { id: runInstanceId },
-      data: {
-        testResults: tests?.map(
-          (value): TestResult => ({
-            state: "pending",
-            displayError: null,
-            id: value.clientId,
-            titleParts: value.title,
-          })
-        ) as undefined | Prisma.JsonObject[],
-      },
-    });
+    if (tests) {
+      await prisma.runInstance.update({
+        select: null,
+        where: { id: runInstanceId },
+        data: {
+          totalPending: tests.length,
+          testResults: tests.map(
+            (value): Partial<TestResult> => ({
+              state: "pending",
+              displayError: null,
+              id: value.clientId,
+              titleParts: value.title,
+            })
+          ),
+        },
+      });
+    }
 
     return {};
   });
