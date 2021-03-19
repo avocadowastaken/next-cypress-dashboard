@@ -12,7 +12,10 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "react-query";
-import { UseMutationOptions } from "react-query/types/react/types";
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+} from "react-query/types/react/types";
 
 export function useRunsPage(
   projectId: string | undefined,
@@ -33,7 +36,8 @@ export function useRunsPage(
 
 export function useRun(
   projectId: string | undefined,
-  runId: string | undefined
+  runId: string | undefined,
+  options?: UseQueryOptions<Run>
 ): UseQueryResult<Run> {
   const queryClient = useQueryClient();
   const key = ["run", projectId, runId] as const;
@@ -41,8 +45,9 @@ export function useRun(
 
   return useQuery(
     key,
-    () => requestJSON(`/api/projects/${projectId}/runs/${runId}`),
+    () => requestJSON<Run>(`/api/projects/${projectId}/runs/${runId}`),
     {
+      ...options,
       refetchInterval: !isComplete && 5 * 1000,
       staleTime: isComplete ? Infinity : undefined,
       enabled: !!runId && !!projectId,

@@ -237,9 +237,10 @@ export default createApiHandler((app) => {
   );
 
   app.get<{
-    Querystring: PageInput;
     Params: { runId: string; projectId: string };
+    Querystring: PageInput & { exclude?: "passed" };
   }>("/api/projects/:projectId/runs/:runId/instances", async (request) => {
+    const { exclude, ...pageInput } = request.query;
     const { runId, projectId } = request.params;
     const { userId } = await getRequestSession(request);
 
@@ -254,9 +255,19 @@ export default createApiHandler((app) => {
 
     await verifyGitHubRepoAccess(userId, project.org, project.repo);
 
-    const where: Prisma.RunInstanceWhereInput = { runId };
+    const where: Prisma.RunInstanceWhereInput = {
+      runId,
+    };
 
-    return createPageResponse(request.query, {
+    if (exclude === "passed") {
+      where.OR = [
+        { completedAt: null },
+        { error: { not: null } },
+        { totalFailed: { gt: 0 } },
+      ];
+    }
+
+    return createPageResponse(pageInput, {
       defaultNodesPerPage: 100,
       getCount: () => prisma.runInstance.count({ where }),
       getNodes: (args) =>

@@ -15,7 +15,9 @@ import {
   DialogActions,
   DialogContent,
   Divider,
+  FormControlLabel,
   Skeleton,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -77,6 +79,7 @@ export default function RunPage(): ReactElement {
   const project = useProject(projectId);
   const runInstances = useRunInstancesPage(projectId, runId, {
     page: router.query.page,
+    exclude: router.query.exclude,
   });
 
   const pageError = run.error || project.error || runInstances.error;
@@ -128,6 +131,23 @@ export default function RunPage(): ReactElement {
 
       <Stack spacing={2}>
         <RunAttributes run={run.data} project={project.data} />
+
+        <Divider />
+
+        <FormControlLabel
+          label="Hide successful specs"
+          control={
+            <Switch
+              checked={router.query.exclude === "passed"}
+              onChange={(_, checked) => {
+                void router.replace({
+                  pathname: router.pathname,
+                  query: { ...router.query, exclude: checked ? "passed" : [] },
+                });
+              }}
+            />
+          }
+        />
 
         <Divider />
 

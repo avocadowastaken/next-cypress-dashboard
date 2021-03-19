@@ -121,6 +121,12 @@ const theme = createMuiTheme({
       },
     },
 
+    MuiSwitch: {
+      defaultProps: {
+        color: "primary",
+      },
+    },
+
     MuiModal: {
       defaultProps: {
         container: () => document.querySelector(".MuiScopedCssBaseline-root"),
