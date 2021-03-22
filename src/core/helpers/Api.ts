@@ -1,4 +1,4 @@
-import { AppError } from "@/core/data/AppError";
+import { AppError, getAppErrorStatusCode } from "@/core/data/AppError";
 import {
   JWT_ENCRYPTION_KEY,
   JWT_SECRET,
@@ -37,49 +37,23 @@ export async function getRequestSession(
 export function createApiHandler(
   setup: (app: NextConnect<NextApiRequest, NextApiResponse>) => void
 ): NextApiHandler {
-  const app = nc({ attachParams: true }).use(morgan("tiny"));
+  const app = nc<NextApiRequest, NextApiResponse>({
+    attachParams: true,
+    onError(error, _, res) {
+      if (error.name === "NotFoundError") {
+        error = new AppError("NOT_FOUND");
+      }
+
+      res.status(getAppErrorStatusCode(error)).send({
+        name: error.name,
+        code: error.code,
+        message: error.message,
+        statusCode: error.statusCode,
+      });
+    },
+  }).use(morgan("tiny"));
 
   setup(app);
 
-  // const app = fastify({
-  //   logger: pino({
-  //     prettyPrint: {},
-  //     prettifier: require("pino-colada"),
-  //   }),
-  // });
-  //
-  // app.register(fastifyCookie);
-  //
-  // app.setErrorHandler((error, _, reply) => {
-  //   if (error.name === "NotFoundError") {
-  //     reply.status(404).send(new AppError("NOT_FOUND"));
-  //   }
-  //
-  //   reply.status(error.statusCode || 500).send(error);
-  // });
-  //
-  //
-  // return async (req, res) => {
-  //   const { "content-length": contentLength, ...requestHeaders } = req.headers;
-  //
-  //   const { statusCode, body, headers } = await app.inject({
-  //     url: req.url,
-  //     query: req.query,
-  //     payload: req.body,
-  //     cookies: req.cookies,
-  //     headers: requestHeaders,
-  //     method: req.method as HTTPMethods,
-  //   });
-  //
-  //   res.status(statusCode);
-  //
-  //   for (const [name, value] of Object.entries(headers)) {
-  //     if (value) {
-  //       res.setHeader(name, value);
-  //     }
-  //   }
-  //
-  //   res.send(body);
-  // };
   return app;
 }
