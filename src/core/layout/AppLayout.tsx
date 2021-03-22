@@ -17,10 +17,10 @@ import { useRouter } from "next/router";
 import React, { ReactElement, ReactNode, useMemo } from "react";
 
 export interface AppTitleProps {
-  breadcrumbs: Array<string | [label: string, href: string]>;
+  breadcrumbs?: Array<string | [label: string, href: string]>;
 }
 
-export function AppTitle({ breadcrumbs }: AppTitleProps) {
+export function AppTitle({ breadcrumbs = [] }: AppTitleProps) {
   const documentTitle = useMemo(
     () =>
       [
@@ -39,7 +39,9 @@ export function AppTitle({ breadcrumbs }: AppTitleProps) {
   );
 }
 
-export function AppBreadcrumb({ breadcrumbs }: AppTitleProps): ReactElement {
+export function AppBreadcrumb({
+  breadcrumbs = [],
+}: AppTitleProps): ReactElement {
   return (
     <Breadcrumbs>
       {breadcrumbs.map((breadcrumb) => {
@@ -63,20 +65,76 @@ export function AppBreadcrumb({ breadcrumbs }: AppTitleProps): ReactElement {
   );
 }
 
-export interface LayoutProps extends AppTitleProps {
+export interface AppLayoutContentProps extends AppTitleProps {
   actions?: ReactNode;
   children?: ReactNode;
   maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
 }
 
-export function AppLayout({
+export function AppLayoutContent({
   actions,
   children,
   maxWidth = "md",
   breadcrumbs = [],
-}: LayoutProps) {
+}: AppLayoutContentProps) {
   const router = useRouter();
 
+  return (
+    <Container maxWidth={maxWidth}>
+      <Box paddingY={2}>
+        <Inline alignItems="center" justifyContent="space-between">
+          <AppBreadcrumb breadcrumbs={breadcrumbs} />
+
+          {!!actions && actions}
+        </Inline>
+      </Box>
+
+      <Stack spacing={2}>
+        {!!router.query.error && (
+          <Alert
+            severity="error"
+            action={
+              <NextLink
+                href={{
+                  pathname: router.pathname,
+                  query: { ...router.query, error: [] },
+                }}
+              >
+                <Button color="inherit">Close</Button>
+              </NextLink>
+            }
+          >
+            {router.query.error}
+          </Alert>
+        )}
+
+        {!!router.query.success && (
+          <Alert
+            severity="success"
+            action={
+              <NextLink
+                href={{
+                  pathname: router.pathname,
+                  query: { ...router.query, success: [] },
+                }}
+              >
+                <Button color="inherit">Close</Button>
+              </NextLink>
+            }
+          >
+            {router.query.success}
+          </Alert>
+        )}
+
+        <div>{children}</div>
+      </Stack>
+    </Container>
+  );
+}
+
+export interface LayoutProps extends AppTitleProps, AppLayoutContentProps {}
+
+export function AppLayout({ breadcrumbs, ...props }: LayoutProps) {
   return (
     <>
       <AppTitle breadcrumbs={breadcrumbs} />
@@ -101,55 +159,7 @@ export function AppLayout({
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth={maxWidth}>
-        <Box paddingY={2}>
-          <Inline alignItems="center" justifyContent="space-between">
-            <AppBreadcrumb breadcrumbs={breadcrumbs} />
-
-            {!!actions && actions}
-          </Inline>
-        </Box>
-
-        <Stack spacing={2}>
-          {!!router.query.error && (
-            <Alert
-              severity="error"
-              action={
-                <NextLink
-                  href={{
-                    pathname: router.pathname,
-                    query: { ...router.query, error: [] },
-                  }}
-                >
-                  <Button color="inherit">Close</Button>
-                </NextLink>
-              }
-            >
-              {router.query.error}
-            </Alert>
-          )}
-
-          {!!router.query.success && (
-            <Alert
-              severity="success"
-              action={
-                <NextLink
-                  href={{
-                    pathname: router.pathname,
-                    query: { ...router.query, success: [] },
-                  }}
-                >
-                  <Button color="inherit">Close</Button>
-                </NextLink>
-              }
-            >
-              {router.query.success}
-            </Alert>
-          )}
-
-          <div>{children}</div>
-        </Stack>
-      </Container>
+      <AppLayoutContent {...props} breadcrumbs={breadcrumbs} />
     </>
   );
 }

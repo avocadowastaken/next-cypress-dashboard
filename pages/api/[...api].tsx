@@ -2,18 +2,73 @@ import { AppError } from "@/core/data/AppError";
 import { createPageResponse } from "@/core/data/PageResponse";
 import { createApiHandler, getRequestSession } from "@/core/helpers/Api";
 import { prisma } from "@/core/helpers/db";
-import { TASKS_API_SECRET } from "@/core/helpers/env";
+import { GITHUB_CLIENT_ID, TASKS_API_SECRET } from "@/core/helpers/env";
 import { parseGitUrl } from "@/core/helpers/Git";
 import {
   findGitHubUserAvatar,
+  obtainAccessToken,
   verifyGitHubRepoAccess,
 } from "@/core/helpers/GitHub";
 import { Prisma } from "@prisma/client";
-import { createHash } from "crypto";
+import { createHash, randomBytes } from "crypto";
 import { startOfYesterday } from "date-fns";
 import { deserialize, serialize } from "superjson";
 
 export default createApiHandler((app) => {
+  app.get("/api/auth", async (req, res) => {
+    const state = req.session.get<string>("csrf-token");
+
+    if (!state) {
+      req.session.set("csrf-token", randomBytes(16).toString("base64"));
+      await req.session.save();
+      res.redirect(302, `/?error=${encodeURIComponent("Invalid CSRF token")}`);
+      return;
+    }
+
+    const { code } = req.query;
+
+    if (typeof code !== "string") {
+      const url = new URL("https://github.com/login/oauth/authorize");
+
+      url.searchParams.set("state", state);
+      url.searchParams.set("allow_signup", "false");
+      url.searchParams.set("scope", "user read:org");
+      url.searchParams.set("client_id", GITHUB_CLIENT_ID);
+
+      res.redirect(302, url.toString());
+      return;
+    }
+
+    try {
+      const [accessToken, user] = await obtainAccessToken(code, state);
+
+      const input: Prisma.UserAccountWhereUniqueInput["providerId_providerAccountId"] = {
+        providerId: "github",
+        providerAccountId: user.id.toString(),
+      };
+
+      const { userId } = await prisma.userAccount.upsert({
+        select: { userId: true },
+        where: { providerId_providerAccountId: input },
+        update: { accessToken },
+        create: { ...input, accessToken, user: { create: {} } },
+      });
+
+      req.session.set("userId", userId);
+      await req.session.save();
+      res.redirect(302, req.headers.referer || "/");
+    } catch (e: unknown) {
+      const message =
+        e instanceof Error
+          ? e.stack && process.env.NODE_ENV === "development"
+            ? e.stack
+            : `${e.name}: ${e.message}`
+          : "Unknown Error";
+
+      res.redirect(302, `/?error=${encodeURIComponent(message)}`);
+    }
+  });
+
   app.post("/api/tasks/cleanup-runs", async (req, res) => {
     const { authorization } = req.headers;
 
@@ -45,7 +100,7 @@ export default createApiHandler((app) => {
     async (req, res) => {
       const { email } = req.params;
 
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
       const avatarUrl = await findGitHubUserAvatar(userId, email);
 
       if (avatarUrl) {
@@ -73,7 +128,7 @@ export default createApiHandler((app) => {
   });
 
   app.post("/api/projects", async (req, res) => {
-    const { userId } = await getRequestSession(req);
+    const { userId } = getRequestSession(req);
     const [providerId, org, repo] = parseGitUrl(req.body.repo);
 
     await verifyGitHubRepoAccess(userId, org, repo);
@@ -94,7 +149,7 @@ export default createApiHandler((app) => {
   });
 
   app.get("/api/projects", async (req, res) => {
-    const { userId } = await getRequestSession(req);
+    const { userId } = getRequestSession(req);
     const where: Prisma.ProjectWhereInput = {
       users: { some: { id: userId } },
     };
@@ -116,7 +171,7 @@ export default createApiHandler((app) => {
     "/api/projects/:projectId",
     async (req, res) => {
       const { projectId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
 
       const project = await prisma.project.findFirst({
         rejectOnNotFound: true,
@@ -131,7 +186,7 @@ export default createApiHandler((app) => {
     "/api/projects/:projectId",
     async (req, res) => {
       const { projectId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
 
       const project = await prisma.project.update({
         select: null,
@@ -147,7 +202,7 @@ export default createApiHandler((app) => {
     "/api/projects/:projectId/secrets",
     async (req, res) => {
       const { projectId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
       const project = await prisma.project.findFirst({
         rejectOnNotFound: true,
         where: { id: projectId, users: { some: { id: userId } } },
@@ -169,7 +224,7 @@ export default createApiHandler((app) => {
     "/api/projects/:projectId/secrets",
     async (req, res) => {
       const { projectId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
       const project = await prisma.project.findFirst({
         rejectOnNotFound: true,
         where: { id: projectId, users: { some: { id: userId } } },
@@ -190,7 +245,7 @@ export default createApiHandler((app) => {
     "/api/projects/:projectId/runs",
     async (req, res) => {
       const { projectId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
 
       const project = await prisma.project.findFirst({
         rejectOnNotFound: true,
@@ -222,7 +277,7 @@ export default createApiHandler((app) => {
     "/api/projects/:projectId/runs/:runId",
     async (req, res) => {
       const { runId, projectId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
 
       const { project, ...run } = await prisma.run.findFirst({
         rejectOnNotFound: true,
@@ -243,7 +298,7 @@ export default createApiHandler((app) => {
     "/api/runs/:runId",
     async (req, res) => {
       const { runId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
 
       const run = await prisma.run.findFirst({
         rejectOnNotFound: true,
@@ -268,7 +323,7 @@ export default createApiHandler((app) => {
     async (req, res) => {
       const { exclude, ...pageInput } = req.query;
       const { runId, projectId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
 
       const { project } = await prisma.run.findFirst({
         rejectOnNotFound: true,
@@ -314,7 +369,7 @@ export default createApiHandler((app) => {
     "/api/projects/:projectId/runs/:runId/instances/:runInstanceId",
     async (req, res) => {
       const { runId, projectId, runInstanceId } = req.params;
-      const { userId } = await getRequestSession(req);
+      const { userId } = getRequestSession(req);
 
       const { run, ...runInstance } = await prisma.runInstance.findFirst({
         rejectOnNotFound: true,

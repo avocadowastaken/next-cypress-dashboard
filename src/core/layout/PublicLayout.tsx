@@ -1,11 +1,6 @@
+import { AppLayoutContent } from "@/core/layout/AppLayout";
 import { Inline } from "@/core/layout/Inline";
-import {
-  AppBar,
-  Button,
-  Container,
-  ContainerProps,
-  Toolbar,
-} from "@material-ui/core";
+import { AppBar, Button, ContainerProps, Toolbar } from "@material-ui/core";
 import Head from "next/head";
 import NextLink from "next/link";
 import React, { ReactElement, ReactNode } from "react";
@@ -20,8 +15,8 @@ export interface PublicLayoutProps {
 export function PublicLayout({
   title,
   action,
-  children,
   maxWidth = "sm",
+  ...props
 }: PublicLayoutProps): ReactElement {
   return (
     <>
@@ -43,7 +38,7 @@ export function PublicLayout({
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth={maxWidth}>{children}</Container>
+      <AppLayoutContent {...props} maxWidth={maxWidth} />
     </>
   );
 }

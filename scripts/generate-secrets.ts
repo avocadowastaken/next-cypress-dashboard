@@ -1,83 +1,24 @@
-import { exec } from "@actions/exec";
 import { randomBytes } from "crypto";
 
-function getJWTSecret(): Promise<string> {
+function getRandomBytes(size: number): Promise<string> {
   return new Promise((resolve, reject) => {
-    randomBytes(64, (error, buffer) => {
+    randomBytes(size, (error, buffer) => {
       if (error) reject(error);
       else resolve(buffer.toString("base64"));
     });
   });
 }
 
-async function getJWTSigningKey(): Promise<string> {
-  let result = "";
-
-  await exec(
-    "npx",
-    [
-      "--quiet",
-      "node-jose-tools",
-      "newkey",
-      "-s",
-      "256",
-      "-t",
-      "oct",
-      "-a",
-      "HS512",
-    ],
-    {
-      silent: true,
-      listeners: {
-        stdout: (data) => {
-          result += data.toString("utf8");
-        },
-      },
-    }
-  );
-
-  return result;
-}
-
-async function getJWTEncryptionKey(): Promise<string> {
-  let result = "";
-
-  await exec(
-    "npx",
-    [
-      "--quiet",
-      "node-jose-tools",
-      "newkey",
-      "-s",
-      "256",
-      "-t",
-      "oct",
-      "-a",
-      "A256GCM",
-      "-u",
-      "enc",
-    ],
-    {
-      silent: true,
-      listeners: {
-        stdout: (data) => {
-          result += data.toString("utf8");
-        },
-      },
-    }
-  );
-
-  return result;
-}
-
 async function main() {
-  const [JWT_SECRET, JWT_SIGNING_KEY, JWT_ENCRYPTION_KEY] = await Promise.all([
-    getJWTSecret(),
-    getJWTSigningKey(),
-    getJWTEncryptionKey(),
+  const [SESSION_SECRET, TASKS_API_SECRET] = await Promise.all([
+    getRandomBytes(32),
+    getRandomBytes(32),
   ]);
 
-  return Object.entries({ JWT_SECRET, JWT_SIGNING_KEY, JWT_ENCRYPTION_KEY })
+  return Object.entries({
+    SESSION_SECRET,
+    TASKS_API_SECRET,
+  })
     .map(([key, value]) => `${key}='${value}'`)
     .join("\n");
 }

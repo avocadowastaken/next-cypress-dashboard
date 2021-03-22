@@ -13,48 +13,25 @@ model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  name  String?
-  image String?
-
-  email         String?   @unique
-  emailVerified DateTime?
-
   projects Project[]
   accounts UserAccount[]
-  sessions UserSession[]
 }
 
 model UserAccount {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  compoundId String @unique
+  accessToken String?
 
   providerId        String
-  providerType      String
   providerAccountId String
-
-  accessToken        String?
-  refreshToken       String?
-  accessTokenExpires DateTime?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
   @@unique([userId, providerId])
+  @@unique([providerId, providerAccountId])
   @@unique([userId, providerId, providerAccountId])
-}
-
-model UserSession {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  expires      DateTime
-  accessToken  String   @unique
-  sessionToken String   @unique
 }
 
 model UserVerificationRequest {

@@ -1,37 +1,29 @@
 import { AppError, getAppErrorStatusCode } from "@/core/data/AppError";
-import {
-  JWT_ENCRYPTION_KEY,
-  JWT_SECRET,
-  JWT_SIGNING_KEY,
-} from "@/core/helpers/env";
+import { SESSION_SECRET } from "@/core/helpers/env";
+import { randomBytes } from "crypto";
 import morgan from "morgan";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
 import nc, { NextConnect } from "next-connect";
+import { ironSession, Session } from "next-iron-session";
+
+declare module "next" {
+  export interface NextApiRequest {
+    session: Session;
+  }
+}
 
 interface RequestSession {
   userId: string;
 }
 
-export async function getRequestSession(
-  req: NextApiRequest
-): Promise<RequestSession> {
-  try {
-    const session = await getToken({
-      req,
-      secret: JWT_SECRET,
-      signingKey: JWT_SIGNING_KEY,
-      encryptionKey: JWT_ENCRYPTION_KEY,
-    });
+export function getRequestSession(req: NextApiRequest): RequestSession {
+  const userId = req.session.get("userId");
 
-    const userId = session?.["sub"];
+  if (!userId) {
+    throw new AppError("UNAUTHORIZED");
+  }
 
-    if (userId) {
-      return { userId };
-    }
-  } catch {}
-
-  throw new AppError("UNAUTHORIZED");
+  return { userId };
 }
 
 export function createApiHandler(
@@ -51,7 +43,28 @@ export function createApiHandler(
         statusCode: error.statusCode,
       });
     },
-  }).use(morgan("tiny"));
+  });
+
+  app.use(morgan("tiny"));
+  app.use(
+    ironSession({
+      cookieName: "__nis",
+      password: SESSION_SECRET,
+      cookieOptions: {
+        secure: process.env.NODE_ENV === "production",
+      },
+    })
+  );
+
+  app.use((req, _, next) => {
+    const csrfToken = req.session.get("csrf-token");
+
+    if (!csrfToken) {
+      req.session.set("csrf-token", randomBytes(16).toString("hex"));
+    }
+
+    next();
+  });
 
   setup(app);
 

@@ -1,8 +1,36 @@
 import { AppError } from "@/core/data/AppError";
 import { prisma } from "@/core/helpers/db";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/helpers/env";
+import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types";
 import { RequestError } from "@octokit/request-error";
+
+export async function obtainAccessToken(
+  code: string,
+  state: string
+): Promise<
+  [
+    token: string,
+    user:
+      | components["schemas"]["private-user"]
+      | components["schemas"]["public-user"]
+  ]
+> {
+  const auth = createOAuthAppAuth({
+    clientType: "oauth-app",
+    clientId: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
+  });
+
+  const { token } = await auth({ type: "oauth-user", code, state });
+
+  const octokit = new Octokit({ auth: token });
+
+  const { data } = await octokit.request("GET /user");
+
+  return [token, data];
+}
 
 async function getOctokit(userId: string): Promise<Octokit> {
   const account = await prisma.userAccount.findUnique({

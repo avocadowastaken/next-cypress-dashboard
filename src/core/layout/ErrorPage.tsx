@@ -15,9 +15,7 @@ export function useErrorHandler(error: unknown): void {
     const errorCode = !error ? null : extractErrorCode(error);
 
     if (errorCode === "UNAUTHORIZED") {
-      const callbackUrl = encodeURIComponent(window.location.href);
-
-      window.location.replace(`/api/auth/signin?callbackUrl=${callbackUrl}`);
+      window.location.replace("/api/auth");
     }
   }, [error]);
 }
