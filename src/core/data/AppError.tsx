@@ -27,11 +27,6 @@ export class AppError extends Error {
   }
 }
 
-/** @deprecated use AppError class directly */
-export function createAppError(code: AppErrorCode): Error {
-  return new AppError(code);
-}
-
 export function extractErrorCode(error: unknown): AppErrorCode {
   if (error instanceof Error) {
     error = error.message;
@@ -72,14 +67,20 @@ export function getAppErrorStatusCode(error: unknown): number {
   const code = extractErrorCode(error);
   switch (code) {
     case "BAD_REQUEST":
+    case "INVALID_GIT_URL":
+    case "UNSUPPORTED_GIT_PROVIDER":
       return 400;
     case "UNAUTHORIZED":
       return 401;
     case "FORBIDDEN":
+    case "GITHUB_REPO_ACCESS_DENIED":
       return 403;
     case "NOT_FOUND":
+    case "GITHUB_REPO_NOT_FOUND":
       return 404;
-  }
 
-  return 500;
+    case "UNKNOWN_ERROR":
+    default:
+      return 500;
+  }
 }

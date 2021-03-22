@@ -1,4 +1,4 @@
-import { createAppError } from "@/core/data/AppError";
+import { AppError } from "@/core/data/AppError";
 import gitUrlParse from "git-url-parse";
 
 const resourceProviderMap = new Map<string, string>().set(
@@ -10,18 +10,18 @@ export function parseGitUrl(
   url: string
 ): [providerId: string, owner: string, name: string] {
   if (!url) {
-    throw createAppError("INVALID_GIT_URL");
+    throw new AppError("INVALID_GIT_URL");
   }
 
   const { resource, name, owner } = gitUrlParse(url);
   const provider = resourceProviderMap.get(resource);
 
   if (!name || !owner || !resource) {
-    throw createAppError("INVALID_GIT_URL");
+    throw new AppError("INVALID_GIT_URL");
   }
 
   if (!provider) {
-    throw createAppError("UNSUPPORTED_GIT_PROVIDER");
+    throw new AppError("UNSUPPORTED_GIT_PROVIDER");
   }
 
   return [provider, owner, name];
