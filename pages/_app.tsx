@@ -12,6 +12,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: false,
       staleTime: 10 * 1000,
       cacheTime: 10 * 60 * 1000,
       async queryFn({ queryKey }) {

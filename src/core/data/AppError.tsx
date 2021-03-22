@@ -43,6 +43,8 @@ export function formatAppError(error: unknown): string {
   const code = extractErrorCode(error);
 
   switch (code) {
+    case "UNAUTHORIZED":
+      return "Unauthorized";
     case "UNKNOWN_ERROR":
       return "Unknown Error";
     case "BAD_REQUEST":

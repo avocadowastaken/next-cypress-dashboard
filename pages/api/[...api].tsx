@@ -10,32 +10,47 @@ import {
   verifyGitHubRepoAccess,
 } from "@/core/helpers/GitHub";
 import { Prisma } from "@prisma/client";
-import { createHash, randomBytes } from "crypto";
+import { createHash } from "crypto";
 import { startOfYesterday } from "date-fns";
 import { deserialize, serialize } from "superjson";
 
 export default createApiHandler((app) => {
-  app.get("/api/auth", async (req, res) => {
+  app.post("/api/auth", async (req, res) => {
     const state = req.session.get<string>("csrf-token");
 
     if (!state) {
-      req.session.set("csrf-token", randomBytes(16).toString("base64"));
-      await req.session.save();
       res.redirect(302, `/?error=${encodeURIComponent("Invalid CSRF token")}`);
       return;
     }
 
+    const url = new URL("https://github.com/login/oauth/authorize");
+
+    url.searchParams.set("state", state);
+    url.searchParams.set("allow_signup", "false");
+    url.searchParams.set("scope", "user read:org");
+    url.searchParams.set("client_id", GITHUB_CLIENT_ID);
+
+    res.redirect(302, url.toString());
+  });
+
+  app.post("/api/auth/destroy", async (req, res) => {
+    req.session.destroy();
+    await req.session.save();
+    res.redirect(302, "/");
+  });
+
+  app.get("/api/auth", async (req, res) => {
     const { code } = req.query;
 
     if (typeof code !== "string") {
-      const url = new URL("https://github.com/login/oauth/authorize");
+      res.redirect(302, `/?error=${encodeURIComponent("Invalid oAuth code")}`);
+      return;
+    }
 
-      url.searchParams.set("state", state);
-      url.searchParams.set("allow_signup", "false");
-      url.searchParams.set("scope", "user read:org");
-      url.searchParams.set("client_id", GITHUB_CLIENT_ID);
+    const state = req.session.get<string>("csrf-token");
 
-      res.redirect(302, url.toString());
+    if (!state) {
+      res.redirect(302, `/?error=${encodeURIComponent("Invalid CSRF token")}`);
       return;
     }
 
@@ -57,12 +72,12 @@ export default createApiHandler((app) => {
       req.session.set("userId", userId);
       await req.session.save();
       res.redirect(302, req.headers.referer || "/");
-    } catch (e: unknown) {
+    } catch (error: unknown) {
       const message =
-        e instanceof Error
-          ? e.stack && process.env.NODE_ENV === "development"
-            ? e.stack
-            : `${e.name}: ${e.message}`
+        error instanceof Error
+          ? error.stack && process.env.NODE_ENV === "development"
+            ? error.stack
+            : `${error.name}: ${error.message}`
           : "Unknown Error";
 
       res.redirect(302, `/?error=${encodeURIComponent(message)}`);

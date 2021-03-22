@@ -146,15 +146,11 @@ export function AppLayout({ breadcrumbs, ...props }: LayoutProps) {
               <Button color="inherit">Docs</Button>
             </NextLink>
 
-            <NextLink
-              passHref={true}
-              href={{
-                pathname: "/api/auth/signout",
-                query: { callbackUrl: "/" },
-              }}
-            >
-              <Button color="inherit">Sign Out</Button>
-            </NextLink>
+            <form method="post" action="/api/auth/destroy">
+              <Button type="submit" color="inherit">
+                Sign Out
+              </Button>
+            </form>
           </Inline>
         </Toolbar>
       </AppBar>
