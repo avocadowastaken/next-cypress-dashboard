@@ -21,6 +21,10 @@ export async function findGitHubUserAvatar(
   userId: string,
   email: string
 ): Promise<null | string> {
+  try {
+    email = decodeURIComponent(email);
+  } catch {}
+
   const privateEmailPattern = /(([\d]{7})\+)?(.+)(@users.noreply.github.com)$/;
   const privateEmailMatches = email.match(privateEmailPattern);
 

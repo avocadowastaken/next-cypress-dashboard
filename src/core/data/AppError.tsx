@@ -27,11 +27,6 @@ export class AppError extends Error {
   }
 }
 
-/** @deprecated use AppError class directly */
-export function createAppError(code: AppErrorCode): Error {
-  return new AppError(code);
-}
-
 export function extractErrorCode(error: unknown): AppErrorCode {
   if (error instanceof Error) {
     error = error.message;
