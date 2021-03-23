@@ -39,8 +39,8 @@
     "next-connect": "0.10.1",
     "next-iron-session": "4.1.12",
     "prism-react-renderer": "1.2.0",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react-query": "3.13.0",
     "superjson": "1.7.3"
   },

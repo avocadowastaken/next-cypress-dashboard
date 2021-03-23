@@ -1,5 +1,12 @@
 var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropDesc = Object.getOwnPropertyDescriptor, __getOwnPropSymbols = Object.getOwnPropertySymbols, __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __assign = Object.assign, __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, {enumerable: !0, configurable: !0, writable: !0, value}) : obj[key] = value, __assign = (a, b) => {
+  for (var prop in b || (b = {}))
+    __hasOwnProp.call(b, prop) && __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b))
+      __propIsEnum.call(b, prop) && __defNormalProp(a, prop, b[prop]);
+  return a;
+}, __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
 var __rest = (source, exclude) => {
   var target = {};
   for (var prop in source)
@@ -2483,7 +2490,7 @@ var require_dist_web3 = __commonJS((exports2) => {
     paginateRest: () => paginateRest,
     paginatingEndpoints: () => paginatingEndpoints
   });
-  var VERSION4 = "2.13.2";
+  var VERSION4 = "2.13.3";
   function normalizePaginatedListResponse(response) {
     if (!("total_count" in response.data && !("url" in response.data)))
       return response;
