@@ -241,7 +241,7 @@ var require_core = __commonJS((exports2) => {
   }
   __name(endGroup, "endGroup");
   exports2.endGroup = endGroup;
-  function group(name2, fn) {
+  function group2(name2, fn) {
     return __awaiter(this, void 0, void 0, function* () {
       startGroup(name2);
       let result;
@@ -253,8 +253,8 @@ var require_core = __commonJS((exports2) => {
       return result;
     });
   }
-  __name(group, "group");
-  exports2.group = group;
+  __name(group2, "group");
+  exports2.group = group2;
   function saveState(name2, value) {
     command_1.issueCommand("save-state", {name: name2}, value);
   }
@@ -3914,40 +3914,48 @@ var createTokenAuth = /* @__PURE__ */ __name(function(token2) {
 var import_github = __toModule(require_github());
 var token = (0, import_core.getInput)("token", {required: !0}), name = (0, import_core.getInput)("name", {required: !0}), environment = (0, import_core.getInput)("environment", {required: !0}), ignoreErrors = (0, import_core.getInput)("ignore_errors", {required: !1}) === "true", octokit = (0, import_github.getOctokit)(token);
 async function findDeploymentURL() {
+  (0, import_core.info)("Fetching latest deployments");
   for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", __assign(__assign({}, import_github.context.repo), {
     environment,
     per_page: 10,
     task: "deploy"
-  })))
+  }))) {
+    (0, import_core.info)(deployments.length === 0 ? "No deployment found" : deployments.length === 1 ? "One deployment found" : `${deployments.length} deployments found`);
     for (let {id} of deployments) {
+      (0, import_core.info)(`Fetching deployment status of the: ${id}`);
       let {
         data: statuses
       } = await octokit.request("GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", __assign(__assign({}, import_github.context.repo), {deployment_id: id}));
+      (0, import_core.info)(statuses.length === 0 ? "No deployment status found" : statuses.length === 1 ? "One deployment status found" : `${statuses.length} deployment statuses found`);
       for (let {state, target_url} of statuses)
         if (state === "success" && target_url)
           return target_url;
     }
+  }
 }
 __name(findDeploymentURL, "findDeploymentURL");
 async function main() {
-  let deploymentURL = await findDeploymentURL();
+  let deploymentURL = await (0, import_core.group)(`Getting deployment for the environment: ${environment}`, findDeploymentURL);
   if (!deploymentURL)
     return (0, import_core.warning)(`There are no deployments for the environment '${environment}'`);
-  (0, import_core.info)(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
-  let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Token ${process.env.TASKS_API_SECRET}`
-    }
-  }), responseText = await response.text().catch(() => null);
-  if (response.ok)
-    responseText && (0, import_core.info)(responseText);
-  else
-    throw new Error(`Failed to execute task.
+  await (0, import_core.group)(`Execute task: ${name} }`, async () => {
+    (0, import_core.info)(`Requesting: '${deploymentURL}'`);
+    let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Token ${process.env.TASKS_API_SECRET}`
+      }
+    });
+    (0, import_core.info)(`Parsing response: ${response.status} (${response.statusText})`);
+    let responseText = await response.text().catch(() => null);
+    if ((0, import_core.info)(`Parsed response:
+${responseText}`), !response.ok)
+      throw new Error(`Failed to execute task.
 ${response.statusText}
 ${responseText}`);
+  });
 }
 __name(main, "main");
 main().catch((error) => {
