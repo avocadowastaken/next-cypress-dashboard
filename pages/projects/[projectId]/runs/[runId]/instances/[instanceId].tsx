@@ -16,8 +16,10 @@ import {
   Box,
   Collapse,
   Divider,
+  FormControlLabel,
   IconButton,
   Skeleton,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -31,9 +33,11 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@material-ui/icons";
+import { useRouter } from "next/router";
 import React, { Fragment, ReactElement, useState } from "react";
 
 export default function RunInstancePage(): ReactElement {
+  const router = useRouter();
   const runId = useRouterParam("runId");
   const projectId = useRouterParam("projectId");
   const instanceId = useRouterParam("instanceId");
@@ -72,6 +76,23 @@ export default function RunInstancePage(): ReactElement {
 
         <Divider />
 
+        <FormControlLabel
+          label="Hide successful tests"
+          control={
+            <Switch
+              checked={router.query.exclude === "passed"}
+              onChange={(_, checked) => {
+                void router.replace({
+                  pathname: router.pathname,
+                  query: { ...router.query, exclude: checked ? "passed" : [] },
+                });
+              }}
+            />
+          }
+        />
+
+        <Divider />
+
         {runInstance.data.error ? (
           <Pre code={runInstance.data.error} language="bash" />
         ) : (
@@ -88,34 +109,43 @@ export default function RunInstancePage(): ReactElement {
               ) : (
                 <TableBody>
                   {testResults.map((testResult) => {
+                    if (
+                      testResult.state === "passed" &&
+                      router.query.exclude === "passed"
+                    ) {
+                      return null;
+                    }
+
                     const isSelected = selectedResult === testResult.id;
 
                     return (
                       <Fragment key={testResult.id}>
                         <TableRow sx={{ "& > td": { borderBottom: "none" } }}>
                           <TableCell>
-                            <Inline>
-                              {testResult.state === "passed" ? (
-                                <Check color="primary" fontSize="small" />
-                              ) : testResult.state === "failed" ? (
-                                <Tooltip title="Failed">
-                                  <Error color="error" fontSize="small" />
-                                </Tooltip>
-                              ) : testResult.state === "skipped" ? (
-                                <Tooltip title="Skipped">
-                                  <DebugStepOver
-                                    color="disabled"
-                                    fontSize="small"
-                                  />
-                                </Tooltip>
-                              ) : (
-                                <Tooltip title="Pending">
-                                  <SyncCircle
-                                    fontSize="small"
-                                    color="disabled"
-                                  />
-                                </Tooltip>
-                              )}
+                            <Inline alignItems="center">
+                              <Box height="20px">
+                                {testResult.state === "passed" ? (
+                                  <Check color="primary" fontSize="small" />
+                                ) : testResult.state === "failed" ? (
+                                  <Tooltip title="Failed">
+                                    <Error color="error" fontSize="small" />
+                                  </Tooltip>
+                                ) : testResult.state === "skipped" ? (
+                                  <Tooltip title="Skipped">
+                                    <DebugStepOver
+                                      color="disabled"
+                                      fontSize="small"
+                                    />
+                                  </Tooltip>
+                                ) : (
+                                  <Tooltip title="Pending">
+                                    <SyncCircle
+                                      fontSize="small"
+                                      color="disabled"
+                                    />
+                                  </Tooltip>
+                                )}
+                              </Box>
 
                               <span>{testResult.titleParts.join(" – ")}</span>
 

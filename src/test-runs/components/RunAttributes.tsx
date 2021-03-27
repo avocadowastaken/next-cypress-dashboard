@@ -18,6 +18,7 @@ import { AccessTime, Apple, Check, Error } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
 import { formatDistanceToNowStrict } from "date-fns";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React, { ReactElement, useMemo } from "react";
 
 const PR_BRANCH_PATTERN = /^refs\/pull\/(\d+)\/merge$/;
@@ -31,6 +32,7 @@ export function RunAttributes({
   run,
   project,
 }: RunAttributesProps): ReactElement {
+  const router = useRouter();
   const [branchIcon, branchLabel, branchHref] = useMemo<
     [icon: ReactElement, label: string, url: string]
   >(() => {
@@ -65,7 +67,13 @@ export function RunAttributes({
 
   return (
     <Stack>
-      <NextLink passHref={true} href={`/projects/${project.id}/runs/${run.id}`}>
+      <NextLink
+        passHref={true}
+        href={{
+          query: { exclude: router.query.exclude || [] },
+          pathname: `/projects/${project.id}/runs/${run.id}`,
+        }}
+      >
         <Link variant="subtitle1">{run.commitMessage || run.ciBuildId}</Link>
       </NextLink>
 

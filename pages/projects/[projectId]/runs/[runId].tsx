@@ -135,7 +135,7 @@ export default function RunPage(): ReactElement {
         <Divider />
 
         <FormControlLabel
-          label="Hide successful specs"
+          label="Hide successful tests"
           control={
             <Switch
               checked={router.query.exclude === "passed"}

@@ -5,6 +5,7 @@ import { Chip, Link, Tooltip } from "@material-ui/core";
 import { Check, Error } from "@material-ui/icons";
 import { Run, RunInstance } from "@prisma/client";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 
 export interface RunInstanceAttributesProps {
@@ -26,6 +27,8 @@ export function RunInstanceAttributes({
     totalSkipped,
   },
 }: RunInstanceAttributesProps): ReactElement {
+  const router = useRouter();
+
   return (
     <Inline>
       <DurationChip start={claimedAt} finish={completedAt} />
@@ -56,7 +59,10 @@ export function RunInstanceAttributes({
 
       <NextLink
         passHref={true}
-        href={`/projects/${projectId}/runs/${runId}/instances/${id}`}
+        href={{
+          query: { exclude: router.query.exclude || [] },
+          pathname: `/projects/${projectId}/runs/${runId}/instances/${id}`,
+        }}
       >
         <Link>{spec}</Link>
       </NextLink>
