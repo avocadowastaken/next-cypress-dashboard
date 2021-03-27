@@ -91,23 +91,17 @@ export default createApiHandler((app) => {
       throw new AppError("FORBIDDEN");
     }
 
-    const { task } = req.body;
+    const oneDayAgo = startOfYesterday();
 
-    if (task === "cleanup-runs") {
-      const oneDayAgo = startOfYesterday();
+    const { count: runInstances } = await prisma.runInstance.deleteMany({
+      where: { createdAt: { lte: oneDayAgo } },
+    });
 
-      const { count: runInstances } = await prisma.runInstance.deleteMany({
-        where: { createdAt: { lte: oneDayAgo } },
-      });
+    const { count: runs } = await prisma.run.deleteMany({
+      where: { createdAt: { lte: oneDayAgo } },
+    });
 
-      const { count: runs } = await prisma.run.deleteMany({
-        where: { createdAt: { lte: oneDayAgo } },
-      });
-
-      res.send(JSON.stringify({ runs, runInstances }));
-    }
-
-    res.end();
+    res.send(JSON.stringify({ runs, runInstances }));
   });
 
   app.get<{ params: { email: string } }>(

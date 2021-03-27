@@ -1,11 +1,9 @@
 import { getInput, info, setFailed, warning } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import fetch, { RequestInit } from "node-fetch";
+import fetch from "node-fetch";
 
-const { TASKS_API_SECRET } = process.env;
 const token = getInput("token", { required: true });
 const name = getInput("name", { required: true });
-const payload = getInput("payload", { required: false });
 const environment = getInput("environment", { required: true });
 const ignoreErrors = getInput("ignore_errors", { required: false }) === "true";
 
@@ -49,30 +47,16 @@ async function main(): Promise<void> {
     );
   }
 
-  const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
-
-  if (TASKS_API_SECRET) {
-    headers["Authorization"] = `Token ${TASKS_API_SECRET}`;
-  }
-
   info(`Making request to: '${deploymentURL}' with '${name}'…`);
 
-  const requestInit: RequestInit = {
-    headers,
+  const response = await fetch(`${deploymentURL}/api/tasks/${name}`, {
     method: "POST",
-  };
-
-  if (payload) {
-    requestInit.body = payload;
-  }
-
-  const response = await fetch(
-    `${deploymentURL}/api/tasks/${name}`,
-    requestInit
-  );
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Token ${process.env.TASKS_API_SECRET}`,
+    },
+  });
 
   const responseText = await response.text().catch(() => null);
   if (!response.ok) {

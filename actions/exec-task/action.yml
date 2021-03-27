@@ -15,10 +15,6 @@ inputs:
     required: true
     description: "Task name"
 
-  payload:
-    required: false
-    description: "Task payload"
-
   ignore_errors:
     required: false
     description: "Threats errors as warnings"

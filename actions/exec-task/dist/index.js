@@ -284,8 +284,8 @@ var require_context = __commonJS((exports2) => {
       this.eventName = process.env.GITHUB_EVENT_NAME, this.sha = process.env.GITHUB_SHA, this.ref = process.env.GITHUB_REF, this.workflow = process.env.GITHUB_WORKFLOW, this.action = process.env.GITHUB_ACTION, this.actor = process.env.GITHUB_ACTOR, this.job = process.env.GITHUB_JOB, this.runNumber = parseInt(process.env.GITHUB_RUN_NUMBER, 10), this.runId = parseInt(process.env.GITHUB_RUN_ID, 10);
     }
     get issue() {
-      let payload2 = this.payload;
-      return Object.assign(Object.assign({}, this.repo), {number: (payload2.issue || payload2.pull_request || payload2).number});
+      let payload = this.payload;
+      return Object.assign(Object.assign({}, this.repo), {number: (payload.issue || payload.pull_request || payload).number});
     }
     get repo() {
       if (process.env.GITHUB_REPOSITORY) {
@@ -3892,7 +3892,7 @@ var createTokenAuth = /* @__PURE__ */ __name(function(token2) {
 
 // actions/exec-task/index.ts
 var import_github = __toModule(require_github());
-var {TASKS_API_SECRET} = process.env, token = (0, import_core.getInput)("token", {required: !0}), name = (0, import_core.getInput)("name", {required: !0}), payload = (0, import_core.getInput)("payload", {required: !1}), environment = (0, import_core.getInput)("environment", {required: !0}), ignoreErrors = (0, import_core.getInput)("ignore_errors", {required: !1}) === "true", octokit = (0, import_github.getOctokit)(token);
+var token = (0, import_core.getInput)("token", {required: !0}), name = (0, import_core.getInput)("name", {required: !0}), environment = (0, import_core.getInput)("environment", {required: !0}), ignoreErrors = (0, import_core.getInput)("ignore_errors", {required: !1}) === "true", octokit = (0, import_github.getOctokit)(token);
 async function findDeploymentURL() {
   for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", __assign(__assign({}, import_github.context.repo), {
     environment,
@@ -3913,17 +3913,15 @@ async function main() {
   let deploymentURL = await findDeploymentURL();
   if (!deploymentURL)
     return (0, import_core.warning)(`There are no deployments for the environment '${environment}'`);
-  let headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json"
-  };
-  TASKS_API_SECRET && (headers.Authorization = `Token ${TASKS_API_SECRET}`), (0, import_core.info)(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
-  let requestInit = {
-    headers,
-    method: "POST"
-  };
-  payload && (requestInit.body = payload);
-  let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, requestInit), responseText = await response.text().catch(() => null);
+  (0, import_core.info)(`Making request to: '${deploymentURL}' with '${name}'\u2026`);
+  let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Token ${process.env.TASKS_API_SECRET}`
+    }
+  }), responseText = await response.text().catch(() => null);
   if (response.ok)
     responseText && (0, import_core.info)(responseText);
   else
