@@ -3929,7 +3929,7 @@ async function findDeploymentURL() {
       (0, import_core.info)(statuses.length === 0 ? "No deployment status found" : statuses.length === 1 ? "One deployment status found" : `${statuses.length} deployment statuses found`);
       for (let {state, target_url} of statuses)
         if (state === "success" && target_url)
-          return target_url;
+          return (0, import_core.info)(`Success deployment found: ${target_url}`), target_url;
     }
   }
 }
@@ -3938,7 +3938,7 @@ async function main() {
   let deploymentURL = await (0, import_core.group)(`Getting deployment for the environment: ${environment}`, findDeploymentURL);
   if (!deploymentURL)
     return (0, import_core.warning)(`There are no deployments for the environment '${environment}'`);
-  await (0, import_core.group)(`Execute task: ${name} }`, async () => {
+  await (0, import_core.group)(`Execute task: ${name}`, async () => {
     (0, import_core.info)(`Requesting: '${deploymentURL}'`);
     let response = await lib_default(`${deploymentURL}/api/tasks/${name}`, {
       method: "POST",

@@ -49,6 +49,8 @@ async function findDeploymentURL(): Promise<string | undefined> {
 
       for (const { state, target_url } of statuses) {
         if (state === "success" && target_url) {
+          info(`Success deployment found: ${target_url}`);
+
           return target_url;
         }
       }
@@ -70,7 +72,7 @@ async function main(): Promise<void> {
     );
   }
 
-  await group(`Execute task: ${name} }`, async () => {
+  await group(`Execute task: ${name}`, async () => {
     info(`Requesting: '${deploymentURL}'`);
 
     const response = await fetch(`${deploymentURL}/api/tasks/${name}`, {
