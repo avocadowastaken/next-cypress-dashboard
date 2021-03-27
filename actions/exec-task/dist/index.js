@@ -15,7 +15,7 @@ var __rest = (source, exclude) => {
     for (var prop of __getOwnPropSymbols(source))
       exclude.indexOf(prop) < 0 && __propIsEnum.call(source, prop) && (target[prop] = source[prop]);
   return target;
-}, __commonJS = (callback, module2) => () => (module2 || (module2 = {exports: {}}, callback(module2.exports, module2)), module2.exports), __export = (target, all) => {
+}, __commonJS = (cb, mod) => () => (mod || cb((mod = {exports: {}}).exports, mod), mod.exports), __export = (target, all) => {
   for (var name2 in all)
     __defProp(target, name2, {get: all[name2], enumerable: !0});
 }, __exportStar = (target, module2, desc) => {
@@ -708,11 +708,12 @@ var require_http_client = __commonJS((exports2) => {
         let agentOptions = {
           maxSockets,
           keepAlive: this._keepAlive,
-          proxy: {
-            proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`,
+          proxy: __assign(__assign({}, (proxyUrl.username || proxyUrl.password) && {
+            proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
+          }), {
             host: proxyUrl.hostname,
             port: proxyUrl.port
-          }
+          })
         }, tunnelAgent, overHttps = proxyUrl.protocol === "https:";
         usingSsl ? tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp : tunnelAgent = overHttps ? tunnel.httpOverHttps : tunnel.httpOverHttp, agent = tunnelAgent(agentOptions), this._proxyAgent = agent;
       }
@@ -966,9 +967,9 @@ var require_once = __commonJS((exports2, module2) => {
 });
 
 // node_modules/@octokit/core/dist-web/index.js
-var require_dist_web = __commonJS((exports2) => {
-  __markAsModule(exports2);
-  __export(exports2, {
+var require_dist_web = __commonJS((exports) => {
+  __markAsModule(exports);
+  __export(exports, {
     Octokit: () => Octokit
   });
   var import_before_after_hook = __toModule(require_before_after_hook()), VERSION4 = "3.3.1", Octokit = class {
@@ -1041,9 +1042,9 @@ var require_dist_web = __commonJS((exports2) => {
 });
 
 // node_modules/@octokit/plugin-rest-endpoint-methods/dist-web/index.js
-var require_dist_web2 = __commonJS((exports2) => {
-  __markAsModule(exports2);
-  __export(exports2, {
+var require_dist_web2 = __commonJS((exports) => {
+  __markAsModule(exports);
+  __export(exports, {
     restEndpointMethods: () => restEndpointMethods
   });
   var Endpoints = {
@@ -1696,10 +1697,25 @@ var require_dist_web2 = __commonJS((exports2) => {
         "DELETE /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"
       ],
       getAllPackageVersionsForAPackageOwnedByAnOrg: [
-        "GET /orgs/{org}/packages/{package_type}/{package_name}/versions"
+        "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
+        {},
+        {renamed: ["packages", "getAllPackageVersionsForPackageOwnedByOrg"]}
       ],
       getAllPackageVersionsForAPackageOwnedByTheAuthenticatedUser: [
+        "GET /user/packages/{package_type}/{package_name}/versions",
+        {},
+        {
+          renamed: [
+            "packages",
+            "getAllPackageVersionsForPackageOwnedByAuthenticatedUser"
+          ]
+        }
+      ],
+      getAllPackageVersionsForPackageOwnedByAuthenticatedUser: [
         "GET /user/packages/{package_type}/{package_name}/versions"
+      ],
+      getAllPackageVersionsForPackageOwnedByOrg: [
+        "GET /orgs/{org}/packages/{package_type}/{package_name}/versions"
       ],
       getAllPackageVersionsForPackageOwnedByUser: [
         "GET /users/{username}/packages/{package_type}/{package_name}/versions"
@@ -1723,10 +1739,10 @@ var require_dist_web2 = __commonJS((exports2) => {
         "GET /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"
       ],
       restorePackageForAuthenticatedUser: [
-        "POST /user/packages/{package_type}/{package_name}/restore"
+        "POST /user/packages/{package_type}/{package_name}/restore{?token}"
       ],
       restorePackageForOrg: [
-        "POST /orgs/{org}/packages/{package_type}/{package_name}/restore"
+        "POST /orgs/{org}/packages/{package_type}/{package_name}/restore{?token}"
       ],
       restorePackageVersionForAuthenticatedUser: [
         "POST /user/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"
@@ -2023,7 +2039,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       ],
       createDispatchEvent: ["POST /repos/{owner}/{repo}/dispatches"],
       createForAuthenticatedUser: ["POST /user/repos"],
-      createFork: ["POST /repos/{owner}/{repo}/forks"],
+      createFork: ["POST /repos/{owner}/{repo}/forks{?org,organization}"],
       createInOrg: ["POST /orgs/{org}/repos"],
       createOrUpdateEnvironment: [
         "PUT /repos/{owner}/{repo}/environments/{environment_name}"
@@ -2157,6 +2173,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       ],
       getPunchCardStats: ["GET /repos/{owner}/{repo}/stats/punch_card"],
       getReadme: ["GET /repos/{owner}/{repo}/readme"],
+      getReadmeInDirectory: ["GET /repos/{owner}/{repo}/readme/{dir}"],
       getRelease: ["GET /repos/{owner}/{repo}/releases/{release_id}"],
       getReleaseAsset: ["GET /repos/{owner}/{repo}/releases/assets/{asset_id}"],
       getReleaseByTag: ["GET /repos/{owner}/{repo}/releases/tags/{tag}"],
@@ -2433,7 +2450,7 @@ var require_dist_web2 = __commonJS((exports2) => {
       unfollow: ["DELETE /user/following/{username}"],
       updateAuthenticated: ["PATCH /user"]
     }
-  }, VERSION4 = "4.13.5";
+  }, VERSION4 = "4.15.0";
   function endpointsToMethods(octokit2, endpointsMap) {
     let newMethods = {};
     for (let [scope, endpoints] of Object.entries(endpointsMap))
@@ -2475,16 +2492,19 @@ var require_dist_web2 = __commonJS((exports2) => {
   }
   __name(decorate, "decorate");
   function restEndpointMethods(octokit2) {
-    return endpointsToMethods(octokit2, Endpoints);
+    let api = endpointsToMethods(octokit2, Endpoints);
+    return __assign(__assign({}, api), {
+      rest: api
+    });
   }
   __name(restEndpointMethods, "restEndpointMethods");
   restEndpointMethods.VERSION = VERSION4;
 });
 
 // node_modules/@octokit/plugin-paginate-rest/dist-web/index.js
-var require_dist_web3 = __commonJS((exports2) => {
-  __markAsModule(exports2);
-  __export(exports2, {
+var require_dist_web3 = __commonJS((exports) => {
+  __markAsModule(exports);
+  __export(exports, {
     composePaginateRest: () => composePaginateRest,
     isPaginatingEndpoint: () => isPaginatingEndpoint,
     paginateRest: () => paginateRest,
