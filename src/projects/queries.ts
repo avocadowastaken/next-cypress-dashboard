@@ -63,6 +63,7 @@ export function useAddProject(
       data: { repo },
     });
 
+    await queryClient.invalidateQueries("projects");
     queryClient.setQueryData(["project", project.id], project);
 
     return project;
@@ -72,13 +73,16 @@ export function useAddProject(
 export function useDeleteProject(
   options?: Pick<UseMutationOptions<Project, Error, string>, "onSuccess">
 ): UseMutationResult<Project, Error, string> {
-  return useMutation(
-    (projectId: string) =>
-      requestJSON<Project>(`/api/projects/${projectId}`, {
-        method: "DELETE",
-      }),
-    options
-  );
+  const queryClient = useQueryClient();
+  return useMutation(async (projectId: string) => {
+    const project = await requestJSON<Project>(`/api/projects/${projectId}`, {
+      method: "DELETE",
+    });
+
+    await queryClient.invalidateQueries("projects");
+
+    return project;
+  }, options);
 }
 
 export function useProjectSecrets(
