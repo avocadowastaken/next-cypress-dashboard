@@ -75,9 +75,15 @@ export function useRun(
 export function useDeleteRun(
   options?: Pick<UseMutationOptions<unknown, Error, string>, "onSuccess">
 ): UseMutationResult<Project, Error, string> {
-  return useMutation(
-    (runId: string) =>
-      requestJSON<Project>(`/api/runs/${runId}`, { method: "DELETE" }),
-    options
-  );
+  const queryClient = useQueryClient();
+
+  return useMutation(async (runId: string) => {
+    const response = await requestJSON<Project>(`/api/runs/${runId}`, {
+      method: "DELETE",
+    });
+
+    await queryClient.invalidateQueries("runs");
+
+    return response;
+  }, options);
 }
