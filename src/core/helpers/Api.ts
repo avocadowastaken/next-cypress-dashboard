@@ -1,30 +1,9 @@
 import { AppError, getAppErrorStatusCode } from "@/core/data/AppError";
-import { SESSION_SECRET } from "@/core/helpers/env";
+import { sessionMiddleware } from "@/core/helpers/Session";
 import { randomBytes } from "crypto";
 import morgan from "morgan";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import nc, { NextConnect } from "next-connect";
-import { ironSession, Session } from "next-iron-session";
-
-declare module "next" {
-  export interface NextApiRequest {
-    session: Session;
-  }
-}
-
-interface RequestSession {
-  userId: string;
-}
-
-export function getRequestSession(req: NextApiRequest): RequestSession {
-  const userId = req.session.get("userId");
-
-  if (!userId) {
-    throw new AppError("UNAUTHORIZED");
-  }
-
-  return { userId };
-}
 
 export function createApiHandler(
   setup: (app: NextConnect<NextApiRequest, NextApiResponse>) => void
@@ -46,15 +25,7 @@ export function createApiHandler(
   });
 
   app.use(morgan("tiny"));
-  app.use(
-    ironSession({
-      cookieName: "__nis",
-      password: SESSION_SECRET,
-      cookieOptions: {
-        secure: process.env.NODE_ENV === "production",
-      },
-    })
-  );
+  app.use(sessionMiddleware());
 
   app.use((req, _, next) => {
     const csrfToken = req.session.get("csrf-token");

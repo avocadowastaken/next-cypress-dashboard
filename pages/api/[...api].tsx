@@ -1,6 +1,6 @@
 import { AppError } from "@/core/data/AppError";
 import { createPageResponse } from "@/core/data/PageResponse";
-import { createApiHandler, getRequestSession } from "@/core/helpers/Api";
+import { createApiHandler } from "@/core/helpers/Api";
 import { prisma } from "@/core/helpers/db";
 import { GITHUB_CLIENT_ID, TASKS_API_SECRET } from "@/core/helpers/env";
 import { parseGitUrl } from "@/core/helpers/Git";
@@ -9,6 +9,7 @@ import {
   obtainAccessToken,
   verifyGitHubRepoAccess,
 } from "@/core/helpers/GitHub";
+import { getRequestSession } from "@/core/helpers/Session";
 import { Prisma } from "@prisma/client";
 import { createHash } from "crypto";
 import { startOfYesterday } from "date-fns";
