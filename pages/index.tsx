@@ -4,11 +4,13 @@ import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<unknown>> {
-  const session = await getSSPSession(ctx);
+  try {
+    await getSSPSession(ctx);
 
-  return !session.userId
-    ? { redirect: { permanent: false, destination: "/home" } }
-    : { redirect: { permanent: false, destination: "/projects" } };
+    return { redirect: { permanent: false, destination: "/projects" } };
+  } catch {
+    return { redirect: { permanent: false, destination: "/home" } };
+  }
 }
 
 export default function IndexPage(): null {
