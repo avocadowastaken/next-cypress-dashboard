@@ -13,6 +13,7 @@ import {
 import { capitalize } from "@/core/helpers/Text";
 import { Inline } from "@/core/layout/Inline";
 import { Stack } from "@/core/layout/Stack";
+import { getRunName } from "@/test-runs/helpers";
 import { Avatar, Chip, Link, Tooltip } from "@material-ui/core";
 import { AccessTime, Apple, Check, Error } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
@@ -74,7 +75,7 @@ export function RunAttributes({
           pathname: `/projects/${project.id}/runs/${run.id}`,
         }}
       >
-        <Link variant="subtitle1">{run.commitMessage || run.ciBuildId}</Link>
+        <Link variant="subtitle1">{getRunName(run)}</Link>
       </NextLink>
 
       <Inline>
