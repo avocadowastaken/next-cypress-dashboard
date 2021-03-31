@@ -1,11 +1,11 @@
 import { Pre } from "@/core/components/Pre";
 import { TablePager } from "@/core/components/TablePager";
-import { extractErrorCode, formatAppError } from "@/core/data/AppError";
 import { AppLayout } from "@/core/layout/AppLayout";
 import { ErrorPage, useErrorHandler } from "@/core/layout/ErrorPage";
 import { Inline } from "@/core/layout/Inline";
 import { Stack } from "@/core/layout/Stack";
 import { useRouterParam } from "@/core/routing/useRouterParam";
+import { extractErrorCode, formatAppError } from "@/lib/AppError";
 import { formatProjectName } from "@/projects/helpers";
 import {
   useDeleteProject,

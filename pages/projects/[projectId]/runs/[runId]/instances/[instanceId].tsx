@@ -1,11 +1,11 @@
 import { DebugStepOver, SyncCircle } from "@/core/components/icons";
 import { Pre } from "@/core/components/Pre";
-import { TestResult } from "@/core/helpers/Cypress";
 import { AppLayout } from "@/core/layout/AppLayout";
 import { ErrorPage } from "@/core/layout/ErrorPage";
 import { Inline } from "@/core/layout/Inline";
 import { Stack } from "@/core/layout/Stack";
 import { useRouterParam } from "@/core/routing/useRouterParam";
+import { TestResult } from "@/lib/Cypress";
 import { formatProjectName } from "@/projects/helpers";
 import { useProject } from "@/projects/queries";
 import { RunInstanceAttributes } from "@/test-run-instances/components/RunInstanceAttributes";

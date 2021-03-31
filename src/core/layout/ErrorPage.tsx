@@ -2,7 +2,7 @@ import {
   extractErrorCode,
   formatAppError,
   getAppErrorStatusCode,
-} from "@/core/data/AppError";
+} from "@/lib/AppError";
 import {
   Button,
   Dialog,

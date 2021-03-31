@@ -1,9 +1,9 @@
-import { requestJSON } from "@/core/data/Http";
+import { requestJSON } from "@/lib/Http";
 import {
   createPageInputParams,
   PageInput,
   PageResponse,
-} from "@/core/data/PageResponse";
+} from "@/lib/PageResponse";
 import { useRun } from "@/test-runs/queries";
 import { Run, RunInstance } from "@prisma/client";
 import { useQuery, useQueryClient, UseQueryResult } from "react-query";

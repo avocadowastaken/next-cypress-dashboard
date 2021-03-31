@@ -1,7 +1,7 @@
 import { TablePager } from "@/core/components/TablePager";
-import { extractErrorCode, formatAppError } from "@/core/data/AppError";
 import { AppLayout } from "@/core/layout/AppLayout";
 import { ErrorPage, useErrorHandler } from "@/core/layout/ErrorPage";
+import { extractErrorCode, formatAppError } from "@/lib/AppError";
 import { formatProjectName } from "@/projects/helpers";
 import { useAddProject, useProjectsPage } from "@/projects/queries";
 import {

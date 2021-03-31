@@ -1,9 +1,9 @@
-import { requestJSON } from "@/core/data/Http";
+import { requestJSON } from "@/lib/Http";
 import {
   createPageInputParams,
   PageInput,
   PageResponse,
-} from "@/core/data/PageResponse";
+} from "@/lib/PageResponse";
 import { Project, Run } from "@prisma/client";
 import {
   useMutation,

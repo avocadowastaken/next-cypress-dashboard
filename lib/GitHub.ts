@@ -1,6 +1,6 @@
-import { AppError } from "@/core/data/AppError";
-import { prisma } from "@/core/helpers/db";
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/helpers/env";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/env";
+import { AppError } from "@/lib/AppError";
+import { prisma } from "@/lib/db";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types";
@@ -100,22 +100,6 @@ export async function findGitHubUserAvatar(
   }
 
   return null;
-}
-
-export async function searchGitHubCommit(
-  userId: string,
-  email: string
-): Promise<undefined | components["schemas"]["commit-search-result-item"]> {
-  const octokit = await getOctokit(userId);
-
-  const result = await octokit.request("GET /search/commits", {
-    per_page: 1,
-    sort: "author-date",
-    q: `author-email:${email}`,
-    mediaType: { previews: ["cloak"] },
-  });
-
-  return result.data.items[0];
 }
 
 export async function verifyGitHubRepoAccess(

@@ -1,4 +1,4 @@
-import { prisma } from "@/core/helpers/db";
+import { prisma } from "@/lib/db";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 
 export async function getServerSideProps({

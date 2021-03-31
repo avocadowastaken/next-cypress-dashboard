@@ -1,15 +1,15 @@
-import { AppError } from "@/core/data/AppError";
-import { createPageResponse } from "@/core/data/PageResponse";
-import { createApiHandler } from "@/core/helpers/Api";
-import { prisma } from "@/core/helpers/db";
-import { GITHUB_CLIENT_ID, TASKS_API_SECRET } from "@/core/helpers/env";
-import { parseGitUrl } from "@/core/helpers/Git";
+import { GITHUB_CLIENT_ID, TASKS_API_SECRET } from "@/core/env";
+import { createApiHandler } from "@/lib/Api";
+import { AppError } from "@/lib/AppError";
+import { prisma } from "@/lib/db";
+import { parseGitUrl } from "@/lib/Git";
 import {
   findGitHubUserAvatar,
   obtainAccessToken,
   verifyGitHubRepoAccess,
-} from "@/core/helpers/GitHub";
-import { getRequestSession } from "@/core/helpers/Session";
+} from "@/lib/GitHub";
+import { createPageResponse } from "@/lib/PageResponse";
+import { getRequestSession } from "@/lib/Session";
 import { Prisma } from "@prisma/client";
 import { createHash } from "crypto";
 import { startOfYesterday } from "date-fns";

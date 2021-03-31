@@ -1,5 +1,6 @@
-import { AppError } from "@/core/data/AppError";
-import { createApiHandler } from "@/core/helpers/Api";
+import { TASKS_API_SECRET } from "@/core/env";
+import { createApiHandler } from "@/lib/Api";
+import { AppError } from "@/lib/AppError";
 import {
   AddInstanceResultsInput,
   AddInstanceTestsInput,
@@ -12,11 +13,10 @@ import {
   toOS,
   toTestResultState,
   UpdateInstanceInput,
-} from "@/core/helpers/Cypress";
-import { prisma } from "@/core/helpers/db";
-import { TASKS_API_SECRET } from "@/core/helpers/env";
-import { parseGitUrl } from "@/core/helpers/Git";
-import { trim } from "@/core/helpers/Text";
+} from "@/lib/Cypress";
+import { prisma } from "@/lib/db";
+import { parseGitUrl } from "@/lib/Git";
+import { trim } from "@/lib/Text";
 import { Prisma, Run } from "@prisma/client";
 
 function wait(ms: number): Promise<void> {

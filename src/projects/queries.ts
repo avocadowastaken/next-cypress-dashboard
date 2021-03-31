@@ -1,5 +1,5 @@
-import { requestJSON } from "@/core/data/Http";
-import { PageInput, PageResponse } from "@/core/data/PageResponse";
+import { requestJSON } from "@/lib/Http";
+import { PageInput, PageResponse } from "@/lib/PageResponse";
 import { Project, ProjectSecrets } from "@prisma/client";
 import {
   useMutation,

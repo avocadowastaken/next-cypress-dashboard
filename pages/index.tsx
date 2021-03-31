@@ -1,4 +1,4 @@
-import { getSSPSession } from "@/core/helpers/Session";
+import { getSSPSession } from "@/lib/Session";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 
 export async function getServerSideProps(

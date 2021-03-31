@@ -1,5 +1,5 @@
-import { AppError, getAppErrorStatusCode } from "@/core/data/AppError";
-import { sessionMiddleware } from "@/core/helpers/Session";
+import { AppError, getAppErrorStatusCode } from "@/lib/AppError";
+import { sessionMiddleware } from "@/lib/Session";
 import { randomBytes } from "crypto";
 import morgan from "morgan";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";

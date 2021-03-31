@@ -1,9 +1,9 @@
-import { requestJSON } from "@/core/data/Http";
 import {
   AppRouterProgressIndicator,
   AppRouterStateProvider,
 } from "@/core/routing/AppRouterState";
 import { AppThemeProvider } from "@/core/theme/AppThemeProvider";
+import { requestJSON } from "@/lib/Http";
 import { AppProps } from "next/app";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";

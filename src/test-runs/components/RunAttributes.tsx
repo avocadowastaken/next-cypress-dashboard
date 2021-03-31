@@ -10,9 +10,9 @@ import {
   SourceCommit,
   SourcePull,
 } from "@/core/components/icons";
-import { capitalize } from "@/core/helpers/Text";
 import { Inline } from "@/core/layout/Inline";
 import { Stack } from "@/core/layout/Stack";
+import { capitalize } from "@/lib/Text";
 import { getRunName } from "@/test-runs/helpers";
 import { Avatar, Chip, Link, Tooltip } from "@material-ui/core";
 import { AccessTime, Apple, Check, Error } from "@material-ui/icons";

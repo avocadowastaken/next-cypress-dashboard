@@ -1,5 +1,5 @@
-import { AppError } from "@/core/data/AppError";
-import { SESSION_SECRET } from "@/core/helpers/env";
+import { SESSION_SECRET } from "@/core/env";
+import { AppError } from "@/lib/AppError";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import {
   applySession,

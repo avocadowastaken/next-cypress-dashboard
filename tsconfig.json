@@ -33,6 +33,7 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
+      "@/lib/*": ["lib/*"],
       "@/*": ["src/*"]
     }
   }
