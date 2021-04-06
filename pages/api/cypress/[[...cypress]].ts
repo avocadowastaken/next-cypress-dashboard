@@ -15,7 +15,6 @@ import {
   UpdateInstanceInput,
 } from "@/lib/Cypress";
 import { prisma } from "@/lib/db";
-import { parseGitUrl } from "@/lib/Git";
 import { trim } from "@/lib/Text";
 import { Prisma, Run } from "@prisma/client";
 
@@ -114,13 +113,11 @@ export default createApiHandler((app) => {
     const groupId = trim(group || ciBuildId);
 
     if (recordKey === TASKS_API_SECRET) {
-      const [providerId, org, repo] = parseGitUrl(commit.remoteOrigin);
-
-      ({ id: projectId } = await prisma.project.findUnique({
-        select: { id: true },
+      await prisma.project.findUnique({
+        select: null,
         rejectOnNotFound: true,
-        where: { org_repo_providerId: { providerId, org, repo } },
-      }));
+        where: { id: projectId },
+      });
     } else {
       await prisma.project.findFirst({
         select: null,
