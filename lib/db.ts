@@ -15,6 +15,7 @@ function createPrisma(): PrismaClient {
   }
 
   globalThis["prisma"] = new PrismaClient({
+    errorFormat: "pretty",
     log: ["info", "query", "warn", "error"],
   });
 
