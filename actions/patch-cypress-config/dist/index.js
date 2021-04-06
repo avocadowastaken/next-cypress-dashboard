@@ -1,12 +1,12 @@
 var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
 var __commonJS = (cb, mod) => () => (mod || cb((mod = {exports: {}}).exports, mod), mod.exports);
-var __exportStar = (target, module2, desc) => {
+var __reExport = (target, module2, desc) => {
   if (module2 && typeof module2 == "object" || typeof module2 == "function")
     for (let key of __getOwnPropNames(module2))
       !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
   return target;
-}, __toModule = (module2) => __exportStar(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: !0} : {value: module2, enumerable: !0})), module2);
+}, __toModule = (module2) => __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: !0} : {value: module2, enumerable: !0})), module2);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS((exports2) => {
@@ -281,9 +281,17 @@ var require_io_util = __commonJS((exports2) => {
       }
       __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
+  }, __importStar = exports2 && exports2.__importStar || function(mod) {
+    if (mod && mod.__esModule)
+      return mod;
+    var result = {};
+    if (mod != null)
+      for (var k in mod)
+        Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
+    return result.default = mod, result;
   }, _a;
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var assert_1 = require("assert"), fs2 = require("fs"), path2 = require("path");
+  var assert_1 = require("assert"), fs2 = __importStar(require("fs")), path2 = __importStar(require("path"));
   _a = fs2.promises, exports2.chmod = _a.chmod, exports2.copyFile = _a.copyFile, exports2.lstat = _a.lstat, exports2.mkdir = _a.mkdir, exports2.readdir = _a.readdir, exports2.readlink = _a.readlink, exports2.rename = _a.rename, exports2.rmdir = _a.rmdir, exports2.stat = _a.stat, exports2.symlink = _a.symlink, exports2.unlink = _a.unlink;
   exports2.IS_WINDOWS = process.platform === "win32";
   function exists(fsPath) {
@@ -430,9 +438,17 @@ var require_io = __commonJS((exports2) => {
       }
       __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
+  }, __importStar = exports2 && exports2.__importStar || function(mod) {
+    if (mod && mod.__esModule)
+      return mod;
+    var result = {};
+    if (mod != null)
+      for (var k in mod)
+        Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
+    return result.default = mod, result;
   };
   Object.defineProperty(exports2, "__esModule", {value: !0});
-  var childProcess = require("child_process"), path2 = require("path"), util_1 = require("util"), ioUtil = require_io_util(), exec2 = util_1.promisify(childProcess.exec);
+  var childProcess = __importStar(require("child_process")), path2 = __importStar(require("path")), util_1 = require("util"), ioUtil = __importStar(require_io_util()), exec2 = util_1.promisify(childProcess.exec);
   function cp(source, dest, options = {}) {
     return __awaiter(this, void 0, void 0, function* () {
       let {force, recursive} = readCopyOptions(options), destStat = (yield ioUtil.exists(dest)) ? yield ioUtil.stat(dest) : null;
@@ -511,36 +527,46 @@ var require_io = __commonJS((exports2) => {
     return __awaiter(this, void 0, void 0, function* () {
       if (!tool)
         throw new Error("parameter 'tool' is required");
-      if (check && !(yield which(tool, !1)))
-        throw ioUtil.IS_WINDOWS ? new Error(`Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also verify the file has a valid extension for an executable file.`) : new Error(`Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.`);
-      try {
-        let extensions = [];
-        if (ioUtil.IS_WINDOWS && process.env.PATHEXT)
-          for (let extension of process.env.PATHEXT.split(path2.delimiter))
-            extension && extensions.push(extension);
-        if (ioUtil.isRooted(tool)) {
-          let filePath = yield ioUtil.tryGetExecutablePath(tool, extensions);
-          return filePath || "";
-        }
-        if (tool.includes("/") || ioUtil.IS_WINDOWS && tool.includes("\\"))
-          return "";
-        let directories = [];
-        if (process.env.PATH)
-          for (let p of process.env.PATH.split(path2.delimiter))
-            p && directories.push(p);
-        for (let directory of directories) {
-          let filePath = yield ioUtil.tryGetExecutablePath(directory + path2.sep + tool, extensions);
-          if (filePath)
-            return filePath;
-        }
-        return "";
-      } catch (err) {
-        throw new Error(`which failed with message ${err.message}`);
+      if (check) {
+        let result = yield which(tool, !1);
+        if (!result)
+          throw ioUtil.IS_WINDOWS ? new Error(`Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also verify the file has a valid extension for an executable file.`) : new Error(`Unable to locate executable file: ${tool}. Please verify either the file path exists or the file can be found within a directory specified by the PATH environment variable. Also check the file mode to verify the file is executable.`);
+        return result;
       }
+      let matches = yield findInPath(tool);
+      return matches && matches.length > 0 ? matches[0] : "";
     });
   }
   __name(which, "which");
   exports2.which = which;
+  function findInPath(tool) {
+    return __awaiter(this, void 0, void 0, function* () {
+      if (!tool)
+        throw new Error("parameter 'tool' is required");
+      let extensions = [];
+      if (ioUtil.IS_WINDOWS && process.env.PATHEXT)
+        for (let extension of process.env.PATHEXT.split(path2.delimiter))
+          extension && extensions.push(extension);
+      if (ioUtil.isRooted(tool)) {
+        let filePath = yield ioUtil.tryGetExecutablePath(tool, extensions);
+        return filePath ? [filePath] : [];
+      }
+      if (tool.includes(path2.sep))
+        return [];
+      let directories = [];
+      if (process.env.PATH)
+        for (let p of process.env.PATH.split(path2.delimiter))
+          p && directories.push(p);
+      let matches = [];
+      for (let directory of directories) {
+        let filePath = yield ioUtil.tryGetExecutablePath(path2.join(directory, tool), extensions);
+        filePath && matches.push(filePath);
+      }
+      return matches;
+    });
+  }
+  __name(findInPath, "findInPath");
+  exports2.findInPath = findInPath;
   function readCopyOptions(options) {
     let force = options.force == null ? !0 : options.force, recursive = Boolean(options.recursive);
     return {force, recursive};

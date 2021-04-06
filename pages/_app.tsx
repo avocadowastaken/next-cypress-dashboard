@@ -3,7 +3,6 @@ import {
   AppRouterStateProvider,
 } from "@/core/routing/AppRouterState";
 import { AppThemeProvider } from "@/core/theme/AppThemeProvider";
-import { requestJSON } from "@/lib/Http";
 import { AppProps } from "next/app";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -15,9 +14,6 @@ const queryClient = new QueryClient({
       retry: false,
       staleTime: 10 * 1000,
       cacheTime: 10 * 60 * 1000,
-      async queryFn({ queryKey }) {
-        return requestJSON(queryKey[0]);
-      },
     },
   },
 });

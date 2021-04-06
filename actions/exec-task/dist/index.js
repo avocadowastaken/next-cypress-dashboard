@@ -1,5 +1,5 @@
 var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropDesc = Object.getOwnPropertyDescriptor, __getOwnPropSymbols = Object.getOwnPropertySymbols, __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, {enumerable: !0, configurable: !0, writable: !0, value}) : obj[key] = value, __assign = (a, b) => {
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, {enumerable: !0, configurable: !0, writable: !0, value}) : obj[key] = value, __objSpread = (a, b) => {
   for (var prop in b || (b = {}))
     __hasOwnProp.call(b, prop) && __defNormalProp(a, prop, b[prop]);
   if (__getOwnPropSymbols)
@@ -7,7 +7,7 @@ var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, {enu
       __propIsEnum.call(b, prop) && __defNormalProp(a, prop, b[prop]);
   return a;
 }, __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
-var __rest = (source, exclude) => {
+var __objRest = (source, exclude) => {
   var target = {};
   for (var prop in source)
     __hasOwnProp.call(source, prop) && exclude.indexOf(prop) < 0 && (target[prop] = source[prop]);
@@ -18,12 +18,12 @@ var __rest = (source, exclude) => {
 }, __esm = (fn, res) => () => (fn && (res = fn(fn = 0)), res), __commonJS = (cb, mod) => () => (mod || cb((mod = {exports: {}}).exports, mod), mod.exports), __export = (target, all) => {
   for (var name2 in all)
     __defProp(target, name2, {get: all[name2], enumerable: !0});
-}, __exportStar = (target, module2, desc) => {
+}, __reExport = (target, module2, desc) => {
   if (module2 && typeof module2 == "object" || typeof module2 == "function")
     for (let key of __getOwnPropNames(module2))
       !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
   return target;
-}, __toModule = (module2) => __exportStar(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: !0} : {value: module2, enumerable: !0})), module2);
+}, __toModule = (module2) => __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: !0} : {value: module2, enumerable: !0})), module2);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS((exports2) => {
@@ -708,7 +708,7 @@ var require_http_client = __commonJS((exports2) => {
         let agentOptions = {
           maxSockets,
           keepAlive: this._keepAlive,
-          proxy: __assign(__assign({}, (proxyUrl.username || proxyUrl.password) && {
+          proxy: __objSpread(__objSpread({}, (proxyUrl.username || proxyUrl.password) && {
             proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
           }), {
             host: proxyUrl.hostname,
@@ -5033,7 +5033,7 @@ var import_before_after_hook, VERSION4, Octokit, init_dist_web8 = __esm(() => {
   init_dist_web5();
   init_dist_web6();
   init_dist_web7();
-  VERSION4 = "3.3.1", Octokit = class {
+  VERSION4 = "3.4.0", Octokit = class {
     constructor(options = {}) {
       let hook2 = new import_before_after_hook.Collection(), requestDefaults = {
         baseUrl: request.endpoint.DEFAULTS.baseUrl,
@@ -5057,7 +5057,7 @@ var import_before_after_hook, VERSION4, Octokit, init_dist_web8 = __esm(() => {
         warn: console.warn.bind(console),
         error: console.error.bind(console)
       }, options.log), this.hook = hook2, options.authStrategy) {
-        let {authStrategy} = options, otherOptions = __rest(options, ["authStrategy"]), auth2 = authStrategy(Object.assign({
+        let _a = options, {authStrategy} = _a, otherOptions = __objRest(_a, ["authStrategy"]), auth2 = authStrategy(Object.assign({
           request: this.request,
           log: this.log,
           octokit: this,
@@ -5147,7 +5147,7 @@ function decorate(octokit2, scope, methodName, defaults, decorations) {
 }
 function restEndpointMethods(octokit2) {
   let api = endpointsToMethods(octokit2, Endpoints);
-  return __assign(__assign({}, api), {
+  return __objSpread(__objSpread({}, api), {
     rest: api
   });
 }
@@ -6899,7 +6899,7 @@ init_lib();
 var token = (0, import_core.getInput)("token", {required: !0}), name = (0, import_core.getInput)("name", {required: !0}), environment = (0, import_core.getInput)("environment", {required: !0}), ignoreErrors = (0, import_core.getInput)("ignore_errors", {required: !1}) === "true", octokit = (0, import_github.getOctokit)(token);
 async function findDeploymentURL() {
   (0, import_core.info)("Fetching latest deployments");
-  for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", __assign(__assign({}, import_github.context.repo), {
+  for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", __objSpread(__objSpread({}, import_github.context.repo), {
     environment,
     per_page: 10,
     task: "deploy"
@@ -6909,7 +6909,7 @@ async function findDeploymentURL() {
       (0, import_core.info)(`Fetching deployment status of the: ${id}`);
       let {
         data: statuses
-      } = await octokit.request("GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", __assign(__assign({}, import_github.context.repo), {deployment_id: id}));
+      } = await octokit.request("GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", __objSpread(__objSpread({}, import_github.context.repo), {deployment_id: id}));
       (0, import_core.info)(statuses.length === 0 ? "No deployment status found" : statuses.length === 1 ? "One deployment status found" : `${statuses.length} deployment statuses found`);
       for (let {state, target_url} of statuses)
         if (state === "success" && target_url)
