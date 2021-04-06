@@ -15,6 +15,8 @@ export function createApiHandler(
         error = new AppError("NOT_FOUND");
       }
 
+      console.error(error);
+
       res.status(getAppErrorStatusCode(error)).send({
         name: error.name,
         code: error.code,
