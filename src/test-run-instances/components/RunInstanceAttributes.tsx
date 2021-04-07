@@ -34,7 +34,7 @@ export function RunInstanceAttributes({
       <DurationChip
         start={claimedAt}
         finish={completedAt}
-        enableCounter={totalPending > 0}
+        enableCounter={true}
       />
 
       {totalPassed > 0 && (
