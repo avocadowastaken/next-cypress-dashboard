@@ -1,9 +1,10 @@
 import { Chip, Skeleton } from "@material-ui/core";
 import { Timer } from "@material-ui/icons";
 import { format as formatDate, setMilliseconds, startOfToday } from "date-fns";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement, useEffect, useMemo, useState } from "react";
 
 export interface DurationChipProps {
+  enableCounter?: boolean;
   start: null | undefined | Date;
   finish: null | undefined | Date;
 }
@@ -11,9 +12,11 @@ export interface DurationChipProps {
 export function DurationChip({
   start,
   finish,
+  enableCounter = false,
 }: DurationChipProps): ReactElement {
   const startTime = start?.getTime();
-  const finishTime = finish?.getTime();
+  const [finishTime, setFinishTime] = useState(finish?.getTime());
+
   const duration = useMemo(() => {
     if (startTime && finishTime) {
       const diff = Math.abs(startTime - finishTime);
@@ -25,6 +28,22 @@ export function DurationChip({
 
     return null;
   }, [startTime, finishTime]);
+
+  useEffect(() => {
+    if (!startTime || finish || !enableCounter) {
+      setFinishTime(finish?.getTime());
+      return;
+    }
+
+    setFinishTime(Date.now());
+    const interval = setInterval(() => {
+      setFinishTime(Date.now());
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [startTime, finish, enableCounter]);
 
   return (
     <Chip icon={<Timer />} label={duration || <Skeleton width="33px" />} />

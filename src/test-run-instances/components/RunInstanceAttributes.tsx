@@ -31,7 +31,11 @@ export function RunInstanceAttributes({
 
   return (
     <Inline>
-      <DurationChip start={claimedAt} finish={completedAt} />
+      <DurationChip
+        start={claimedAt}
+        finish={completedAt}
+        enableCounter={totalPending > 0}
+      />
 
       {totalPassed > 0 && (
         <Tooltip title="Passed">

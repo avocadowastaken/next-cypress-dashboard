@@ -11,7 +11,10 @@ function createPrisma(): PrismaClient {
 
   // Ensure the previous prisma instance is disconnected.
   if ("prisma" in globalThis && "$disconnect" in globalThis["prisma"]) {
-    void globalThis["prisma"].$disconnect();
+    // Wait for pending requests to complete
+    setTimeout(() => {
+      void globalThis["prisma"].$disconnect();
+    }, 10 * 1000);
   }
 
   globalThis["prisma"] = new PrismaClient({

@@ -1,3 +1,4 @@
+import { DateChip } from "@/core/components/DateChip";
 import { DurationChip } from "@/core/components/DurationChip";
 import {
   ElectronFramework,
@@ -15,9 +16,8 @@ import { Stack } from "@/core/layout/Stack";
 import { capitalize } from "@/lib/Text";
 import { getRunName } from "@/test-runs/helpers";
 import { Avatar, Chip, Link, Tooltip } from "@material-ui/core";
-import { AccessTime, Apple, Check, Error } from "@material-ui/icons";
+import { Apple, Check, Error } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
-import { formatDistanceToNowStrict } from "date-fns";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useMemo } from "react";
@@ -87,14 +87,7 @@ export function RunAttributes({
 
         <DurationChip start={run.createdAt} finish={run.completedAt} />
 
-        <Tooltip title={run.createdAt.toLocaleString()}>
-          <Chip
-            icon={<AccessTime />}
-            label={formatDistanceToNowStrict(run.createdAt, {
-              addSuffix: true,
-            })}
-          />
-        </Tooltip>
+        <DateChip value={run.createdAt} />
 
         <Chip
           component="a"
