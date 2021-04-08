@@ -30,7 +30,15 @@ async function main() {
 
   await exec(
     "cypress",
-    ["run", "--record", "--parallel", "--ci-build-id", id],
+    [
+      "run",
+      "--record",
+      "--parallel",
+      "--ci-build-id",
+      id,
+      "--config",
+      "video=false",
+    ],
     {
       env: {
         ...process.env,

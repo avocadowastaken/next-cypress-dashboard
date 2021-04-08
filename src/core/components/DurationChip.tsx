@@ -1,6 +1,7 @@
-import { Chip, Skeleton } from "@material-ui/core";
+import { formatDateTime, formatDuration } from "@/lib/Date";
+import { ONE_SECOND, scheduleCron } from "@/lib/MicroCron";
+import { Chip, Skeleton, Tooltip } from "@material-ui/core";
 import { Timer } from "@material-ui/icons";
-import { format as formatDate, setMilliseconds, startOfToday } from "date-fns";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
 
 export interface DurationChipProps {
@@ -17,16 +18,15 @@ export function DurationChip({
   const startTime = start?.getTime();
   const [finishTime, setFinishTime] = useState(finish?.getTime());
 
-  const duration = useMemo(() => {
+  const [duration, tooltip] = useMemo(() => {
     if (startTime && finishTime) {
-      const diff = Math.abs(startTime - finishTime);
-
-      if (diff) {
-        return formatDate(setMilliseconds(startOfToday(), diff), "mm:ss");
-      }
+      return [
+        formatDuration(startTime, finishTime),
+        `${formatDateTime(startTime)} – ${formatDateTime(finishTime)}`,
+      ];
     }
 
-    return null;
+    return [];
   }, [startTime, finishTime]);
 
   useEffect(() => {
@@ -36,16 +36,14 @@ export function DurationChip({
     }
 
     setFinishTime(Date.now());
-    const interval = setInterval(() => {
+    return scheduleCron(ONE_SECOND, () => {
       setFinishTime(Date.now());
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    });
   }, [startTime, finish, enableCounter]);
 
   return (
-    <Chip icon={<Timer />} label={duration || <Skeleton width="33px" />} />
+    <Tooltip title={tooltip || "Pending…"}>
+      <Chip icon={<Timer />} label={duration || <Skeleton width="33px" />} />
+    </Tooltip>
   );
 }
