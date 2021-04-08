@@ -1,4 +1,4 @@
-import { SESSION_SECRET } from "@/core/env";
+import { SESSION_SECRET } from "@/core/secrets";
 import { AppError } from "@/lib/AppError";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import {

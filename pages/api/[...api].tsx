@@ -1,11 +1,12 @@
-import { GITHUB_CLIENT_ID, TASKS_API_SECRET } from "@/core/env";
+import { TASKS_API_SECRET } from "@/core/secrets";
 import { createApiHandler } from "@/lib/Api";
 import { AppError } from "@/lib/AppError";
 import { prisma } from "@/lib/db";
 import { parseGitUrl } from "@/lib/Git";
 import {
+  createGitHubAuthorizationLink,
   findGitHubUserAvatar,
-  obtainAccessToken,
+  obtainGitHubAccessToken,
   verifyGitHubRepoAccess,
 } from "@/lib/GitHub";
 import { createPageResponse } from "@/lib/PageResponse";
@@ -21,17 +22,9 @@ export default createApiHandler((app) => {
 
     if (!state) {
       res.redirect(302, `/?error=${encodeURIComponent("Invalid CSRF token")}`);
-      return;
+    } else {
+      res.redirect(302, createGitHubAuthorizationLink(state));
     }
-
-    const url = new URL("https://github.com/login/oauth/authorize");
-
-    url.searchParams.set("state", state);
-    url.searchParams.set("allow_signup", "false");
-    url.searchParams.set("scope", "user read:org");
-    url.searchParams.set("client_id", GITHUB_CLIENT_ID);
-
-    res.redirect(302, url.toString());
   });
 
   app.post("/api/auth/destroy", async (req, res) => {
@@ -56,7 +49,7 @@ export default createApiHandler((app) => {
     }
 
     try {
-      const [accessToken, user] = await obtainAccessToken(code, state);
+      const [accessToken, user] = await obtainGitHubAccessToken(code, state);
 
       const input: Prisma.UserAccountWhereUniqueInput["providerId_providerAccountId"] = {
         providerId: "github",

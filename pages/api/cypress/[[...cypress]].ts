@@ -1,4 +1,4 @@
-import { TASKS_API_SECRET } from "@/core/env";
+import { TASKS_API_SECRET } from "@/core/secrets";
 import { createApiHandler } from "@/lib/Api";
 import { AppError } from "@/lib/AppError";
 import {
@@ -15,7 +15,9 @@ import {
   UpdateInstanceInput,
 } from "@/lib/Cypress";
 import { prisma } from "@/lib/db";
+import { createGitHubStatusForRun, updateGitHubCheck } from "@/lib/GitHub";
 import { trim } from "@/lib/Text";
+import { createRunUrl } from "@/test-runs/helpers";
 import { Prisma, Run } from "@prisma/client";
 
 function wait(ms: number): Promise<void> {
@@ -73,8 +75,7 @@ async function fulfillRunStats(
       },
     });
 
-    await prisma.run.update({
-      select: null,
+    const run = await prisma.run.update({
       where: { id: runId },
       data: {
         completedAt,
@@ -83,7 +84,17 @@ async function fulfillRunStats(
         totalPending: sum.totalPending,
         totalSkipped: sum.totalSkipped,
       },
+      include: {
+        project: { include: { users: { take: 1 } } },
+      },
     });
+
+    if (run.project.users.length) {
+      const [user] = run.project.users;
+      await updateGitHubCheck(run, user, run.project).catch((error) => {
+        console.error(error);
+      });
+    }
   }
 }
 
@@ -112,19 +123,16 @@ export default createApiHandler((app) => {
 
     const groupId = trim(group || ciBuildId);
 
-    if (recordKey === TASKS_API_SECRET) {
-      await prisma.project.findUnique({
-        select: null,
-        rejectOnNotFound: true,
-        where: { id: projectId },
-      });
-    } else {
-      await prisma.project.findFirst({
-        select: null,
-        rejectOnNotFound: true,
-        where: { id: projectId, secrets: { recordKey } },
-      });
-    }
+    const projectWhereInput: Prisma.ProjectWhereInput =
+      recordKey === TASKS_API_SECRET
+        ? { id: projectId }
+        : { id: projectId, secrets: { recordKey } };
+
+    const project = await prisma.project.findFirst({
+      rejectOnNotFound: true,
+      where: projectWhereInput,
+      include: { users: { take: 1 } },
+    });
 
     const [run, isNewRun] = await obtainRun(
       {
@@ -147,14 +155,19 @@ export default createApiHandler((app) => {
       specs.map((spec) => ({ spec, groupId }))
     );
 
-    const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+    if (isNewRun && project.users.length) {
+      const [user] = project.users;
+      await createGitHubStatusForRun(run, user, project).catch((error) => {
+        console.error(error);
+      });
+    }
 
     res.send({
       groupId,
       isNewRun,
       runId: run.id,
       machineId: run.machineId,
-      runUrl: `${protocol}://${req.headers.host}/r/${run.id}`,
+      runUrl: createRunUrl(run),
     });
   });
 

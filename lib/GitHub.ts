@@ -1,12 +1,25 @@
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/env";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/secrets";
 import { AppError } from "@/lib/AppError";
 import { prisma } from "@/lib/db";
+import { createRunUrl } from "@/test-runs/helpers";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types";
 import { RequestError } from "@octokit/request-error";
+import { Project, Run, User } from "@prisma/client";
 
-export async function obtainAccessToken(
+export function createGitHubAuthorizationLink(state: string): string {
+  const url = new URL("https://github.com/login/oauth/authorize");
+
+  url.searchParams.set("state", state);
+  url.searchParams.set("allow_signup", "false");
+  url.searchParams.set("client_id", GITHUB_CLIENT_ID);
+  url.searchParams.set("scope", ["user", "read:org"].join(" "));
+
+  return url.toString();
+}
+
+export async function obtainGitHubAccessToken(
   code: string,
   state: string
 ): Promise<
@@ -43,6 +56,40 @@ async function getOctokit(userId: string): Promise<Octokit> {
   }
 
   return new Octokit({ auth: account.accessToken });
+}
+
+export async function createGitHubStatusForRun(
+  run: Run,
+  user: User,
+  project: Project
+): Promise<void> {
+  const octokit = await getOctokit(user.id);
+  await octokit.request("POST /repos/{owner}/{repo}/statuses/{sha}", {
+    repo: project.repo,
+    owner: project.org,
+    sha: run.commitSha,
+    state: "pending",
+    target_url: createRunUrl(run),
+    description: "Testing started…",
+    context: "Next Cypress Dashboard",
+  });
+}
+
+export async function updateGitHubCheck(
+  run: Run,
+  user: User,
+  project: Project
+) {
+  const octokit = await getOctokit(user.id);
+  await octokit.request("POST /repos/{owner}/{repo}/statuses/{sha}", {
+    repo: project.repo,
+    owner: project.org,
+    sha: run.commitSha,
+    target_url: createRunUrl(run),
+    context: "Next Cypress Dashboard",
+    state: run.totalFailed > 0 ? "error" : "success",
+    description: run.totalFailed > 0 ? "Testing failed" : "Testing succeed",
+  });
 }
 
 export async function findGitHubUserAvatar(
