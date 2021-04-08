@@ -58,7 +58,7 @@ async function getOctokit(userId: string): Promise<Octokit> {
   return new Octokit({ auth: account.accessToken });
 }
 
-export async function createGitHubStatusForRun(
+export async function createGitHubStatus(
   run: Run,
   user: User,
   project: Project
@@ -75,7 +75,7 @@ export async function createGitHubStatusForRun(
   });
 }
 
-export async function updateGitHubCheck(
+export async function updateGitHubCommitStatus(
   run: Run,
   user: User,
   project: Project

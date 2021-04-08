@@ -15,7 +15,7 @@ import {
   UpdateInstanceInput,
 } from "@/lib/Cypress";
 import { prisma } from "@/lib/db";
-import { createGitHubStatusForRun, updateGitHubCheck } from "@/lib/GitHub";
+import { createGitHubStatus, updateGitHubCommitStatus } from "@/lib/GitHub";
 import { trim } from "@/lib/Text";
 import { createRunUrl } from "@/test-runs/helpers";
 import { Prisma, Run } from "@prisma/client";
@@ -91,7 +91,7 @@ async function fulfillRunStats(
 
     if (run.project.users.length) {
       const [user] = run.project.users;
-      await updateGitHubCheck(run, user, run.project).catch((error) => {
+      await updateGitHubCommitStatus(run, user, run.project).catch((error) => {
         console.error(error);
       });
     }
@@ -157,7 +157,7 @@ export default createApiHandler((app) => {
 
     if (isNewRun && project.users.length) {
       const [user] = project.users;
-      await createGitHubStatusForRun(run, user, project).catch((error) => {
+      await createGitHubStatus(run, user, project).catch((error) => {
         console.error(error);
       });
     }
