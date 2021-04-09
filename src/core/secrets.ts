@@ -8,8 +8,8 @@ function get(key: string): string {
   return value;
 }
 
+export const NCD_SECRET = get("NCD_SECRET");
 export const SESSION_SECRET = get("SESSION_SECRET");
-export const TASKS_API_SECRET = get("TASKS_API_SECRET");
 
 export const GITHUB_CLIENT_ID = get("GITHUB_ID");
 export const GITHUB_CLIENT_SECRET = get("GITHUB_SECRET");

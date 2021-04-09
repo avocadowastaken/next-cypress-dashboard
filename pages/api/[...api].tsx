@@ -1,4 +1,4 @@
-import { TASKS_API_SECRET } from "@/core/secrets";
+import { NCD_SECRET } from "@/core/secrets";
 import { createApiHandler } from "@/lib/Api";
 import { AppError } from "@/lib/AppError";
 import { prisma } from "@/lib/db";
@@ -81,7 +81,7 @@ export default createApiHandler((app) => {
   app.post("/api/tasks/cleanup-runs", async (req, res) => {
     const { authorization } = req.headers;
 
-    if (authorization !== `Token ${TASKS_API_SECRET}`) {
+    if (authorization !== `Token ${NCD_SECRET}`) {
       throw new AppError("FORBIDDEN");
     }
 

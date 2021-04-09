@@ -1,4 +1,4 @@
-import { TASKS_API_SECRET } from "@/core/secrets";
+import { NCD_SECRET } from "@/core/secrets";
 import { createApiHandler } from "@/lib/Api";
 import { AppError } from "@/lib/AppError";
 import {
@@ -122,7 +122,7 @@ export default createApiHandler((app) => {
       rejectOnNotFound: true,
       where: {
         id: projectId,
-        secrets: recordKey === TASKS_API_SECRET ? undefined : { recordKey },
+        secrets: recordKey === NCD_SECRET ? undefined : { recordKey },
       },
     });
 

@@ -19,7 +19,7 @@ jobs:
       - run: npx cypress run --record --parallel --ci-build-id=cypress-${{ github.event.deployment_status.id }}
         env:
           DEBUG: "cypress:server:record,cypress:server:api"
-          CYPRESS_RECORD_KEY: ${{ secrets.TASKS_API_SECRET }}
+          CYPRESS_RECORD_KEY: ${{ secrets.NCD_SECRET }}
       - if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
@@ -43,7 +43,7 @@ jobs:
       - run: npx cypress run --record --parallel --ci-build-id=cypress@6.6-${{ github.event.deployment_status.id }}
         env:
           DEBUG: "cypress:server:record,cypress:server:api"
-          CYPRESS_RECORD_KEY: ${{ secrets.TASKS_API_SECRET }}
+          CYPRESS_RECORD_KEY: ${{ secrets.NCD_SECRET }}
       - if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
