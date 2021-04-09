@@ -28,6 +28,7 @@
     "@material-ui/icons": "5.0.0-alpha.26",
     "@material-ui/lab": "5.0.0-alpha.26",
     "@mdi/js": "5.9.55",
+    "@octokit/auth-app": "3.3.0",
     "@octokit/auth-oauth-app": "4.1.1",
     "@octokit/core": "3.4.0",
     "@prisma/client": "2.20.1",

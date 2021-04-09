@@ -1,4 +1,4 @@
-function resolve(key: string): string {
+function get(key: string): string {
   const value = process.env[key];
 
   if (!value) {
@@ -8,8 +8,13 @@ function resolve(key: string): string {
   return value;
 }
 
-export const SESSION_SECRET = resolve("SESSION_SECRET");
-export const TASKS_API_SECRET = resolve("TASKS_API_SECRET");
+export const SESSION_SECRET = get("SESSION_SECRET");
+export const TASKS_API_SECRET = get("TASKS_API_SECRET");
 
-export const GITHUB_CLIENT_ID = resolve("GITHUB_ID");
-export const GITHUB_CLIENT_SECRET = resolve("GITHUB_SECRET");
+export const GITHUB_CLIENT_ID = get("GITHUB_ID");
+export const GITHUB_CLIENT_SECRET = get("GITHUB_SECRET");
+export const GITHUB_APP_ID = get("GITHUB_APP_ID");
+export const GITHUB_APP_PRIVATE_KEY = new Buffer(
+  get("GITHUB_APP_PRIVATE_KEY"),
+  "base64"
+).toString("utf8");

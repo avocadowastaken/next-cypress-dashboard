@@ -1,12 +1,18 @@
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/secrets";
+import {
+  GITHUB_APP_ID,
+  GITHUB_APP_PRIVATE_KEY,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+} from "@/core/secrets";
 import { AppError } from "@/lib/AppError";
 import { prisma } from "@/lib/db";
 import { createRunUrl } from "@/test-runs/helpers";
+import { createAppAuth } from "@octokit/auth-app";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types";
 import { RequestError } from "@octokit/request-error";
-import { Project, Run, User } from "@prisma/client";
+import { Project, Run } from "@prisma/client";
 
 export function createGitHubAuthorizationLink(state: string): string {
   const url = new URL("https://github.com/login/oauth/authorize");
@@ -45,7 +51,18 @@ export async function obtainGitHubAccessToken(
   return [token, data];
 }
 
-async function getOctokit(userId: string): Promise<Octokit> {
+async function getAppOctokit(): Promise<Octokit> {
+  const auth = createAppAuth({
+    appId: GITHUB_APP_ID,
+    clientId: GITHUB_CLIENT_ID,
+    privateKey: GITHUB_APP_PRIVATE_KEY,
+    clientSecret: GITHUB_CLIENT_SECRET,
+  });
+
+  return new Octokit({ auth });
+}
+
+async function getUserOctokit(userId: string): Promise<Octokit> {
   const account = await prisma.userAccount.findUnique({
     select: { accessToken: true },
     where: { userId_providerId: { userId, providerId: "github" } },
@@ -60,10 +77,9 @@ async function getOctokit(userId: string): Promise<Octokit> {
 
 export async function createGitHubStatus(
   run: Run,
-  user: User,
   project: Project
 ): Promise<void> {
-  const octokit = await getOctokit(user.id);
+  const octokit = await getAppOctokit();
   await octokit.request("POST /repos/{owner}/{repo}/statuses/{sha}", {
     repo: project.repo,
     owner: project.org,
@@ -75,12 +91,8 @@ export async function createGitHubStatus(
   });
 }
 
-export async function updateGitHubCommitStatus(
-  run: Run,
-  user: User,
-  project: Project
-) {
-  const octokit = await getOctokit(user.id);
+export async function updateGitHubCommitStatus(run: Run, project: Project) {
+  const octokit = await getAppOctokit();
   await octokit.request("POST /repos/{owner}/{repo}/statuses/{sha}", {
     repo: project.repo,
     owner: project.org,
@@ -117,7 +129,7 @@ export async function findGitHubUserAvatar(
     }
   }
 
-  const octokit = await getOctokit(userId).catch(() => null);
+  const octokit = await getUserOctokit(userId).catch(() => null);
 
   if (octokit) {
     const users = await octokit
@@ -154,7 +166,7 @@ export async function verifyGitHubRepoAccess(
   owner: string,
   repo: string
 ): Promise<void> {
-  const octokit = await getOctokit(userId);
+  const octokit = await getUserOctokit(userId);
 
   let repository: components["schemas"]["full-repository"];
 

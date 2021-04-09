@@ -84,17 +84,12 @@ async function fulfillRunStats(
         totalPending: sum.totalPending,
         totalSkipped: sum.totalSkipped,
       },
-      include: {
-        project: { include: { users: { take: 1 } } },
-      },
+      include: { project: true },
     });
 
-    if (run.project.users.length) {
-      const [user] = run.project.users;
-      await updateGitHubCommitStatus(run, user, run.project).catch((error) => {
-        console.error(error);
-      });
-    }
+    await updateGitHubCommitStatus(run, run.project).catch((error: unknown) => {
+      console.error(error);
+    });
   }
 }
 
@@ -123,15 +118,12 @@ export default createApiHandler((app) => {
 
     const groupId = trim(group || ciBuildId);
 
-    const projectWhereInput: Prisma.ProjectWhereInput =
-      recordKey === TASKS_API_SECRET
-        ? { id: projectId }
-        : { id: projectId, secrets: { recordKey } };
-
     const project = await prisma.project.findFirst({
       rejectOnNotFound: true,
-      where: projectWhereInput,
-      include: { users: { take: 1 } },
+      where: {
+        id: projectId,
+        secrets: recordKey === TASKS_API_SECRET ? undefined : { recordKey },
+      },
     });
 
     const [run, isNewRun] = await obtainRun(
@@ -155,9 +147,8 @@ export default createApiHandler((app) => {
       specs.map((spec) => ({ spec, groupId }))
     );
 
-    if (isNewRun && project.users.length) {
-      const [user] = project.users;
-      await createGitHubStatus(run, user, project).catch((error) => {
+    if (isNewRun) {
+      await createGitHubStatus(run, project).catch((error: unknown) => {
         console.error(error);
       });
     }
