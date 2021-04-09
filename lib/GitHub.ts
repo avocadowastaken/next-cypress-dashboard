@@ -1,4 +1,4 @@
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/env";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/secrets";
 import { AppError } from "@/lib/AppError";
 import { prisma } from "@/lib/db";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";

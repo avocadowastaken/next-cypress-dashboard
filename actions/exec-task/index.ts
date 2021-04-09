@@ -80,7 +80,7 @@ async function main(): Promise<void> {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Token ${process.env.TASKS_API_SECRET}`,
+        Authorization: `Token ${process.env.NCD_SECRET}`,
       },
     });
 

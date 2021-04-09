@@ -1,4 +1,4 @@
-import { TASKS_API_SECRET } from "@/core/env";
+import { NCD_SECRET } from "@/core/secrets";
 import { createApiHandler } from "@/lib/Api";
 import { AppError } from "@/lib/AppError";
 import {
@@ -112,7 +112,7 @@ export default createApiHandler((app) => {
 
     const groupId = trim(group || ciBuildId);
 
-    if (recordKey === TASKS_API_SECRET) {
+    if (recordKey === NCD_SECRET) {
       await prisma.project.findUnique({
         select: null,
         rejectOnNotFound: true,

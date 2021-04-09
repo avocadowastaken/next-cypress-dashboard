@@ -14,10 +14,10 @@ function getRecordKey(): string {
 
   try {
     const dotEnvFileContent = readFileSync(dotEnvFilePath, "utf8");
-    const { TASKS_API_SECRET } = parse(dotEnvFileContent);
+    const { NCD_SECRET } = parse(dotEnvFileContent);
 
-    if (TASKS_API_SECRET) {
-      return TASKS_API_SECRET;
+    if (NCD_SECRET) {
+      return NCD_SECRET;
     }
   } catch {}
 
