@@ -13,7 +13,7 @@ jobs:
 
       - uses: ./actions/exec-task
         env:
-          TASKS_API_SECRET: ${{ secrets.TASKS_API_SECRET }}
+          NCD_SECRET: ${{ secrets.NCD_SECRET }}
         with:
           environment: Preview
           ignore_errors: true
@@ -21,7 +21,7 @@ jobs:
 
       - uses: ./actions/exec-task
         env:
-          TASKS_API_SECRET: ${{ secrets.TASKS_API_SECRET }}
+          NCD_SECRET: ${{ secrets.NCD_SECRET }}
         with:
           environment: Production
           name: "cleanup-runs"

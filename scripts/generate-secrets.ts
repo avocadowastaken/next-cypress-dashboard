@@ -10,14 +10,14 @@ function getRandomBytes(size: number): Promise<string> {
 }
 
 async function main() {
-  const [SESSION_SECRET, TASKS_API_SECRET] = await Promise.all([
+  const [NCD_SECRET, SESSION_SECRET] = await Promise.all([
     getRandomBytes(32),
     getRandomBytes(32),
   ]);
 
   return Object.entries({
+    NCD_SECRET,
     SESSION_SECRET,
-    TASKS_API_SECRET,
   })
     .map(([key, value]) => `${key}='${value}'`)
     .join("\n");
