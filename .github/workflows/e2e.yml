@@ -25,27 +25,3 @@ jobs:
         with:
           name: cypress-${{ matrix.container }}
           path: cypress/videos
-
-  cypress_6-6:
-    if: github.event.deployment_status.state == 'success'
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        container: [A, B]
-    steps:
-      - uses: actions/checkout@v2
-      - run: yarn add cypress@6.6
-      - run: yarn --force
-      - uses: ./actions/patch-cypress-config
-        with:
-          api_url: ${{ github.event.deployment_status.target_url }}
-      - run: npx cypress run --record --parallel --ci-build-id=cypress@6.6-${{ github.event.deployment_status.id }}
-        env:
-          DEBUG: "cypress:server:record,cypress:server:api"
-          CYPRESS_RECORD_KEY: ${{ secrets.NCD_SECRET }}
-      - if: ${{ failure() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: cypress-${{ matrix.container }}
-          path: cypress/videos

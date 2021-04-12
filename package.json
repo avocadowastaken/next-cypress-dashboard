@@ -62,7 +62,6 @@
     "@types/react": "17.0.3",
     "babel-plugin-direct-import": "0.6.3",
     "cypress": "7.0.1",
-    "cypress-esbuild-preprocessor": "1.0.2",
     "dotenv": "8.2.0",
     "esbuild": "0.11.8",
     "husky": "6.0.0",

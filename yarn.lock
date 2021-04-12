@@ -1948,11 +1948,6 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.7.tgz#2a5fb75e1015e84dd15692f71e89a1450290950b"
   integrity sha512-KxnUB0ZMlnUWCsx2Z8MUsr6qV6ja1w9ArPErJaJaF8a5SOWoHLIszeCTKGRGRgtLgYrs1E8CHkNSP1VZTTPc9g==
 
-cypress-esbuild-preprocessor@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/cypress-esbuild-preprocessor/-/cypress-esbuild-preprocessor-1.0.2.tgz#84b8483c8dd7f48ccc69d4742860746d21a42dea"
-  integrity sha512-JsFnm6fBQt/OEzstknJ1KLMTuUERUaG0ZB9fk0KdNUlZqxaVEoQ9/pFvKmqRfzUe2y00cWD++ptccQA4tNAAlQ==
-
 cypress@7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-7.0.1.tgz#8603f84d828fd4c5462a856f55cef5642e4ce573"
