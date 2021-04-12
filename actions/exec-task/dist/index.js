@@ -4912,7 +4912,7 @@ var VERSION2, request, init_dist_web5 = __esm(() => {
   init_is_plain_object();
   init_lib();
   init_dist_web4();
-  VERSION2 = "5.4.14";
+  VERSION2 = "5.4.15";
   __name(getBufferResponse, "getBufferResponse");
   __name(fetchWrapper, "fetchWrapper");
   __name(withDefaults2, "withDefaults");
@@ -6929,7 +6929,7 @@ async function main() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Token ${process.env.TASKS_API_SECRET}`
+        Authorization: `Token ${process.env.NCD_SECRET}`
       }
     });
     (0, import_core.info)(`Parsing response: ${response.status} (${response.statusText})`);

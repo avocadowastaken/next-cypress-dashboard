@@ -23,15 +23,15 @@
   },
   "dependencies": {
     "@emotion/react": "11.1.5",
-    "@emotion/styled": "11.1.5",
+    "@emotion/styled": "11.3.0",
     "@material-ui/core": "5.0.0-alpha.26",
     "@material-ui/icons": "5.0.0-alpha.26",
     "@material-ui/lab": "5.0.0-alpha.26",
     "@mdi/js": "5.9.55",
-    "@octokit/auth-oauth-app": "4.1.1",
+    "@octokit/auth-oauth-app": "4.1.2",
     "@octokit/core": "3.4.0",
     "@prisma/client": "2.20.1",
-    "date-fns": "2.19.0",
+    "date-fns": "2.20.1",
     "git-url-parse": "11.4.4",
     "lodash": "4.17.21",
     "morgan": "1.10.0",
@@ -41,7 +41,7 @@
     "prism-react-renderer": "1.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-query": "3.13.4",
+    "react-query": "3.13.6",
     "superjson": "1.7.3"
   },
   "devDependencies": {
@@ -58,13 +58,13 @@
     "@types/lodash": "4.14.168",
     "@types/morgan": "1.9.2",
     "@types/node": "14.14.37",
-    "@types/node-fetch": "2.5.9",
+    "@types/node-fetch": "2.5.10",
     "@types/react": "17.0.3",
     "babel-plugin-direct-import": "0.6.3",
-    "cypress": "7.0.0",
+    "cypress": "7.0.1",
     "cypress-esbuild-preprocessor": "1.0.2",
     "dotenv": "8.2.0",
-    "esbuild": "0.11.5",
+    "esbuild": "0.11.8",
     "husky": "6.0.0",
     "lint-staged": "10.5.4",
     "next-prisma-plugin": "0.1.1",
@@ -75,7 +75,7 @@
     "prettier-plugin-prisma": "0.7.0",
     "prisma": "2.20.1",
     "ts-node": "9.1.1",
-    "typescript": "4.2.3",
+    "typescript": "4.2.4",
     "yaml": "1.10.2"
   }
 }

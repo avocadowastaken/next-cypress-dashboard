@@ -1128,6 +1128,8 @@ var require_balanced_match = __commonJS((exports2, module2) => {
   function range(a, b, str) {
     var begs, beg, left, right, result, ai = str.indexOf(a), bi = str.indexOf(b, ai + 1), i = ai;
     if (ai >= 0 && bi > 0) {
+      if (a === b)
+        return [ai, bi];
       for (begs = [], left = str.length; i >= 0 && !result; )
         i == ai ? (begs.push(i), ai = str.indexOf(a, i + 1)) : begs.length == 1 ? result = [begs.pop(), bi] : (beg = begs.pop(), beg < left && (left = beg, right = bi), bi = str.indexOf(b, i + 1)), i = ai < bi && ai >= 0 ? ai : bi;
       begs.length && (result = [left, right]);
