@@ -192,7 +192,7 @@ var require_core = __commonJS((exports2) => {
   __name(getInput2, "getInput");
   exports2.getInput = getInput2;
   function setOutput(name2, value) {
-    command_1.issueCommand("set-output", {name: name2}, value);
+    process.stdout.write(os.EOL), command_1.issueCommand("set-output", {name: name2}, value);
   }
   __name(setOutput, "setOutput");
   exports2.setOutput = setOutput;
