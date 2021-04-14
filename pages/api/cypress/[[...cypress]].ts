@@ -78,10 +78,10 @@ async function fulfillRunStats(
       where: { id: runId },
       data: {
         completedAt,
-        totalFailed: sum.totalFailed,
-        totalPassed: sum.totalPassed,
-        totalPending: sum.totalPending,
-        totalSkipped: sum.totalSkipped,
+        totalFailed: sum.totalFailed || 0,
+        totalPassed: sum.totalPassed || 0,
+        totalPending: sum.totalPending || 0,
+        totalSkipped: sum.totalSkipped || 0,
       },
     });
   }
