@@ -11,17 +11,19 @@ import {
   SourceCommit,
   SourcePull,
 } from "@/core/components/icons";
+import { LinkChip } from "@/core/components/LinkChip";
 import { Inline } from "@/core/layout/Inline";
 import { Stack } from "@/core/layout/Stack";
 import { capitalize } from "@/lib/Text";
 import { getRunName } from "@/test-runs/helpers";
 import { Avatar, Chip, Link, Tooltip } from "@material-ui/core";
-import { Apple, Check, Error } from "@material-ui/icons";
+import { Apple, Check, Error, LocalOfferOutlined } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement } from "react";
 
+const TAG_PATTERN = /^refs\/tags\/(.+)$/;
 const PR_BRANCH_PATTERN = /^refs\/pull\/(\d+)\/merge$/;
 
 export interface RunAttributesProps {
@@ -29,42 +31,57 @@ export interface RunAttributesProps {
   project: Project;
 }
 
+function RunBranchChip({ run, project }: RunAttributesProps): ReactElement {
+  const repoUrl = `https://github.com/${project.org}/${project.repo}`;
+  if (run.commitBranch) {
+    const tagMatches = run.commitBranch.match(TAG_PATTERN);
+
+    if (tagMatches) {
+      const [, tag] = tagMatches;
+      return (
+        <LinkChip
+          label={tag}
+          icon={<LocalOfferOutlined />}
+          href={`${repoUrl}/releases/tag/${tag}`}
+        />
+      );
+    }
+
+    const prBranchMatches = run.commitBranch.match(PR_BRANCH_PATTERN);
+    if (prBranchMatches) {
+      const [, pr] = prBranchMatches;
+      return (
+        <LinkChip
+          label={pr}
+          icon={<SourcePull />}
+          href={`${repoUrl}/pull/${pr}/commits/${run.commitSha}}`}
+        />
+      );
+    }
+
+    return (
+      <LinkChip
+        label={run.commitBranch}
+        icon={<SourceBranch viewBox="0 0 24 26" />}
+        href={`${repoUrl}/commit/${run.commitSha}`}
+      />
+    );
+  }
+
+  return (
+    <LinkChip
+      icon={<SourceCommit />}
+      label={run.commitSha.slice(0, 7)}
+      href={`${repoUrl}/commit/${run.commitSha}`}
+    />
+  );
+}
+
 export function RunAttributes({
   run,
   project,
 }: RunAttributesProps): ReactElement {
   const router = useRouter();
-  const [branchIcon, branchLabel, branchHref] = useMemo<
-    [icon: ReactElement, label: string, url: string]
-  >(() => {
-    const repoUrl = `https://github.com/${project.org}/${project.repo}`;
-
-    if (run.commitBranch) {
-      const prBranchMatches = run.commitBranch.match(PR_BRANCH_PATTERN);
-
-      if (prBranchMatches) {
-        const [, pr] = prBranchMatches;
-
-        return [
-          <SourcePull />,
-          pr,
-          `${repoUrl}/pull/${pr}/commits/${run.commitSha}`,
-        ];
-      }
-
-      return [
-        <SourceBranch viewBox="0 0 24 26" />,
-        run.commitBranch,
-        `${repoUrl}/commit/${run.commitSha}`,
-      ];
-    }
-
-    return [
-      <SourceCommit />,
-      run.commitSha.slice(0, 7),
-      `${repoUrl}/commit/${run.commitSha}`,
-    ];
-  }, [project.org, project.repo, run.commitSha, run.commitBranch]);
 
   return (
     <Stack>
@@ -89,11 +106,7 @@ export function RunAttributes({
 
         <DateChip value={run.createdAt} />
 
-        <Chip
-          component="a"
-          clickable={true}
-          target="_blank"
-          rel="noopener noreferrer"
+        <LinkChip
           href={`https://github.com/search?type=users&q=${encodeURIComponent(
             run.commitAuthorName
           )}`}
@@ -106,15 +119,7 @@ export function RunAttributes({
           }
         />
 
-        <Chip
-          component="a"
-          target="_blank"
-          clickable={true}
-          href={branchHref}
-          icon={branchIcon}
-          label={branchLabel}
-          rel="noopener noreferrer"
-        />
+        <RunBranchChip run={run} project={project} />
 
         <Tooltip title={`${capitalize(run.os)} ${run.osVersion}`}>
           <Chip
