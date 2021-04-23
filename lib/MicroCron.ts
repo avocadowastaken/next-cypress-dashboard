@@ -3,15 +3,15 @@ export const ONE_MINUTE = 60 * 1000;
 export const ONE_HOUR = 60 * 60 * 1000;
 
 export function scheduleCron(
-  every: typeof ONE_SECOND | typeof ONE_MINUTE | typeof ONE_HOUR,
-  fn: () => void
+  step: typeof ONE_SECOND | typeof ONE_MINUTE | typeof ONE_HOUR,
+  job: () => void
 ): () => void {
-  const startDelay = Date.now() % every;
+  const startDelay = Date.now() % step;
   let intervalID: number | undefined = undefined;
   let timeoutID: number | undefined = window.setTimeout(() => {
-    fn();
     timeoutID = undefined;
-    intervalID = window.setInterval(fn, 0);
+    intervalID = window.setInterval(job, 0);
+    job();
   }, startDelay);
 
   return () => {
