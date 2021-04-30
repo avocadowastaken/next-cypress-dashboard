@@ -102,7 +102,7 @@ function AddProjectDialogForm({
               Dismiss
             </Button>
 
-            <LoadingButton type="submit" pending={isLoading}>
+            <LoadingButton type="submit" loading={isLoading}>
               Confirm
             </LoadingButton>
           </DialogActions>

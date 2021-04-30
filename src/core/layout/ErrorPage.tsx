@@ -32,7 +32,7 @@ function SignInDialog() {
             setIsLoading(true);
           }}
         >
-          <LoadingButton type="submit" pending={isLoading}>
+          <LoadingButton type="submit" loading={isLoading}>
             Sign In
           </LoadingButton>
         </form>

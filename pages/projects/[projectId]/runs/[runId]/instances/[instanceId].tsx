@@ -81,10 +81,13 @@ export default function RunInstancePage(): ReactElement {
           control={
             <Switch
               checked={router.query.exclude === "passed"}
-              onChange={(_, checked) => {
+              onChange={(event) => {
                 void router.replace({
                   pathname: router.pathname,
-                  query: { ...router.query, exclude: checked ? "passed" : [] },
+                  query: {
+                    ...router.query,
+                    exclude: event.target.checked ? "passed" : [],
+                  },
                 });
               }}
             />

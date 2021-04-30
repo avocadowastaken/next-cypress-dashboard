@@ -59,7 +59,7 @@ function DeleteRunDialog({
         </Button>
 
         <LoadingButton
-          pending={isLoading}
+          loading={isLoading}
           onClick={() => {
             mutate(run.id);
           }}
@@ -139,10 +139,13 @@ export default function RunPage(): ReactElement {
           control={
             <Switch
               checked={router.query.exclude === "passed"}
-              onChange={(_, checked) => {
+              onChange={(event) => {
                 void router.replace({
                   pathname: router.pathname,
-                  query: { ...router.query, exclude: checked ? "passed" : [] },
+                  query: {
+                    ...router.query,
+                    exclude: event.target.checked ? "passed" : [],
+                  },
                 });
               }}
             />

@@ -69,7 +69,7 @@ function DeleteProjectDialog({
           Dismiss
         </Button>
         <LoadingButton
-          pending={isLoading}
+          loading={isLoading}
           onClick={() => {
             mutate(project.id);
           }}
@@ -111,7 +111,7 @@ function RevokeSecretsDialog({
         </Button>
 
         <LoadingButton
-          pending={isLoading}
+          loading={isLoading}
           onClick={() => {
             mutate(project.id);
           }}
