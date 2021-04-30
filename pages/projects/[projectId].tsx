@@ -222,8 +222,10 @@ export default function ProjectPage(): ReactElement {
   const project = useProject(projectId);
   const runs = useRunsPage(project.data?.id, { page: router.query.page });
 
-  if (project.error) {
-    return <ErrorPage error={project.error} />;
+  const pageError = project.error || runs.error;
+
+  if (pageError) {
+    return <ErrorPage error={pageError} />;
   }
 
   if (!project.data) {
