@@ -16,7 +16,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   TextField,
 } from "@material-ui/core";
@@ -166,20 +165,9 @@ export default function ProjectsPage(): ReactElement {
 
       <TableContainer>
         <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Provider</TableCell>
-              <TableCell>Repo</TableCell>
-            </TableRow>
-          </TableHead>
-
           {!projects.data ? (
             <TableBody>
               <TableRow>
-                <TableCell>
-                  <Skeleton />
-                </TableCell>
-
                 <TableCell>
                   <Skeleton />
                 </TableCell>
@@ -190,14 +178,14 @@ export default function ProjectsPage(): ReactElement {
               <TableBody>
                 {projects.data.nodes.map((project) => (
                   <TableRow key={project.id}>
-                    <TableCell>{project.providerId}</TableCell>
-
                     <TableCell>
                       <NextLink
                         passHref={true}
                         href={`/projects/${project.id}`}
                       >
-                        <Link>{formatProjectName(project)}</Link>
+                        <Link>
+                          {formatProjectName(project)} ({project.providerId})
+                        </Link>
                       </NextLink>
                     </TableCell>
                   </TableRow>
