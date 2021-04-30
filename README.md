@@ -17,7 +17,7 @@ with the single flaw – it's complex infrastructure.
 
 So my personal goal was to make more minimalistic approach that focused on:
 
-1. Test parallelisation
+1. Test parallelization
 2. Easy installation
 
 Differences with the [Sorry Cypress](https://github.com/sorry-cypress/sorry-cypress)
