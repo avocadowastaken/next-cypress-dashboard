@@ -100,6 +100,14 @@ const theme = createMuiTheme({
       },
     },
 
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          tableLayout: "fixed",
+        },
+      },
+    },
+
     MuiTooltip: {
       defaultProps: {
         arrow: true,
