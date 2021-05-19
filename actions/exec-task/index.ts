@@ -32,9 +32,7 @@ async function findDeploymentURL(): Promise<string | undefined> {
     for (const { id } of deployments) {
       info(`Fetching deployment status of the: ${id}`);
 
-      const {
-        data: statuses,
-      } = await octokit.request(
+      const { data: statuses } = await octokit.request(
         "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses",
         { ...context.repo, deployment_id: id }
       );

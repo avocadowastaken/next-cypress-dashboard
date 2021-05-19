@@ -92,15 +92,8 @@ export default createApiHandler((app) => {
    * Create a Run
    */
   app.post("/runs", async (req, res) => {
-    let {
-      group,
-      specs,
-      commit,
-      platform,
-      ciBuildId,
-      recordKey,
-      projectId,
-    } = req.body as CreateRunInput;
+    let { group, specs, commit, platform, ciBuildId, recordKey, projectId } =
+      req.body as CreateRunInput;
 
     if (!recordKey || !projectId) {
       throw new AppError("FORBIDDEN");

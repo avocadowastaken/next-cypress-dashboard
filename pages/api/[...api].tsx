@@ -58,10 +58,8 @@ export default createApiHandler((app) => {
     try {
       const [accessToken, user] = await obtainAccessToken(code, state);
 
-      const input: Prisma.UserAccountWhereUniqueInput["providerId_providerAccountId"] = {
-        providerId: "github",
-        providerAccountId: user.id.toString(),
-      };
+      const input: Prisma.UserAccountWhereUniqueInput["providerId_providerAccountId"] =
+        { providerId: "github", providerAccountId: user.id.toString() };
 
       const { userId } = await prisma.userAccount.upsert({
         select: { userId: true },
