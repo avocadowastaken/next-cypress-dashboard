@@ -3,7 +3,7 @@
 #### Generate Secrets
 
 ```bash
-yarn ts-node scripts/generate-secrets.ts
+node scripts/generate-secrets
 ```
 
 It will generate secrets in dotenv format.
@@ -16,7 +16,7 @@ SESSION_SECRET='nBoPA6LvhkK4ZuWIlko04Id5yZQux+UvGw2H+5RNYsY='
 So you can append directly to your env file (do not forget to add `--silent` after `yarn`).
 
 ```bash
-yarn --silent ts-node scripts/generate-secrets.ts >> .env
+node scripts/generate-secrets >> .env
 ```
 
 #### Updating Vercel secrets
@@ -28,7 +28,7 @@ yarn --silent ts-node scripts/generate-secrets.ts >> .env
 
 ```bash
 # Generate new secrets for preview
-yarn --silent ts-node scripts/generate-secrets.ts > .env.preview
+node scripts/generate-secrets > .env.preview
 
 # Copy all the new variables for the preview
 source .env.preview
@@ -48,7 +48,7 @@ printf "ncd-session-secret-prev" | vercel env add secret SESSION_SECRET preview
 
 ```bash
 # Generate new secrets for production
-yarn --silent ts-node scripts/generate-secrets.ts > .env.production
+node scripts/generate-secrets > .env.production
 
 # Copy all the new variables for the production
 source .env.production
