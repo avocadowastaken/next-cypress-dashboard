@@ -7,12 +7,6 @@
     "node_modules/.prisma/client/index.d.ts"
   ],
   "exclude": ["node_modules"],
-  "ts-node": {
-    "transpileOnly": true,
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  },
   "compilerOptions": {
     "target": "ES2015",
     "module": "esnext",
