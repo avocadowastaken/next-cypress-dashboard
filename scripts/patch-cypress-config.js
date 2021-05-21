@@ -1,8 +1,10 @@
-import { exec } from "@actions/exec";
-import * as path from "path";
+"use strict";
+
+const path = require("path");
+const execa = require("execa");
 
 const ROOT_DIR = path.join(__dirname, "..");
-const PATCH_CYPRESS_CONFIG_PATH = path.join(
+const PATCH_CYPRESS_CONFIG_SCRIPT = path.join(
   ROOT_DIR,
   "actions",
   "patch-cypress-config",
@@ -12,10 +14,8 @@ const PATCH_CYPRESS_CONFIG_PATH = path.join(
 
 const [INPUT_API_URL = ""] = process.argv.slice(2);
 
-exec("node", [PATCH_CYPRESS_CONFIG_PATH], {
+execa.sync("node", [PATCH_CYPRESS_CONFIG_SCRIPT], {
   cwd: ROOT_DIR,
+  stdio: "inherit",
   env: { ...process.env, INPUT_API_URL },
-}).catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
 });
