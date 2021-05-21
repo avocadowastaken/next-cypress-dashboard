@@ -1,20 +1,23 @@
-var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
+var __create = Object.create, __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty;
+var __markAsModule = (target) => __defProp(target, "__esModule", { value: !0 }), __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
 var __commonJS = (cb, mod) => function() {
-  return mod || (0, cb[Object.keys(cb)[0]])((mod = {exports: {}}).exports, mod), mod.exports;
+  return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __reExport = (target, module2, desc) => {
   if (module2 && typeof module2 == "object" || typeof module2 == "function")
     for (let key of __getOwnPropNames(module2))
-      !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
+      !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
   return target;
-}, __toModule = (module2) => __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: !0} : {value: module2, enumerable: !0})), module2);
+}, __toModule = (module2) => __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: !0 } : { value: module2, enumerable: !0 })), module2);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS({
   "node_modules/@actions/core/lib/utils.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     function toCommandValue(input) {
       return input == null ? "" : typeof input == "string" || input instanceof String ? input : JSON.stringify(input);
     }
@@ -36,7 +39,7 @@ var require_command = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var os = __importStar(require("os")), utils_1 = require_utils();
     function issueCommand(command, properties, message) {
       let cmd = new Command(command, properties, message);
@@ -92,7 +95,7 @@ var require_file_command = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var fs2 = __importStar(require("fs")), os = __importStar(require("os")), utils_1 = require_utils();
     function issueCommand(command, message) {
       let filePath = process.env[`GITHUB_${command}`];
@@ -150,7 +153,7 @@ var require_core = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var command_1 = require_command(), file_command_1 = require_file_command(), utils_1 = require_utils(), os = __importStar(require("os")), path2 = __importStar(require("path")), ExitCode;
     (function(ExitCode2) {
       ExitCode2[ExitCode2.Success = 0] = "Success", ExitCode2[ExitCode2.Failure = 1] = "Failure";
@@ -161,7 +164,7 @@ var require_core = __commonJS({
         let delimiter = "_GitHubActionsFileCommandDelimeter_", commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
         file_command_1.issueCommand("ENV", commandValue);
       } else
-        command_1.issueCommand("set-env", {name}, convertedVal);
+        command_1.issueCommand("set-env", { name }, convertedVal);
     }
     __name(exportVariable, "exportVariable");
     exports2.exportVariable = exportVariable;
@@ -184,7 +187,7 @@ var require_core = __commonJS({
     __name(getInput2, "getInput");
     exports2.getInput = getInput2;
     function setOutput(name, value) {
-      process.stdout.write(os.EOL), command_1.issueCommand("set-output", {name}, value);
+      process.stdout.write(os.EOL), command_1.issueCommand("set-output", { name }, value);
     }
     __name(setOutput, "setOutput");
     exports2.setOutput = setOutput;
@@ -248,7 +251,7 @@ var require_core = __commonJS({
     __name(group2, "group");
     exports2.group = group2;
     function saveState(name, value) {
-      command_1.issueCommand("save-state", {name}, value);
+      command_1.issueCommand("save-state", { name }, value);
     }
     __name(saveState, "saveState");
     exports2.saveState = saveState;
@@ -301,7 +304,7 @@ var require_io_util = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     }, _a;
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var assert_1 = require("assert"), fs2 = __importStar(require("fs")), path2 = __importStar(require("path"));
     _a = fs2.promises, exports2.chmod = _a.chmod, exports2.copyFile = _a.copyFile, exports2.lstat = _a.lstat, exports2.mkdir = _a.mkdir, exports2.readdir = _a.readdir, exports2.readlink = _a.readlink, exports2.rename = _a.rename, exports2.rmdir = _a.rmdir, exports2.stat = _a.stat, exports2.symlink = _a.symlink, exports2.unlink = _a.unlink;
     exports2.IS_WINDOWS = process.platform === "win32";
@@ -460,11 +463,11 @@ var require_io = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var childProcess = __importStar(require("child_process")), path2 = __importStar(require("path")), util_1 = require("util"), ioUtil = __importStar(require_io_util()), exec2 = util_1.promisify(childProcess.exec);
     function cp(source, dest, options = {}) {
       return __awaiter(this, void 0, void 0, function* () {
-        let {force, recursive} = readCopyOptions(options), destStat = (yield ioUtil.exists(dest)) ? yield ioUtil.stat(dest) : null;
+        let { force, recursive } = readCopyOptions(options), destStat = (yield ioUtil.exists(dest)) ? yield ioUtil.stat(dest) : null;
         if (destStat && destStat.isFile() && !force)
           return;
         let newDest = destStat && destStat.isDirectory() ? path2.join(dest, path2.basename(source)) : dest;
@@ -582,7 +585,7 @@ var require_io = __commonJS({
     exports2.findInPath = findInPath;
     function readCopyOptions(options) {
       let force = options.force == null ? !0 : options.force, recursive = Boolean(options.recursive);
-      return {force, recursive};
+      return { force, recursive };
     }
     __name(readCopyOptions, "readCopyOptions");
     function cpDirRecursive(sourceDir, destDir, currentDepth, force) {
@@ -658,7 +661,7 @@ var require_toolrunner = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var os = __importStar(require("os")), events = __importStar(require("events")), child = __importStar(require("child_process")), path2 = __importStar(require("path")), io = __importStar(require_io()), ioUtil = __importStar(require_io_util()), IS_WINDOWS = process.platform === "win32", ToolRunner = class extends events.EventEmitter {
       constructor(toolPath, args, options) {
         super();
@@ -938,7 +941,7 @@ var require_exec = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var tr = __importStar(require_toolrunner());
     function exec2(commandLine, args, options) {
       return __awaiter(this, void 0, void 0, function* () {
@@ -967,7 +970,7 @@ var require_internal_glob_options_helper = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var core = __importStar(require_core());
     function getOptions(copy) {
       let result = {
@@ -995,9 +998,9 @@ var require_internal_path_helper = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     }, __importDefault = exports2 && exports2.__importDefault || function(mod) {
-      return mod && mod.__esModule ? mod : {default: mod};
+      return mod && mod.__esModule ? mod : { default: mod };
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var path2 = __importStar(require("path")), assert_1 = __importDefault(require("assert")), IS_WINDOWS = process.platform === "win32";
     function dirname(p) {
       if (p = safeTrimTrailingSeparator(p), IS_WINDOWS && /^\\\\[^\\]+(\\[^\\]+)?$/.test(p))
@@ -1050,7 +1053,7 @@ var require_internal_path_helper = __commonJS({
 var require_internal_match_kind = __commonJS({
   "node_modules/@actions/glob/lib/internal-match-kind.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var MatchKind;
     (function(MatchKind2) {
       MatchKind2[MatchKind2.None = 0] = "None", MatchKind2[MatchKind2.Directory = 1] = "Directory", MatchKind2[MatchKind2.File = 2] = "File", MatchKind2[MatchKind2.All = 3] = "All";
@@ -1071,7 +1074,7 @@ var require_internal_pattern_helper = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var pathHelper = __importStar(require_internal_path_helper()), internal_match_kind_1 = require_internal_match_kind(), IS_WINDOWS = process.platform === "win32";
     function getSearchPaths(patterns) {
       patterns = patterns.filter((x) => !x.negate);
@@ -1274,17 +1277,17 @@ var require_minimatch = __commonJS({
   "node_modules/minimatch/minimatch.js"(exports2, module2) {
     module2.exports = minimatch;
     minimatch.Minimatch = Minimatch;
-    var path2 = {sep: "/"};
+    var path2 = { sep: "/" };
     try {
       path2 = require("path");
     } catch (er) {
     }
     var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}, expand = require_brace_expansion(), plTypes = {
-      "!": {open: "(?:(?!(?:", close: "))[^/]*?)"},
-      "?": {open: "(?:", close: ")?"},
-      "+": {open: "(?:", close: ")+"},
-      "*": {open: "(?:", close: ")*"},
-      "@": {open: "(?:", close: ")"}
+      "!": { open: "(?:(?!(?:", close: "))[^/]*?)" },
+      "?": { open: "(?:", close: ")?" },
+      "+": { open: "(?:", close: ")+" },
+      "*": { open: "(?:", close: ")*" },
+      "@": { open: "(?:", close: ")" }
     }, qmark = "[^/]", star = qmark + "*?", twoStarDot = "(?:(?!(?:\\/|^)(?:\\.{1,2})($|\\/)).)*?", twoStarNoDot = "(?:(?!(?:\\/|^)\\.).)*?", reSpecials = charSet("().*{}+?[]^$\\!");
     function charSet(s) {
       return s.split("").reduce(function(set, c) {
@@ -1594,7 +1597,7 @@ var require_minimatch = __commonJS({
     __name(match, "match");
     Minimatch.prototype.matchOne = function(file, pattern, partial) {
       var options = this.options;
-      this.debug("matchOne", {this: this, file, pattern}), this.debug("matchOne", file.length, pattern.length);
+      this.debug("matchOne", { this: this, file, pattern }), this.debug("matchOne", file.length, pattern.length);
       for (var fi = 0, pi = 0, fl = file.length, pl = pattern.length; fi < fl && pi < pl; fi++, pi++) {
         this.debug("matchOne loop");
         var p = pattern[pi], f = file[fi];
@@ -1661,9 +1664,9 @@ var require_internal_path = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     }, __importDefault = exports2 && exports2.__importDefault || function(mod) {
-      return mod && mod.__esModule ? mod : {default: mod};
+      return mod && mod.__esModule ? mod : { default: mod };
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var path2 = __importStar(require("path")), pathHelper = __importStar(require_internal_path_helper()), assert_1 = __importDefault(require("assert")), IS_WINDOWS = process.platform === "win32", Path = class {
       constructor(itemPath) {
         if (this.segments = [], typeof itemPath == "string")
@@ -1710,9 +1713,9 @@ var require_internal_pattern = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     }, __importDefault = exports2 && exports2.__importDefault || function(mod) {
-      return mod && mod.__esModule ? mod : {default: mod};
+      return mod && mod.__esModule ? mod : { default: mod };
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var os = __importStar(require("os")), path2 = __importStar(require("path")), pathHelper = __importStar(require_internal_path_helper()), assert_1 = __importDefault(require("assert")), minimatch_1 = require_minimatch(), internal_match_kind_1 = require_internal_match_kind(), internal_path_1 = require_internal_path(), IS_WINDOWS = process.platform === "win32", Pattern = class {
       constructor(patternOrNegate, segments, homedir) {
         this.negate = !1;
@@ -1815,7 +1818,7 @@ var require_internal_pattern = __commonJS({
 var require_internal_search_state = __commonJS({
   "node_modules/@actions/glob/lib/internal-search-state.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var SearchState = class {
       constructor(path2, level) {
         this.path = path2, this.level = level;
@@ -1874,7 +1877,7 @@ var require_internal_globber = __commonJS({
       }
       function settle(resolve, reject, d, v) {
         Promise.resolve(v).then(function(v2) {
-          resolve({value: v2, done: d});
+          resolve({ value: v2, done: d });
         }, reject);
       }
     }, __await = exports2 && exports2.__await || function(v) {
@@ -1921,7 +1924,7 @@ var require_internal_globber = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var core = __importStar(require_core()), fs2 = __importStar(require("fs")), globOptionsHelper = __importStar(require_internal_glob_options_helper()), path2 = __importStar(require("path")), patternHelper = __importStar(require_internal_pattern_helper()), internal_match_kind_1 = require_internal_match_kind(), internal_pattern_1 = require_internal_pattern(), internal_search_state_1 = require_internal_search_state(), IS_WINDOWS = process.platform === "win32", DefaultGlobber = class {
       constructor(options) {
         this.patterns = [], this.searchPaths = [], this.options = globOptionsHelper.getOptions(options);
@@ -1939,7 +1942,7 @@ var require_internal_globber = __commonJS({
               result.push(itemPath);
             }
           } catch (e_1_1) {
-            e_1 = {error: e_1_1};
+            e_1 = { error: e_1_1 };
           } finally {
             try {
               _c && !_c.done && (_a = _b.return) && (yield _a.call(_b));
@@ -2070,7 +2073,7 @@ var require_glob = __commonJS({
         __name(step, "step"), step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var internal_globber_1 = require_internal_globber();
     function create(patterns, options) {
       return __awaiter(this, void 0, void 0, function* () {
@@ -6564,7 +6567,7 @@ var require_yaml = __commonJS({
 });
 
 // actions/patch-cypress-config/index.ts
-var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), API_URL = (0, import_core.getInput)("api_url", {required: !1}) || "https://next-cypress-dashboard.vercel.app";
+var import_core = __toModule(require_core()), import_exec = __toModule(require_exec()), import_glob = __toModule(require_glob()), import_fs = __toModule(require("fs")), path = __toModule(require("path")), yaml = __toModule(require_yaml()), API_URL = (0, import_core.getInput)("api_url", { required: !1 }) || "https://next-cypress-dashboard.vercel.app";
 async function resolveCachePath() {
   return await (0, import_core.group)("Verifying installation", async () => {
     await (0, import_exec.exec)("npx", ["cypress", "install"]), await (0, import_exec.exec)("npx", ["cypress", "verify"]);

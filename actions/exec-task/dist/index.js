@@ -1,12 +1,12 @@
-var __create = Object.create, __defProp = Object.defineProperty, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropDesc = Object.getOwnPropertyDescriptor, __getOwnPropSymbols = Object.getOwnPropertySymbols, __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, {enumerable: !0, configurable: !0, writable: !0, value}) : obj[key] = value, __objSpread = (a, b) => {
+var __create = Object.create, __defProp = Object.defineProperty, __defProps = Object.defineProperties, __getOwnPropDesc = Object.getOwnPropertyDescriptor, __getOwnPropDescs = Object.getOwnPropertyDescriptors, __getOwnPropNames = Object.getOwnPropertyNames, __getOwnPropSymbols = Object.getOwnPropertySymbols, __getProtoOf = Object.getPrototypeOf, __hasOwnProp = Object.prototype.hasOwnProperty, __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: !0, configurable: !0, writable: !0, value }) : obj[key] = value, __spreadValues = (a, b) => {
   for (var prop in b || (b = {}))
     __hasOwnProp.call(b, prop) && __defNormalProp(a, prop, b[prop]);
   if (__getOwnPropSymbols)
     for (var prop of __getOwnPropSymbols(b))
       __propIsEnum.call(b, prop) && __defNormalProp(a, prop, b[prop]);
   return a;
-}, __markAsModule = (target) => __defProp(target, "__esModule", {value: !0}), __name = (target, value) => __defProp(target, "name", {value, configurable: !0});
+}, __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b)), __markAsModule = (target) => __defProp(target, "__esModule", { value: !0 }), __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
 var __objRest = (source, exclude) => {
   var target = {};
   for (var prop in source)
@@ -18,22 +18,22 @@ var __objRest = (source, exclude) => {
 }, __esm = (fn, res) => function() {
   return fn && (res = (0, fn[Object.keys(fn)[0]])(fn = 0)), res;
 }, __commonJS = (cb, mod) => function() {
-  return mod || (0, cb[Object.keys(cb)[0]])((mod = {exports: {}}).exports, mod), mod.exports;
+  return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 }, __export = (target, all) => {
   for (var name2 in all)
-    __defProp(target, name2, {get: all[name2], enumerable: !0});
+    __defProp(target, name2, { get: all[name2], enumerable: !0 });
 }, __reExport = (target, module2, desc) => {
   if (module2 && typeof module2 == "object" || typeof module2 == "function")
     for (let key of __getOwnPropNames(module2))
-      !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
+      !__hasOwnProp.call(target, key) && key !== "default" && __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
   return target;
-}, __toModule = (module2) => __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: !0} : {value: module2, enumerable: !0})), module2);
+}, __toModule = (module2) => __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: !0 } : { value: module2, enumerable: !0 })), module2);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS({
   "node_modules/@actions/core/lib/utils.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     function toCommandValue(input) {
       return input == null ? "" : typeof input == "string" || input instanceof String ? input : JSON.stringify(input);
     }
@@ -55,7 +55,7 @@ var require_command = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var os = __importStar(require("os")), utils_1 = require_utils();
     function issueCommand(command, properties, message) {
       let cmd = new Command(command, properties, message);
@@ -111,7 +111,7 @@ var require_file_command = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var fs = __importStar(require("fs")), os = __importStar(require("os")), utils_1 = require_utils();
     function issueCommand(command, message) {
       let filePath = process.env[`GITHUB_${command}`];
@@ -169,7 +169,7 @@ var require_core = __commonJS({
           Object.hasOwnProperty.call(mod, k) && (result[k] = mod[k]);
       return result.default = mod, result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var command_1 = require_command(), file_command_1 = require_file_command(), utils_1 = require_utils(), os = __importStar(require("os")), path = __importStar(require("path")), ExitCode;
     (function(ExitCode2) {
       ExitCode2[ExitCode2.Success = 0] = "Success", ExitCode2[ExitCode2.Failure = 1] = "Failure";
@@ -180,7 +180,7 @@ var require_core = __commonJS({
         let delimiter = "_GitHubActionsFileCommandDelimeter_", commandValue = `${name2}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
         file_command_1.issueCommand("ENV", commandValue);
       } else
-        command_1.issueCommand("set-env", {name: name2}, convertedVal);
+        command_1.issueCommand("set-env", { name: name2 }, convertedVal);
     }
     __name(exportVariable, "exportVariable");
     exports2.exportVariable = exportVariable;
@@ -203,7 +203,7 @@ var require_core = __commonJS({
     __name(getInput2, "getInput");
     exports2.getInput = getInput2;
     function setOutput(name2, value) {
-      process.stdout.write(os.EOL), command_1.issueCommand("set-output", {name: name2}, value);
+      process.stdout.write(os.EOL), command_1.issueCommand("set-output", { name: name2 }, value);
     }
     __name(setOutput, "setOutput");
     exports2.setOutput = setOutput;
@@ -267,7 +267,7 @@ var require_core = __commonJS({
     __name(group2, "group");
     exports2.group = group2;
     function saveState(name2, value) {
-      command_1.issueCommand("save-state", {name: name2}, value);
+      command_1.issueCommand("save-state", { name: name2 }, value);
     }
     __name(saveState, "saveState");
     exports2.saveState = saveState;
@@ -283,27 +283,28 @@ var require_core = __commonJS({
 var require_context = __commonJS({
   "node_modules/@actions/github/lib/context.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     exports2.Context = void 0;
     var fs_1 = require("fs"), os_1 = require("os"), Context = class {
       constructor() {
+        var _a, _b, _c;
         if (this.payload = {}, process.env.GITHUB_EVENT_PATH)
           if (fs_1.existsSync(process.env.GITHUB_EVENT_PATH))
-            this.payload = JSON.parse(fs_1.readFileSync(process.env.GITHUB_EVENT_PATH, {encoding: "utf8"}));
+            this.payload = JSON.parse(fs_1.readFileSync(process.env.GITHUB_EVENT_PATH, { encoding: "utf8" }));
           else {
             let path = process.env.GITHUB_EVENT_PATH;
             process.stdout.write(`GITHUB_EVENT_PATH ${path} does not exist${os_1.EOL}`);
           }
-        this.eventName = process.env.GITHUB_EVENT_NAME, this.sha = process.env.GITHUB_SHA, this.ref = process.env.GITHUB_REF, this.workflow = process.env.GITHUB_WORKFLOW, this.action = process.env.GITHUB_ACTION, this.actor = process.env.GITHUB_ACTOR, this.job = process.env.GITHUB_JOB, this.runNumber = parseInt(process.env.GITHUB_RUN_NUMBER, 10), this.runId = parseInt(process.env.GITHUB_RUN_ID, 10);
+        this.eventName = process.env.GITHUB_EVENT_NAME, this.sha = process.env.GITHUB_SHA, this.ref = process.env.GITHUB_REF, this.workflow = process.env.GITHUB_WORKFLOW, this.action = process.env.GITHUB_ACTION, this.actor = process.env.GITHUB_ACTOR, this.job = process.env.GITHUB_JOB, this.runNumber = parseInt(process.env.GITHUB_RUN_NUMBER, 10), this.runId = parseInt(process.env.GITHUB_RUN_ID, 10), this.apiUrl = (_a = process.env.GITHUB_API_URL) !== null && _a !== void 0 ? _a : "https://api.github.com", this.serverUrl = (_b = process.env.GITHUB_SERVER_URL) !== null && _b !== void 0 ? _b : "https://github.com", this.graphqlUrl = (_c = process.env.GITHUB_GRAPHQL_URL) !== null && _c !== void 0 ? _c : "https://api.github.com/graphql";
       }
       get issue() {
         let payload = this.payload;
-        return Object.assign(Object.assign({}, this.repo), {number: (payload.issue || payload.pull_request || payload).number});
+        return Object.assign(Object.assign({}, this.repo), { number: (payload.issue || payload.pull_request || payload).number });
       }
       get repo() {
         if (process.env.GITHUB_REPOSITORY) {
           let [owner, repo] = process.env.GITHUB_REPOSITORY.split("/");
-          return {owner, repo};
+          return { owner, repo };
         }
         if (this.payload.repository)
           return {
@@ -322,7 +323,7 @@ var require_context = __commonJS({
 var require_proxy = __commonJS({
   "node_modules/@actions/http-client/proxy.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     function getProxyUrl(reqUrl) {
       let usingSsl = reqUrl.protocol === "https:", proxyUrl;
       if (checkBypass(reqUrl))
@@ -397,7 +398,7 @@ var require_tunnel = __commonJS({
     __name(TunnelingAgent, "TunnelingAgent");
     util.inherits(TunnelingAgent, events.EventEmitter);
     TunnelingAgent.prototype.addRequest = /* @__PURE__ */ __name(function(req, host, port, localAddress) {
-      var self = this, options = mergeOptions({request: req}, self.options, toOptions(host, port, localAddress));
+      var self = this, options = mergeOptions({ request: req }, self.options, toOptions(host, port, localAddress));
       if (self.sockets.length >= this.maxSockets) {
         self.requests.push(options);
         return;
@@ -524,7 +525,7 @@ var require_tunnel2 = __commonJS({
 var require_http_client = __commonJS({
   "node_modules/@actions/http-client/index.js"(exports2) {
     "use strict";
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     var http2 = require("http"), https2 = require("https"), pm = require_proxy(), tunnel, HttpCodes;
     (function(HttpCodes2) {
       HttpCodes2[HttpCodes2.OK = 200] = "OK", HttpCodes2[HttpCodes2.MultipleChoices = 300] = "MultipleChoices", HttpCodes2[HttpCodes2.MovedPermanently = 301] = "MovedPermanently", HttpCodes2[HttpCodes2.ResourceMoved = 302] = "ResourceMoved", HttpCodes2[HttpCodes2.SeeOther = 303] = "SeeOther", HttpCodes2[HttpCodes2.NotModified = 304] = "NotModified", HttpCodes2[HttpCodes2.UseProxy = 305] = "UseProxy", HttpCodes2[HttpCodes2.SwitchProxy = 306] = "SwitchProxy", HttpCodes2[HttpCodes2.TemporaryRedirect = 307] = "TemporaryRedirect", HttpCodes2[HttpCodes2.PermanentRedirect = 308] = "PermanentRedirect", HttpCodes2[HttpCodes2.BadRequest = 400] = "BadRequest", HttpCodes2[HttpCodes2.Unauthorized = 401] = "Unauthorized", HttpCodes2[HttpCodes2.PaymentRequired = 402] = "PaymentRequired", HttpCodes2[HttpCodes2.Forbidden = 403] = "Forbidden", HttpCodes2[HttpCodes2.NotFound = 404] = "NotFound", HttpCodes2[HttpCodes2.MethodNotAllowed = 405] = "MethodNotAllowed", HttpCodes2[HttpCodes2.NotAcceptable = 406] = "NotAcceptable", HttpCodes2[HttpCodes2.ProxyAuthenticationRequired = 407] = "ProxyAuthenticationRequired", HttpCodes2[HttpCodes2.RequestTimeout = 408] = "RequestTimeout", HttpCodes2[HttpCodes2.Conflict = 409] = "Conflict", HttpCodes2[HttpCodes2.Gone = 410] = "Gone", HttpCodes2[HttpCodes2.TooManyRequests = 429] = "TooManyRequests", HttpCodes2[HttpCodes2.InternalServerError = 500] = "InternalServerError", HttpCodes2[HttpCodes2.NotImplemented = 501] = "NotImplemented", HttpCodes2[HttpCodes2.BadGateway = 502] = "BadGateway", HttpCodes2[HttpCodes2.ServiceUnavailable = 503] = "ServiceUnavailable", HttpCodes2[HttpCodes2.GatewayTimeout = 504] = "GatewayTimeout";
@@ -729,7 +730,7 @@ var require_http_client = __commonJS({
           let agentOptions = {
             maxSockets,
             keepAlive: this._keepAlive,
-            proxy: __objSpread(__objSpread({}, (proxyUrl.username || proxyUrl.password) && {
+            proxy: __spreadProps(__spreadValues({}, (proxyUrl.username || proxyUrl.password) && {
               proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
             }), {
               host: proxyUrl.hostname,
@@ -739,7 +740,7 @@ var require_http_client = __commonJS({
           usingSsl ? tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp : tunnelAgent = overHttps ? tunnel.httpOverHttps : tunnel.httpOverHttp, agent = tunnelAgent(agentOptions), this._proxyAgent = agent;
         }
         if (this._keepAlive && !agent) {
-          let options = {keepAlive: this._keepAlive, maxSockets};
+          let options = { keepAlive: this._keepAlive, maxSockets };
           agent = usingSsl ? new https2.Agent(options) : new http2.Agent(options), this._agent = agent;
         }
         return agent || (agent = usingSsl ? https2.globalAgent : http2.globalAgent), usingSsl && this._ignoreSslError && (agent.options = Object.assign(agent.options || {}, {
@@ -792,13 +793,13 @@ var require_utils2 = __commonJS({
   "node_modules/@actions/github/lib/internal/utils.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
-      k2 === void 0 && (k2 = k), Object.defineProperty(o, k2, {enumerable: !0, get: function() {
+      k2 === void 0 && (k2 = k), Object.defineProperty(o, k2, { enumerable: !0, get: function() {
         return m[k];
-      }});
+      } });
     } : function(o, m, k, k2) {
       k2 === void 0 && (k2 = k), o[k2] = m[k];
     }), __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
-      Object.defineProperty(o, "default", {enumerable: !0, value: v});
+      Object.defineProperty(o, "default", { enumerable: !0, value: v });
     } : function(o, v) {
       o.default = v;
     }), __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -807,10 +808,10 @@ var require_utils2 = __commonJS({
       var result = {};
       if (mod != null)
         for (var k in mod)
-          Object.hasOwnProperty.call(mod, k) && __createBinding(result, mod, k);
+          k !== "default" && Object.hasOwnProperty.call(mod, k) && __createBinding(result, mod, k);
       return __setModuleDefault(result, mod), result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     exports2.getApiBaseUrl = exports2.getProxyAgent = exports2.getAuthString = void 0;
     var httpClient = __importStar(require_http_client());
     function getAuthString(token2, options) {
@@ -914,7 +915,7 @@ var require_before_after_hook = __commonJS({
     var register = require_register(), addHook = require_add(), removeHook = require_remove(), bind = Function.bind, bindable = bind.bind(bind);
     function bindApi(hook2, state, name2) {
       var removeHookRef = bindable(removeHook, null).apply(null, name2 ? [state, name2] : [state]);
-      hook2.api = {remove: removeHookRef}, hook2.remove = removeHookRef, ["before", "error", "after", "wrap"].forEach(function(kind) {
+      hook2.api = { remove: removeHookRef }, hook2.remove = removeHookRef, ["before", "error", "after", "wrap"].forEach(function(kind) {
         var args = name2 ? [state, kind, name2] : [state, kind];
         hook2[kind] = hook2.api[kind] = bindable(addHook, null).apply(null, args);
       });
@@ -970,7 +971,7 @@ function lowercaseKeys(object) {
 function mergeDeep(defaults, options) {
   let result = Object.assign({}, defaults);
   return Object.keys(options).forEach((key) => {
-    isPlainObject(options[key]) ? key in defaults ? result[key] = mergeDeep(defaults[key], options[key]) : Object.assign(result, {[key]: options[key]}) : Object.assign(result, {[key]: options[key]});
+    isPlainObject(options[key]) ? key in defaults ? result[key] = mergeDeep(defaults[key], options[key]) : Object.assign(result, { [key]: options[key] }) : Object.assign(result, { [key]: options[key] });
   }), result;
 }
 function removeUndefinedProperties(obj) {
@@ -981,7 +982,7 @@ function removeUndefinedProperties(obj) {
 function merge(defaults, route, options) {
   if (typeof route == "string") {
     let [method, url] = route.split(" ");
-    options = Object.assign(url ? {method, url} : {url: method}, options);
+    options = Object.assign(url ? { method, url } : { url: method }, options);
   } else
     options = Object.assign({}, route);
   options.headers = lowercaseKeys(options.headers), removeUndefinedProperties(options), removeUndefinedProperties(options.headers);
@@ -1084,7 +1085,7 @@ function parse(options) {
       return `application/vnd.github.${preview}-preview${format}`;
     }).join(",");
   }
-  return ["GET", "HEAD"].includes(method) ? url = addQueryParameters(url, remainingParameters) : "data" in remainingParameters ? body = remainingParameters.data : Object.keys(remainingParameters).length ? body = remainingParameters : headers["content-length"] = 0, !headers["content-type"] && typeof body != "undefined" && (headers["content-type"] = "application/json; charset=utf-8"), ["PATCH", "PUT"].includes(method) && typeof body == "undefined" && (body = ""), Object.assign({method, url, headers}, typeof body != "undefined" ? {body} : null, options.request ? {request: options.request} : null);
+  return ["GET", "HEAD"].includes(method) ? url = addQueryParameters(url, remainingParameters) : "data" in remainingParameters ? body = remainingParameters.data : Object.keys(remainingParameters).length ? body = remainingParameters : headers["content-length"] = 0, !headers["content-type"] && typeof body != "undefined" && (headers["content-type"] = "application/json; charset=utf-8"), ["PATCH", "PUT"].includes(method) && typeof body == "undefined" && (body = ""), Object.assign({ method, url, headers }, typeof body != "undefined" ? { body } : null, options.request ? { request: options.request } : null);
 }
 function endpointWithDefaults(defaults, route, options) {
   return parse(merge(defaults, route, options));
@@ -1212,14 +1213,14 @@ var require_internal = __commonJS({
     "use strict";
     var Buffer2 = require_safer().Buffer;
     module2.exports = {
-      utf8: {type: "_internal", bomAware: !0},
-      cesu8: {type: "_internal", bomAware: !0},
+      utf8: { type: "_internal", bomAware: !0 },
+      cesu8: { type: "_internal", bomAware: !0 },
       unicode11utf8: "utf8",
-      ucs2: {type: "_internal", bomAware: !0},
+      ucs2: { type: "_internal", bomAware: !0 },
       utf16le: "ucs2",
-      binary: {type: "_internal"},
-      base64: {type: "_internal"},
-      hex: {type: "_internal"},
+      binary: { type: "_internal" },
+      base64: { type: "_internal" },
+      hex: { type: "_internal" },
       _internal: InternalCodec
     };
     function InternalCodec(codecOptions, iconv) {
@@ -1302,8 +1303,8 @@ var require_utf32 = __commonJS({
       this.iconv = iconv, this.bomAware = !0, this.isLE = codecOptions.isLE;
     }
     __name(Utf32Codec, "Utf32Codec");
-    exports2.utf32le = {type: "_utf32", isLE: !0};
-    exports2.utf32be = {type: "_utf32", isLE: !1};
+    exports2.utf32le = { type: "_utf32", isLE: !0 };
+    exports2.utf32be = { type: "_utf32", isLE: !1 };
     exports2.ucs4le = "utf32le";
     exports2.ucs4be = "utf32be";
     Utf32Codec.prototype.encoder = Utf32Encoder;
@@ -3227,7 +3228,7 @@ var require_gbk_added = __commonJS({
 // node_modules/encoding/node_modules/iconv-lite/encodings/tables/gb18030-ranges.json
 var require_gb18030_ranges = __commonJS({
   "node_modules/encoding/node_modules/iconv-lite/encodings/tables/gb18030-ranges.json"(exports2, module2) {
-    module2.exports = {uChars: [128, 165, 169, 178, 184, 216, 226, 235, 238, 244, 248, 251, 253, 258, 276, 284, 300, 325, 329, 334, 364, 463, 465, 467, 469, 471, 473, 475, 477, 506, 594, 610, 712, 716, 730, 930, 938, 962, 970, 1026, 1104, 1106, 8209, 8215, 8218, 8222, 8231, 8241, 8244, 8246, 8252, 8365, 8452, 8454, 8458, 8471, 8482, 8556, 8570, 8596, 8602, 8713, 8720, 8722, 8726, 8731, 8737, 8740, 8742, 8748, 8751, 8760, 8766, 8777, 8781, 8787, 8802, 8808, 8816, 8854, 8858, 8870, 8896, 8979, 9322, 9372, 9548, 9588, 9616, 9622, 9634, 9652, 9662, 9672, 9676, 9680, 9702, 9735, 9738, 9793, 9795, 11906, 11909, 11913, 11917, 11928, 11944, 11947, 11951, 11956, 11960, 11964, 11979, 12284, 12292, 12312, 12319, 12330, 12351, 12436, 12447, 12535, 12543, 12586, 12842, 12850, 12964, 13200, 13215, 13218, 13253, 13263, 13267, 13270, 13384, 13428, 13727, 13839, 13851, 14617, 14703, 14801, 14816, 14964, 15183, 15471, 15585, 16471, 16736, 17208, 17325, 17330, 17374, 17623, 17997, 18018, 18212, 18218, 18301, 18318, 18760, 18811, 18814, 18820, 18823, 18844, 18848, 18872, 19576, 19620, 19738, 19887, 40870, 59244, 59336, 59367, 59413, 59417, 59423, 59431, 59437, 59443, 59452, 59460, 59478, 59493, 63789, 63866, 63894, 63976, 63986, 64016, 64018, 64021, 64025, 64034, 64037, 64042, 65074, 65093, 65107, 65112, 65127, 65132, 65375, 65510, 65536], gbChars: [0, 36, 38, 45, 50, 81, 89, 95, 96, 100, 103, 104, 105, 109, 126, 133, 148, 172, 175, 179, 208, 306, 307, 308, 309, 310, 311, 312, 313, 341, 428, 443, 544, 545, 558, 741, 742, 749, 750, 805, 819, 820, 7922, 7924, 7925, 7927, 7934, 7943, 7944, 7945, 7950, 8062, 8148, 8149, 8152, 8164, 8174, 8236, 8240, 8262, 8264, 8374, 8380, 8381, 8384, 8388, 8390, 8392, 8393, 8394, 8396, 8401, 8406, 8416, 8419, 8424, 8437, 8439, 8445, 8482, 8485, 8496, 8521, 8603, 8936, 8946, 9046, 9050, 9063, 9066, 9076, 9092, 9100, 9108, 9111, 9113, 9131, 9162, 9164, 9218, 9219, 11329, 11331, 11334, 11336, 11346, 11361, 11363, 11366, 11370, 11372, 11375, 11389, 11682, 11686, 11687, 11692, 11694, 11714, 11716, 11723, 11725, 11730, 11736, 11982, 11989, 12102, 12336, 12348, 12350, 12384, 12393, 12395, 12397, 12510, 12553, 12851, 12962, 12973, 13738, 13823, 13919, 13933, 14080, 14298, 14585, 14698, 15583, 15847, 16318, 16434, 16438, 16481, 16729, 17102, 17122, 17315, 17320, 17402, 17418, 17859, 17909, 17911, 17915, 17916, 17936, 17939, 17961, 18664, 18703, 18814, 18962, 19043, 33469, 33470, 33471, 33484, 33485, 33490, 33497, 33501, 33505, 33513, 33520, 33536, 33550, 37845, 37921, 37948, 38029, 38038, 38064, 38065, 38066, 38069, 38075, 38076, 38078, 39108, 39109, 39113, 39114, 39115, 39116, 39265, 39394, 189e3]};
+    module2.exports = { uChars: [128, 165, 169, 178, 184, 216, 226, 235, 238, 244, 248, 251, 253, 258, 276, 284, 300, 325, 329, 334, 364, 463, 465, 467, 469, 471, 473, 475, 477, 506, 594, 610, 712, 716, 730, 930, 938, 962, 970, 1026, 1104, 1106, 8209, 8215, 8218, 8222, 8231, 8241, 8244, 8246, 8252, 8365, 8452, 8454, 8458, 8471, 8482, 8556, 8570, 8596, 8602, 8713, 8720, 8722, 8726, 8731, 8737, 8740, 8742, 8748, 8751, 8760, 8766, 8777, 8781, 8787, 8802, 8808, 8816, 8854, 8858, 8870, 8896, 8979, 9322, 9372, 9548, 9588, 9616, 9622, 9634, 9652, 9662, 9672, 9676, 9680, 9702, 9735, 9738, 9793, 9795, 11906, 11909, 11913, 11917, 11928, 11944, 11947, 11951, 11956, 11960, 11964, 11979, 12284, 12292, 12312, 12319, 12330, 12351, 12436, 12447, 12535, 12543, 12586, 12842, 12850, 12964, 13200, 13215, 13218, 13253, 13263, 13267, 13270, 13384, 13428, 13727, 13839, 13851, 14617, 14703, 14801, 14816, 14964, 15183, 15471, 15585, 16471, 16736, 17208, 17325, 17330, 17374, 17623, 17997, 18018, 18212, 18218, 18301, 18318, 18760, 18811, 18814, 18820, 18823, 18844, 18848, 18872, 19576, 19620, 19738, 19887, 40870, 59244, 59336, 59367, 59413, 59417, 59423, 59431, 59437, 59443, 59452, 59460, 59478, 59493, 63789, 63866, 63894, 63976, 63986, 64016, 64018, 64021, 64025, 64034, 64037, 64042, 65074, 65093, 65107, 65112, 65127, 65132, 65375, 65510, 65536], gbChars: [0, 36, 38, 45, 50, 81, 89, 95, 96, 100, 103, 104, 105, 109, 126, 133, 148, 172, 175, 179, 208, 306, 307, 308, 309, 310, 311, 312, 313, 341, 428, 443, 544, 545, 558, 741, 742, 749, 750, 805, 819, 820, 7922, 7924, 7925, 7927, 7934, 7943, 7944, 7945, 7950, 8062, 8148, 8149, 8152, 8164, 8174, 8236, 8240, 8262, 8264, 8374, 8380, 8381, 8384, 8388, 8390, 8392, 8393, 8394, 8396, 8401, 8406, 8416, 8419, 8424, 8437, 8439, 8445, 8482, 8485, 8496, 8521, 8603, 8936, 8946, 9046, 9050, 9063, 9066, 9076, 9092, 9100, 9108, 9111, 9113, 9131, 9162, 9164, 9218, 9219, 11329, 11331, 11334, 11336, 11346, 11361, 11363, 11366, 11370, 11372, 11375, 11389, 11682, 11686, 11687, 11692, 11694, 11714, 11716, 11723, 11725, 11730, 11736, 11982, 11989, 12102, 12336, 12348, 12350, 12384, 12393, 12395, 12397, 12510, 12553, 12851, 12962, 12973, 13738, 13823, 13919, 13933, 14080, 14298, 14585, 14698, 15583, 15847, 16318, 16434, 16438, 16481, 16729, 17102, 17122, 17315, 17320, 17402, 17418, 17859, 17909, 17911, 17915, 17916, 17936, 17939, 17961, 18664, 18703, 18814, 18962, 19043, 33469, 33470, 33471, 33484, 33485, 33490, 33497, 33501, 33505, 33513, 33520, 33536, 33550, 37845, 37921, 37948, 38029, 38038, 38064, 38065, 38066, 38069, 38075, 38076, 38078, 39108, 39109, 39113, 39114, 39115, 39116, 39265, 39394, 189e3] };
   }
 });
 
@@ -3831,8 +3832,8 @@ var require_dbcs_data = __commonJS({
         table: function() {
           return require_shiftjis();
         },
-        encodeAdd: {"\xA5": 92, "\u203E": 126},
-        encodeSkipVals: [{from: 60736, to: 63808}]
+        encodeAdd: { "\xA5": 92, "\u203E": 126 },
+        encodeSkipVals: [{ from: 60736, to: 63808 }]
       },
       csshiftjis: "shiftjis",
       mskanji: "shiftjis",
@@ -3849,7 +3850,7 @@ var require_dbcs_data = __commonJS({
         table: function() {
           return require_eucjp();
         },
-        encodeAdd: {"\xA5": 92, "\u203E": 126}
+        encodeAdd: { "\xA5": 92, "\u203E": 126 }
       },
       gb2312: "cp936",
       gb231280: "cp936",
@@ -3883,7 +3884,7 @@ var require_dbcs_data = __commonJS({
           return require_gb18030_ranges();
         },
         encodeSkipVals: [128],
-        encodeAdd: {"\u20AC": 41699}
+        encodeAdd: { "\u20AC": 41699 }
       },
       chinese: "gb18030",
       windows949: "cp949",
@@ -3962,7 +3963,7 @@ var require_streams = __commonJS({
         this.conv = conv, options = options || {}, options.decodeStrings = !1, Transform.call(this, options);
       }
       __name(IconvLiteEncoderStream, "IconvLiteEncoderStream"), IconvLiteEncoderStream.prototype = Object.create(Transform.prototype, {
-        constructor: {value: IconvLiteEncoderStream}
+        constructor: { value: IconvLiteEncoderStream }
       }), IconvLiteEncoderStream.prototype._transform = function(chunk, encoding, done) {
         if (typeof chunk != "string")
           return done(new Error("Iconv encoding stream needs strings as its input."));
@@ -3991,7 +3992,7 @@ var require_streams = __commonJS({
         this.conv = conv, options = options || {}, options.encoding = this.encoding = "utf8", Transform.call(this, options);
       }
       return __name(IconvLiteDecoderStream, "IconvLiteDecoderStream"), IconvLiteDecoderStream.prototype = Object.create(Transform.prototype, {
-        constructor: {value: IconvLiteDecoderStream}
+        constructor: { value: IconvLiteDecoderStream }
       }), IconvLiteDecoderStream.prototype._transform = function(chunk, encoding, done) {
         if (!Buffer2.isBuffer(chunk) && !(chunk instanceof Uint8Array))
           return done(new Error("Iconv decoding stream needs buffers as its input."));
@@ -4257,7 +4258,7 @@ function createHeadersIterator(target, kind) {
   }, iterator2;
 }
 function exportNodeCompatibleHeaders(headers) {
-  let obj = Object.assign({__proto__: null}, headers[MAP]), hostHeaderKey = find(headers[MAP], "Host");
+  let obj = Object.assign({ __proto__: null }, headers[MAP]), hostHeaderKey = find(headers[MAP], "Host");
   return hostHeaderKey !== void 0 && (obj[hostHeaderKey] = obj[hostHeaderKey][0]), obj;
 }
 function createHeadersLenient(obj) {
@@ -4450,15 +4451,15 @@ var import_stream, import_http, import_url, import_https, import_zlib, Readable,
       slice() {
         let size = this.size, start = arguments[0], end = arguments[1], relativeStart, relativeEnd;
         start === void 0 ? relativeStart = 0 : start < 0 ? relativeStart = Math.max(size + start, 0) : relativeStart = Math.min(start, size), end === void 0 ? relativeEnd = size : end < 0 ? relativeEnd = Math.max(size + end, 0) : relativeEnd = Math.min(end, size);
-        let span = Math.max(relativeEnd - relativeStart, 0), slicedBuffer = this[BUFFER].slice(relativeStart, relativeStart + span), blob = new Blob([], {type: arguments[2]});
+        let span = Math.max(relativeEnd - relativeStart, 0), slicedBuffer = this[BUFFER].slice(relativeStart, relativeStart + span), blob = new Blob([], { type: arguments[2] });
         return blob[BUFFER] = slicedBuffer, blob;
       }
     };
     __name(Blob, "Blob");
     Object.defineProperties(Blob.prototype, {
-      size: {enumerable: !0},
-      type: {enumerable: !0},
-      slice: {enumerable: !0}
+      size: { enumerable: !0 },
+      type: { enumerable: !0 },
+      slice: { enumerable: !0 }
     });
     Object.defineProperty(Blob.prototype, Symbol.toStringTag, {
       value: "Blob",
@@ -4524,12 +4525,12 @@ var import_stream, import_http, import_url, import_https, import_zlib, Readable,
       }
     };
     Object.defineProperties(Body.prototype, {
-      body: {enumerable: !0},
-      bodyUsed: {enumerable: !0},
-      arrayBuffer: {enumerable: !0},
-      blob: {enumerable: !0},
-      json: {enumerable: !0},
-      text: {enumerable: !0}
+      body: { enumerable: !0 },
+      bodyUsed: { enumerable: !0 },
+      arrayBuffer: { enumerable: !0 },
+      blob: { enumerable: !0 },
+      json: { enumerable: !0 },
+      text: { enumerable: !0 }
     });
     Body.mixIn = function(proto) {
       for (let name2 of Object.getOwnPropertyNames(Body.prototype))
@@ -4639,15 +4640,15 @@ var import_stream, import_http, import_url, import_https, import_zlib, Readable,
       configurable: !0
     });
     Object.defineProperties(Headers.prototype, {
-      get: {enumerable: !0},
-      forEach: {enumerable: !0},
-      set: {enumerable: !0},
-      append: {enumerable: !0},
-      has: {enumerable: !0},
-      delete: {enumerable: !0},
-      keys: {enumerable: !0},
-      values: {enumerable: !0},
-      entries: {enumerable: !0}
+      get: { enumerable: !0 },
+      forEach: { enumerable: !0 },
+      set: { enumerable: !0 },
+      append: { enumerable: !0 },
+      has: { enumerable: !0 },
+      delete: { enumerable: !0 },
+      keys: { enumerable: !0 },
+      values: { enumerable: !0 },
+      entries: { enumerable: !0 }
     });
     __name(getHeaders, "getHeaders");
     INTERNAL = Symbol("internal");
@@ -4724,13 +4725,13 @@ var import_stream, import_http, import_url, import_https, import_zlib, Readable,
     __name(Response, "Response");
     Body.mixIn(Response.prototype);
     Object.defineProperties(Response.prototype, {
-      url: {enumerable: !0},
-      status: {enumerable: !0},
-      ok: {enumerable: !0},
-      redirected: {enumerable: !0},
-      statusText: {enumerable: !0},
-      headers: {enumerable: !0},
-      clone: {enumerable: !0}
+      url: { enumerable: !0 },
+      status: { enumerable: !0 },
+      ok: { enumerable: !0 },
+      redirected: { enumerable: !0 },
+      statusText: { enumerable: !0 },
+      headers: { enumerable: !0 },
+      clone: { enumerable: !0 }
     });
     Object.defineProperty(Response.prototype, Symbol.toStringTag, {
       value: "Response",
@@ -4797,12 +4798,12 @@ var import_stream, import_http, import_url, import_https, import_zlib, Readable,
       configurable: !0
     });
     Object.defineProperties(Request.prototype, {
-      method: {enumerable: !0},
-      url: {enumerable: !0},
-      headers: {enumerable: !0},
-      redirect: {enumerable: !0},
-      clone: {enumerable: !0},
-      signal: {enumerable: !0}
+      method: { enumerable: !0 },
+      url: { enumerable: !0 },
+      headers: { enumerable: !0 },
+      redirect: { enumerable: !0 },
+      clone: { enumerable: !0 },
+      signal: { enumerable: !0 }
     });
     __name(getNodeRequestOptions, "getNodeRequestOptions");
     __name(AbortError, "AbortError");
@@ -5022,7 +5023,7 @@ function graphql(request2, query, options) {
       if (!!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
         return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
   }
-  let parsedOptions = typeof query == "string" ? Object.assign({query}, options) : query, requestOptions = Object.keys(parsedOptions).reduce((result, key) => NON_VARIABLE_OPTIONS.includes(key) ? (result[key] = parsedOptions[key], result) : (result.variables || (result.variables = {}), result.variables[key] = parsedOptions[key], result), {}), baseUrl = parsedOptions.baseUrl || request2.endpoint.DEFAULTS.baseUrl;
+  let parsedOptions = typeof query == "string" ? Object.assign({ query }, options) : query, requestOptions = Object.keys(parsedOptions).reduce((result, key) => NON_VARIABLE_OPTIONS.includes(key) ? (result[key] = parsedOptions[key], result) : (result.variables || (result.variables = {}), result.variables[key] = parsedOptions[key], result), {}), baseUrl = parsedOptions.baseUrl || request2.endpoint.DEFAULTS.baseUrl;
   return GHES_V3_SUFFIX_REGEX.test(baseUrl) && (requestOptions.url = baseUrl.replace(GHES_V3_SUFFIX_REGEX, "/api/graphql")), request2(requestOptions).then((response) => {
     if (response.data.errors) {
       let headers = {};
@@ -5053,11 +5054,11 @@ var VERSION3, GraphqlError, NON_VARIABLE_OPTIONS, FORBIDDEN_VARIABLE_OPTIONS, GH
   "node_modules/@octokit/graphql/dist-web/index.js"() {
     init_dist_web5();
     init_dist_web();
-    VERSION3 = "4.6.1", GraphqlError = class extends Error {
+    VERSION3 = "4.6.2", GraphqlError = class extends Error {
       constructor(request2, response) {
         let message = response.data.errors[0].message;
         super(message);
-        Object.assign(this, response.data), Object.assign(this, {headers: response.headers}), this.name = "GraphqlError", this.request = request2, Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
+        Object.assign(this, response.data), Object.assign(this, { headers: response.headers }), this.name = "GraphqlError", this.request = request2, Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
       }
     };
     __name(GraphqlError, "GraphqlError");
@@ -5152,7 +5153,7 @@ var import_before_after_hook, VERSION4, Octokit, init_dist_web8 = __esm({
           warn: console.warn.bind(console),
           error: console.error.bind(console)
         }, options.log), this.hook = hook2, options.authStrategy) {
-          let _a = options, {authStrategy} = _a, otherOptions = __objRest(_a, ["authStrategy"]), auth2 = authStrategy(Object.assign({
+          let _a = options, { authStrategy } = _a, otherOptions = __objRest(_a, ["authStrategy"]), auth2 = authStrategy(Object.assign({
             request: this.request,
             log: this.log,
             octokit: this,
@@ -5201,13 +5202,14 @@ var import_before_after_hook, VERSION4, Octokit, init_dist_web8 = __esm({
 // node_modules/@octokit/plugin-rest-endpoint-methods/dist-web/index.js
 var dist_web_exports2 = {};
 __export(dist_web_exports2, {
+  legacyRestEndpointMethods: () => legacyRestEndpointMethods,
   restEndpointMethods: () => restEndpointMethods
 });
 function endpointsToMethods(octokit2, endpointsMap) {
   let newMethods = {};
   for (let [scope, endpoints] of Object.entries(endpointsMap))
     for (let [methodName, endpoint2] of Object.entries(endpoints)) {
-      let [route, defaults, decorations] = endpoint2, [method, url] = route.split(/ /), endpointDefaults = Object.assign({method, url}, defaults);
+      let [route, defaults, decorations] = endpoint2, [method, url] = route.split(/ /), endpointDefaults = Object.assign({ method, url }, defaults);
       newMethods[scope] || (newMethods[scope] = {});
       let scopeMethods = newMethods[scope];
       if (decorations) {
@@ -5242,8 +5244,13 @@ function decorate(octokit2, scope, methodName, defaults, decorations) {
   return __name(withDecorations, "withDecorations"), Object.assign(withDecorations, requestWithDefaults);
 }
 function restEndpointMethods(octokit2) {
+  return {
+    rest: endpointsToMethods(octokit2, Endpoints)
+  };
+}
+function legacyRestEndpointMethods(octokit2) {
   let api = endpointsToMethods(octokit2, Endpoints);
-  return __objSpread(__objSpread({}, api), {
+  return __spreadProps(__spreadValues({}, api), {
     rest: api
   });
 }
@@ -5346,7 +5353,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         getRepoPermissions: [
           "GET /repos/{owner}/{repo}/actions/permissions",
           {},
-          {renamed: ["actions", "getGithubActionsPermissionsRepository"]}
+          { renamed: ["actions", "getGithubActionsPermissionsRepository"] }
         ],
         getRepoPublicKey: ["GET /repos/{owner}/{repo}/actions/secrets/public-key"],
         getRepoSecret: ["GET /repos/{owner}/{repo}/actions/secrets/{secret_name}"],
@@ -5472,7 +5479,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         checkToken: ["POST /applications/{client_id}/token"],
         createContentAttachment: [
           "POST /content_references/{content_reference_id}/attachments",
-          {mediaType: {previews: ["corsair"]}}
+          { mediaType: { previews: ["corsair"] } }
         ],
         createFromManifest: ["POST /app-manifests/{code}/conversions"],
         createInstallationAccessToken: [
@@ -5566,7 +5573,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         getAlert: [
           "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}",
           {},
-          {renamedParameters: {alert_id: "alert_number"}}
+          { renamedParameters: { alert_id: "alert_number" } }
         ],
         getAnalysis: [
           "GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"
@@ -5585,18 +5592,18 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
       codesOfConduct: {
         getAllCodesOfConduct: [
           "GET /codes_of_conduct",
-          {mediaType: {previews: ["scarlet-witch"]}}
+          { mediaType: { previews: ["scarlet-witch"] } }
         ],
         getConductCode: [
           "GET /codes_of_conduct/{key}",
-          {mediaType: {previews: ["scarlet-witch"]}}
+          { mediaType: { previews: ["scarlet-witch"] } }
         ],
         getForRepo: [
           "GET /repos/{owner}/{repo}/community/code_of_conduct",
-          {mediaType: {previews: ["scarlet-witch"]}}
+          { mediaType: { previews: ["scarlet-witch"] } }
         ]
       },
-      emojis: {get: ["GET /emojis"]},
+      emojis: { get: ["GET /emojis"] },
       enterpriseAdmin: {
         disableSelectedOrganizationGithubActionsEnterprise: [
           "DELETE /enterprises/{enterprise}/actions/permissions/organizations/{org_id}"
@@ -5671,7 +5678,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         getRestrictionsForYourPublicRepos: [
           "GET /user/interaction-limits",
           {},
-          {renamed: ["interactions", "getRestrictionsForAuthenticatedUser"]}
+          { renamed: ["interactions", "getRestrictionsForAuthenticatedUser"] }
         ],
         removeRestrictionsForAuthenticatedUser: ["DELETE /user/interaction-limits"],
         removeRestrictionsForOrg: ["DELETE /orgs/{org}/interaction-limits"],
@@ -5681,7 +5688,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         removeRestrictionsForYourPublicRepos: [
           "DELETE /user/interaction-limits",
           {},
-          {renamed: ["interactions", "removeRestrictionsForAuthenticatedUser"]}
+          { renamed: ["interactions", "removeRestrictionsForAuthenticatedUser"] }
         ],
         setRestrictionsForAuthenticatedUser: ["PUT /user/interaction-limits"],
         setRestrictionsForOrg: ["PUT /orgs/{org}/interaction-limits"],
@@ -5689,7 +5696,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         setRestrictionsForYourPublicRepos: [
           "PUT /user/interaction-limits",
           {},
-          {renamed: ["interactions", "setRestrictionsForAuthenticatedUser"]}
+          { renamed: ["interactions", "setRestrictionsForAuthenticatedUser"] }
         ]
       },
       issues: {
@@ -5724,7 +5731,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         listEventsForRepo: ["GET /repos/{owner}/{repo}/issues/events"],
         listEventsForTimeline: [
           "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline",
-          {mediaType: {previews: ["mockingbird"]}}
+          { mediaType: { previews: ["mockingbird"] } }
         ],
         listForAuthenticatedUser: ["GET /user/issues"],
         listForOrg: ["GET /orgs/{org}/issues"],
@@ -5765,7 +5772,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         render: ["POST /markdown"],
         renderRaw: [
           "POST /markdown/raw",
-          {headers: {"content-type": "text/plain; charset=utf-8"}}
+          { headers: { "content-type": "text/plain; charset=utf-8" } }
         ]
       },
       meta: {
@@ -5778,46 +5785,46 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         cancelImport: ["DELETE /repos/{owner}/{repo}/import"],
         deleteArchiveForAuthenticatedUser: [
           "DELETE /user/migrations/{migration_id}/archive",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         deleteArchiveForOrg: [
           "DELETE /orgs/{org}/migrations/{migration_id}/archive",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         downloadArchiveForOrg: [
           "GET /orgs/{org}/migrations/{migration_id}/archive",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         getArchiveForAuthenticatedUser: [
           "GET /user/migrations/{migration_id}/archive",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         getCommitAuthors: ["GET /repos/{owner}/{repo}/import/authors"],
         getImportStatus: ["GET /repos/{owner}/{repo}/import"],
         getLargeFiles: ["GET /repos/{owner}/{repo}/import/large_files"],
         getStatusForAuthenticatedUser: [
           "GET /user/migrations/{migration_id}",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         getStatusForOrg: [
           "GET /orgs/{org}/migrations/{migration_id}",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         listForAuthenticatedUser: [
           "GET /user/migrations",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         listForOrg: [
           "GET /orgs/{org}/migrations",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         listReposForOrg: [
           "GET /orgs/{org}/migrations/{migration_id}/repositories",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         listReposForUser: [
           "GET /user/migrations/{migration_id}/repositories",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         mapCommitAuthor: ["PATCH /repos/{owner}/{repo}/import/authors/{author_id}"],
         setLfsPreference: ["PATCH /repos/{owner}/{repo}/import/lfs"],
@@ -5826,11 +5833,11 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         startImport: ["PUT /repos/{owner}/{repo}/import"],
         unlockRepoForAuthenticatedUser: [
           "DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         unlockRepoForOrg: [
           "DELETE /orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock",
-          {mediaType: {previews: ["wyandotte"]}}
+          { mediaType: { previews: ["wyandotte"] } }
         ],
         updateImport: ["PATCH /repos/{owner}/{repo}/import"]
       },
@@ -5901,7 +5908,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         getAllPackageVersionsForAPackageOwnedByAnOrg: [
           "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
           {},
-          {renamed: ["packages", "getAllPackageVersionsForPackageOwnedByOrg"]}
+          { renamed: ["packages", "getAllPackageVersionsForPackageOwnedByOrg"] }
         ],
         getAllPackageVersionsForAPackageOwnedByTheAuthenticatedUser: [
           "GET /user/packages/{package_type}/{package_name}/versions",
@@ -5956,103 +5963,103 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
       projects: {
         addCollaborator: [
           "PUT /projects/{project_id}/collaborators/{username}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         createCard: [
           "POST /projects/columns/{column_id}/cards",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         createColumn: [
           "POST /projects/{project_id}/columns",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         createForAuthenticatedUser: [
           "POST /user/projects",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         createForOrg: [
           "POST /orgs/{org}/projects",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         createForRepo: [
           "POST /repos/{owner}/{repo}/projects",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         delete: [
           "DELETE /projects/{project_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         deleteCard: [
           "DELETE /projects/columns/cards/{card_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         deleteColumn: [
           "DELETE /projects/columns/{column_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         get: [
           "GET /projects/{project_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         getCard: [
           "GET /projects/columns/cards/{card_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         getColumn: [
           "GET /projects/columns/{column_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         getPermissionForUser: [
           "GET /projects/{project_id}/collaborators/{username}/permission",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         listCards: [
           "GET /projects/columns/{column_id}/cards",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         listCollaborators: [
           "GET /projects/{project_id}/collaborators",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         listColumns: [
           "GET /projects/{project_id}/columns",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         listForOrg: [
           "GET /orgs/{org}/projects",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         listForRepo: [
           "GET /repos/{owner}/{repo}/projects",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         listForUser: [
           "GET /users/{username}/projects",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         moveCard: [
           "POST /projects/columns/cards/{card_id}/moves",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         moveColumn: [
           "POST /projects/columns/{column_id}/moves",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         removeCollaborator: [
           "DELETE /projects/{project_id}/collaborators/{username}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         update: [
           "PATCH /projects/{project_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         updateCard: [
           "PATCH /projects/columns/cards/{card_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         updateColumn: [
           "PATCH /projects/columns/{column_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ]
       },
       pulls: {
@@ -6106,7 +6113,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         update: ["PATCH /repos/{owner}/{repo}/pulls/{pull_number}"],
         updateBranch: [
           "PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch",
-          {mediaType: {previews: ["lydian"]}}
+          { mediaType: { previews: ["lydian"] } }
         ],
         updateReview: [
           "PUT /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}"
@@ -6115,86 +6122,86 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
           "PATCH /repos/{owner}/{repo}/pulls/comments/{comment_id}"
         ]
       },
-      rateLimit: {get: ["GET /rate_limit"]},
+      rateLimit: { get: ["GET /rate_limit"] },
       reactions: {
         createForCommitComment: [
           "POST /repos/{owner}/{repo}/comments/{comment_id}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         createForIssue: [
           "POST /repos/{owner}/{repo}/issues/{issue_number}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         createForIssueComment: [
           "POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         createForPullRequestReviewComment: [
           "POST /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         createForTeamDiscussionCommentInOrg: [
           "POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         createForTeamDiscussionInOrg: [
           "POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         deleteForCommitComment: [
           "DELETE /repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         deleteForIssue: [
           "DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         deleteForIssueComment: [
           "DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         deleteForPullRequestComment: [
           "DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         deleteForTeamDiscussion: [
           "DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         deleteForTeamDiscussionComment: [
           "DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         deleteLegacy: [
           "DELETE /reactions/{reaction_id}",
-          {mediaType: {previews: ["squirrel-girl"]}},
+          { mediaType: { previews: ["squirrel-girl"] } },
           {
             deprecated: "octokit.rest.reactions.deleteLegacy() is deprecated, see https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy"
           }
         ],
         listForCommitComment: [
           "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         listForIssue: [
           "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         listForIssueComment: [
           "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         listForPullRequestReviewComment: [
           "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         listForTeamDiscussionCommentInOrg: [
           "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ],
         listForTeamDiscussionInOrg: [
           "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions",
-          {mediaType: {previews: ["squirrel-girl"]}}
+          { mediaType: { previews: ["squirrel-girl"] } }
         ]
       },
       repos: {
@@ -6202,28 +6209,28 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         addAppAccessRestrictions: [
           "POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps",
           {},
-          {mapToData: "apps"}
+          { mapToData: "apps" }
         ],
         addCollaborator: ["PUT /repos/{owner}/{repo}/collaborators/{username}"],
         addStatusCheckContexts: [
           "POST /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts",
           {},
-          {mapToData: "contexts"}
+          { mapToData: "contexts" }
         ],
         addTeamAccessRestrictions: [
           "POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams",
           {},
-          {mapToData: "teams"}
+          { mapToData: "teams" }
         ],
         addUserAccessRestrictions: [
           "POST /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users",
           {},
-          {mapToData: "users"}
+          { mapToData: "users" }
         ],
         checkCollaborator: ["GET /repos/{owner}/{repo}/collaborators/{username}"],
         checkVulnerabilityAlerts: [
           "GET /repos/{owner}/{repo}/vulnerability-alerts",
-          {mediaType: {previews: ["dorian"]}}
+          { mediaType: { previews: ["dorian"] } }
         ],
         compareCommits: ["GET /repos/{owner}/{repo}/compare/{base}...{head}"],
         createCommitComment: [
@@ -6231,7 +6238,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         ],
         createCommitSignatureProtection: [
           "POST /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures",
-          {mediaType: {previews: ["zzzax"]}}
+          { mediaType: { previews: ["zzzax"] } }
         ],
         createCommitStatus: ["POST /repos/{owner}/{repo}/statuses/{sha}"],
         createDeployKey: ["POST /repos/{owner}/{repo}/keys"],
@@ -6249,12 +6256,12 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
         createPagesSite: [
           "POST /repos/{owner}/{repo}/pages",
-          {mediaType: {previews: ["switcheroo"]}}
+          { mediaType: { previews: ["switcheroo"] } }
         ],
         createRelease: ["POST /repos/{owner}/{repo}/releases"],
         createUsingTemplate: [
           "POST /repos/{template_owner}/{template_repo}/generate",
-          {mediaType: {previews: ["baptiste"]}}
+          { mediaType: { previews: ["baptiste"] } }
         ],
         createWebhook: ["POST /repos/{owner}/{repo}/hooks"],
         declineInvitation: ["DELETE /user/repository_invitations/{invitation_id}"],
@@ -6274,7 +6281,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         deleteCommitComment: ["DELETE /repos/{owner}/{repo}/comments/{comment_id}"],
         deleteCommitSignatureProtection: [
           "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures",
-          {mediaType: {previews: ["zzzax"]}}
+          { mediaType: { previews: ["zzzax"] } }
         ],
         deleteDeployKey: ["DELETE /repos/{owner}/{repo}/keys/{key_id}"],
         deleteDeployment: [
@@ -6286,7 +6293,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         ],
         deletePagesSite: [
           "DELETE /repos/{owner}/{repo}/pages",
-          {mediaType: {previews: ["switcheroo"]}}
+          { mediaType: { previews: ["switcheroo"] } }
         ],
         deletePullRequestReviewProtection: [
           "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"
@@ -6298,26 +6305,26 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         deleteWebhook: ["DELETE /repos/{owner}/{repo}/hooks/{hook_id}"],
         disableAutomatedSecurityFixes: [
           "DELETE /repos/{owner}/{repo}/automated-security-fixes",
-          {mediaType: {previews: ["london"]}}
+          { mediaType: { previews: ["london"] } }
         ],
         disableVulnerabilityAlerts: [
           "DELETE /repos/{owner}/{repo}/vulnerability-alerts",
-          {mediaType: {previews: ["dorian"]}}
+          { mediaType: { previews: ["dorian"] } }
         ],
         downloadArchive: [
           "GET /repos/{owner}/{repo}/zipball/{ref}",
           {},
-          {renamed: ["repos", "downloadZipballArchive"]}
+          { renamed: ["repos", "downloadZipballArchive"] }
         ],
         downloadTarballArchive: ["GET /repos/{owner}/{repo}/tarball/{ref}"],
         downloadZipballArchive: ["GET /repos/{owner}/{repo}/zipball/{ref}"],
         enableAutomatedSecurityFixes: [
           "PUT /repos/{owner}/{repo}/automated-security-fixes",
-          {mediaType: {previews: ["london"]}}
+          { mediaType: { previews: ["london"] } }
         ],
         enableVulnerabilityAlerts: [
           "PUT /repos/{owner}/{repo}/vulnerability-alerts",
-          {mediaType: {previews: ["dorian"]}}
+          { mediaType: { previews: ["dorian"] } }
         ],
         get: ["GET /repos/{owner}/{repo}"],
         getAccessRestrictions: [
@@ -6332,7 +6339,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         ],
         getAllTopics: [
           "GET /repos/{owner}/{repo}/topics",
-          {mediaType: {previews: ["mercy"]}}
+          { mediaType: { previews: ["mercy"] } }
         ],
         getAppsWithAccessToProtectedBranch: [
           "GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps"
@@ -6352,7 +6359,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         getCommitComment: ["GET /repos/{owner}/{repo}/comments/{comment_id}"],
         getCommitSignatureProtection: [
           "GET /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures",
-          {mediaType: {previews: ["zzzax"]}}
+          { mediaType: { previews: ["zzzax"] } }
         ],
         getCommunityProfileMetrics: ["GET /repos/{owner}/{repo}/community/profile"],
         getContent: ["GET /repos/{owner}/{repo}/contents/{path}"],
@@ -6369,6 +6376,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         getLatestRelease: ["GET /repos/{owner}/{repo}/releases/latest"],
         getPages: ["GET /repos/{owner}/{repo}/pages"],
         getPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/{build_id}"],
+        getPagesHealthCheck: ["GET /repos/{owner}/{repo}/pages/health"],
         getParticipationStats: ["GET /repos/{owner}/{repo}/stats/participation"],
         getPullRequestReviewProtection: [
           "GET /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"
@@ -6398,7 +6406,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         listBranches: ["GET /repos/{owner}/{repo}/branches"],
         listBranchesForHeadCommit: [
           "GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head",
-          {mediaType: {previews: ["groot"]}}
+          { mediaType: { previews: ["groot"] } }
         ],
         listCollaborators: ["GET /repos/{owner}/{repo}/collaborators"],
         listCommentsForCommit: [
@@ -6426,7 +6434,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         listPublic: ["GET /repositories"],
         listPullRequestsAssociatedWithCommit: [
           "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls",
-          {mediaType: {previews: ["groot"]}}
+          { mediaType: { previews: ["groot"] } }
         ],
         listReleaseAssets: [
           "GET /repos/{owner}/{repo}/releases/{release_id}/assets"
@@ -6440,7 +6448,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         removeAppAccessRestrictions: [
           "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps",
           {},
-          {mapToData: "apps"}
+          { mapToData: "apps" }
         ],
         removeCollaborator: [
           "DELETE /repos/{owner}/{repo}/collaborators/{username}"
@@ -6448,7 +6456,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         removeStatusCheckContexts: [
           "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts",
           {},
-          {mapToData: "contexts"}
+          { mapToData: "contexts" }
         ],
         removeStatusCheckProtection: [
           "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"
@@ -6456,17 +6464,17 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         removeTeamAccessRestrictions: [
           "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams",
           {},
-          {mapToData: "teams"}
+          { mapToData: "teams" }
         ],
         removeUserAccessRestrictions: [
           "DELETE /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users",
           {},
-          {mapToData: "users"}
+          { mapToData: "users" }
         ],
         renameBranch: ["POST /repos/{owner}/{repo}/branches/{branch}/rename"],
         replaceAllTopics: [
           "PUT /repos/{owner}/{repo}/topics",
-          {mediaType: {previews: ["mercy"]}}
+          { mediaType: { previews: ["mercy"] } }
         ],
         requestPagesBuild: ["POST /repos/{owner}/{repo}/pages/builds"],
         setAdminBranchProtection: [
@@ -6475,22 +6483,22 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         setAppAccessRestrictions: [
           "PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps",
           {},
-          {mapToData: "apps"}
+          { mapToData: "apps" }
         ],
         setStatusCheckContexts: [
           "PUT /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts",
           {},
-          {mapToData: "contexts"}
+          { mapToData: "contexts" }
         ],
         setTeamAccessRestrictions: [
           "PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams",
           {},
-          {mapToData: "teams"}
+          { mapToData: "teams" }
         ],
         setUserAccessRestrictions: [
           "PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/users",
           {},
-          {mapToData: "users"}
+          { mapToData: "users" }
         ],
         testPushWebhook: ["POST /repos/{owner}/{repo}/hooks/{hook_id}/tests"],
         transfer: ["POST /repos/{owner}/{repo}/transfer"],
@@ -6513,7 +6521,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         updateStatusCheckPotection: [
           "PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks",
           {},
-          {renamed: ["repos", "updateStatusCheckProtection"]}
+          { renamed: ["repos", "updateStatusCheckProtection"] }
         ],
         updateStatusCheckProtection: [
           "PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"
@@ -6524,16 +6532,16 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         ],
         uploadReleaseAsset: [
           "POST /repos/{owner}/{repo}/releases/{release_id}/assets{?name,label}",
-          {baseUrl: "https://uploads.github.com"}
+          { baseUrl: "https://uploads.github.com" }
         ]
       },
       search: {
         code: ["GET /search/code"],
-        commits: ["GET /search/commits", {mediaType: {previews: ["cloak"]}}],
+        commits: ["GET /search/commits", { mediaType: { previews: ["cloak"] } }],
         issuesAndPullRequests: ["GET /search/issues"],
         labels: ["GET /search/labels"],
         repos: ["GET /search/repositories"],
-        topics: ["GET /search/topics", {mediaType: {previews: ["mercy"]}}],
+        topics: ["GET /search/topics", { mediaType: { previews: ["mercy"] } }],
         users: ["GET /search/users"]
       },
       secretScanning: {
@@ -6551,14 +6559,14 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         ],
         addOrUpdateProjectPermissionsInOrg: [
           "PUT /orgs/{org}/teams/{team_slug}/projects/{project_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         addOrUpdateRepoPermissionsInOrg: [
           "PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"
         ],
         checkPermissionsForProjectInOrg: [
           "GET /orgs/{org}/teams/{team_slug}/projects/{project_id}",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         checkPermissionsForRepoInOrg: [
           "GET /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"
@@ -6598,7 +6606,7 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         ],
         listProjectsInOrg: [
           "GET /orgs/{org}/teams/{team_slug}/projects",
-          {mediaType: {previews: ["inertia"]}}
+          { mediaType: { previews: ["inertia"] } }
         ],
         listReposInOrg: ["GET /orgs/{org}/teams/{team_slug}/repos"],
         removeMembershipForUserInOrg: [
@@ -6652,11 +6660,13 @@ var Endpoints, VERSION5, init_dist_web9 = __esm({
         unfollow: ["DELETE /user/following/{username}"],
         updateAuthenticated: ["PATCH /user"]
       }
-    }, VERSION5 = "4.15.1";
+    }, VERSION5 = "5.1.1";
     __name(endpointsToMethods, "endpointsToMethods");
     __name(decorate, "decorate");
     __name(restEndpointMethods, "restEndpointMethods");
     restEndpointMethods.VERSION = VERSION5;
+    __name(legacyRestEndpointMethods, "legacyRestEndpointMethods");
+    legacyRestEndpointMethods.VERSION = VERSION5;
   }
 });
 
@@ -6682,9 +6692,9 @@ function iterator(octokit2, route, parameters) {
     [Symbol.asyncIterator]: () => ({
       async next() {
         if (!url)
-          return {done: !0};
-        let response = await requestMethod({method, url, headers}), normalizedResponse = normalizePaginatedListResponse(response);
-        return url = ((normalizedResponse.headers.link || "").match(/<([^>]+)>;\s*rel="next"/) || [])[1], {value: normalizedResponse};
+          return { done: !0 };
+        let response = await requestMethod({ method, url, headers }), normalizedResponse = normalizePaginatedListResponse(response);
+        return url = ((normalizedResponse.headers.link || "").match(/<([^>]+)>;\s*rel="next"/) || [])[1], { value: normalizedResponse };
       }
     })
   };
@@ -6924,13 +6934,13 @@ var require_utils3 = __commonJS({
   "node_modules/@actions/github/lib/utils.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
-      k2 === void 0 && (k2 = k), Object.defineProperty(o, k2, {enumerable: !0, get: function() {
+      k2 === void 0 && (k2 = k), Object.defineProperty(o, k2, { enumerable: !0, get: function() {
         return m[k];
-      }});
+      } });
     } : function(o, m, k, k2) {
       k2 === void 0 && (k2 = k), o[k2] = m[k];
     }), __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
-      Object.defineProperty(o, "default", {enumerable: !0, value: v});
+      Object.defineProperty(o, "default", { enumerable: !0, value: v });
     } : function(o, v) {
       o.default = v;
     }), __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -6939,10 +6949,10 @@ var require_utils3 = __commonJS({
       var result = {};
       if (mod != null)
         for (var k in mod)
-          Object.hasOwnProperty.call(mod, k) && __createBinding(result, mod, k);
+          k !== "default" && Object.hasOwnProperty.call(mod, k) && __createBinding(result, mod, k);
       return __setModuleDefault(result, mod), result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     exports2.getOctokitOptions = exports2.GitHub = exports2.context = void 0;
     var Context = __importStar(require_context()), Utils = __importStar(require_utils2()), core_1 = (init_dist_web8(), dist_web_exports), plugin_rest_endpoint_methods_1 = (init_dist_web9(), dist_web_exports2), plugin_paginate_rest_1 = (init_dist_web10(), dist_web_exports3);
     exports2.context = new Context.Context();
@@ -6967,13 +6977,13 @@ var require_github = __commonJS({
   "node_modules/@actions/github/lib/github.js"(exports2) {
     "use strict";
     var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
-      k2 === void 0 && (k2 = k), Object.defineProperty(o, k2, {enumerable: !0, get: function() {
+      k2 === void 0 && (k2 = k), Object.defineProperty(o, k2, { enumerable: !0, get: function() {
         return m[k];
-      }});
+      } });
     } : function(o, m, k, k2) {
       k2 === void 0 && (k2 = k), o[k2] = m[k];
     }), __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
-      Object.defineProperty(o, "default", {enumerable: !0, value: v});
+      Object.defineProperty(o, "default", { enumerable: !0, value: v });
     } : function(o, v) {
       o.default = v;
     }), __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -6982,10 +6992,10 @@ var require_github = __commonJS({
       var result = {};
       if (mod != null)
         for (var k in mod)
-          Object.hasOwnProperty.call(mod, k) && __createBinding(result, mod, k);
+          k !== "default" && Object.hasOwnProperty.call(mod, k) && __createBinding(result, mod, k);
       return __setModuleDefault(result, mod), result;
     };
-    Object.defineProperty(exports2, "__esModule", {value: !0});
+    Object.defineProperty(exports2, "__esModule", { value: !0 });
     exports2.getOctokit = exports2.context = void 0;
     var Context = __importStar(require_context()), utils_1 = require_utils3();
     exports2.context = new Context.Context();
@@ -7000,22 +7010,20 @@ var require_github = __commonJS({
 // actions/exec-task/index.ts
 var import_core = __toModule(require_core()), import_github = __toModule(require_github());
 init_lib();
-var token = (0, import_core.getInput)("token", {required: !0}), name = (0, import_core.getInput)("name", {required: !0}), environment = (0, import_core.getInput)("environment", {required: !0}), ignoreErrors = (0, import_core.getInput)("ignore_errors", {required: !1}) === "true", octokit = (0, import_github.getOctokit)(token);
+var token = (0, import_core.getInput)("token", { required: !0 }), name = (0, import_core.getInput)("name", { required: !0 }), environment = (0, import_core.getInput)("environment", { required: !0 }), ignoreErrors = (0, import_core.getInput)("ignore_errors", { required: !1 }) === "true", octokit = (0, import_github.getOctokit)(token);
 async function findDeploymentURL() {
   (0, import_core.info)("Fetching latest deployments");
-  for await (let {data: deployments} of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", __objSpread(__objSpread({}, import_github.context.repo), {
+  for await (let { data: deployments } of octokit.paginate.iterator("GET /repos/{owner}/{repo}/deployments", __spreadProps(__spreadValues({}, import_github.context.repo), {
     environment,
     per_page: 10,
     task: "deploy"
   }))) {
     (0, import_core.info)(deployments.length === 0 ? "No deployment found" : deployments.length === 1 ? "One deployment found" : `${deployments.length} deployments found`);
-    for (let {id} of deployments) {
+    for (let { id } of deployments) {
       (0, import_core.info)(`Fetching deployment status of the: ${id}`);
-      let {
-        data: statuses
-      } = await octokit.request("GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", __objSpread(__objSpread({}, import_github.context.repo), {deployment_id: id}));
+      let { data: statuses } = await octokit.request("GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", __spreadProps(__spreadValues({}, import_github.context.repo), { deployment_id: id }));
       (0, import_core.info)(statuses.length === 0 ? "No deployment status found" : statuses.length === 1 ? "One deployment status found" : `${statuses.length} deployment statuses found`);
-      for (let {state, target_url} of statuses)
+      for (let { state, target_url } of statuses)
         if (state === "success" && target_url)
           return (0, import_core.info)(`Success deployment found: ${target_url}`), target_url;
     }
