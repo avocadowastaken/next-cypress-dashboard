@@ -8,7 +8,7 @@
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "ES2020",
     "module": "esnext",
     "moduleResolution": "node",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
