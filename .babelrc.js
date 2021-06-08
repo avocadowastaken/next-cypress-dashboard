@@ -6,17 +6,12 @@ module.exports = (api) => {
   api.cache(() => [target].join(","));
 
   return {
+    compact: false,
     presets: ["next/babel"],
     plugins: [
       target === "web" && [
         "babel-plugin-direct-import",
-        {
-          modules: [
-            "@material-ui/lab",
-            "@material-ui/core",
-            "@material-ui/icons",
-          ],
-        },
+        { modules: ["@material-ui/lab", "@material-ui/core"] },
       ],
     ].filter(Boolean),
   };

@@ -1,5 +1,5 @@
 import {
-  createMuiTheme,
+  createTheme,
   CssBaseline,
   Link,
   ScopedCssBaseline,
@@ -16,7 +16,7 @@ import React, {
   ReactNode,
 } from "react";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     mode: "dark",
 

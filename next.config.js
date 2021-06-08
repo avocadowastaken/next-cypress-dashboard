@@ -2,6 +2,7 @@ const makeWithMDX = require("@next/mdx");
 const rehypePrism = require("@mapbox/rehype-prism");
 const makeWithPrismaPlugin = require("next-prisma-plugin");
 const makeWithBundleAnalyzer = require("@next/bundle-analyzer");
+const makeWithTranspileModules = require("next-transpile-modules");
 
 const withMDX = makeWithMDX({
   extension: /\.mdx?$/,
@@ -12,12 +13,14 @@ const withBundleAnalyzer = makeWithBundleAnalyzer({
 });
 
 const withPrismaPlugin = makeWithPrismaPlugin();
+const withTranspileModules = makeWithTranspileModules(["@material-ui/icons"]);
 
 module.exports = (phase, defaultConfig) => {
   let config = withPrismaPlugin(phase, defaultConfig);
 
   config = withMDX(config);
   config = withBundleAnalyzer(config);
+  config = withTranspileModules(config);
 
   return {
     ...config,
