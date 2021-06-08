@@ -26,9 +26,8 @@ import {
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
 import { Run } from "@prisma/client";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 
 export interface DeleteRunDialogProps {
   run: Run;
@@ -82,6 +81,8 @@ export default function RunPage(): ReactElement {
     exclude: router.query.exclude,
   });
 
+  const [modalState, setModalState] = useState<"delete">();
+
   const pageError = run.error || project.error || runInstances.error;
 
   if (pageError) {
@@ -99,32 +100,25 @@ export default function RunPage(): ReactElement {
         [formatProjectName(project.data), `/projects/${project.data.id}`],
       ]}
       actions={
-        <NextLink
-          href={{
-            pathname: router.pathname,
-            query: { ...router.query, delete: "true" },
+        <Button
+          onClick={() => {
+            setModalState("delete");
           }}
         >
-          <Button>Delete</Button>
-        </NextLink>
+          Delete
+        </Button>
       }
     >
       <DeleteRunDialog
         run={run.data}
-        open={router.query.delete === "true"}
+        open={modalState === "delete"}
         onClose={() => {
-          void router.replace({
-            pathname: router.pathname,
-            query: { ...router.query, delete: [] },
-          });
+          setModalState(undefined);
         }}
         onSuccess={() => {
           void router.replace({
             pathname: `/projects/${run.data.projectId}`,
-            query: {
-              ...router.query,
-              success: `"${run.data.ciBuildId}" run removed`,
-            },
+            query: { success: `"${run.data.ciBuildId}" run removed` },
           });
         }}
       />

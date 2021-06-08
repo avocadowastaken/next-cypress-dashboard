@@ -24,7 +24,7 @@ import { LoadingButton } from "@material-ui/lab";
 import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 
 const GITHUB_APP =
   process.env.NEXT_PUBLIC_GITHUB_APP || "next-cypress-dashboard";
@@ -112,9 +112,9 @@ function AddProjectDialogForm({
 }
 
 export function AddProjectDialog({
-  initialRepo,
   onClose,
   onSuccess,
+  initialRepo,
 }: AddProjectDialogProps): ReactElement {
   const open = typeof initialRepo == "string";
 
@@ -133,6 +133,12 @@ export default function ProjectsPage(): ReactElement {
   const router = useRouter();
   const projects = useProjectsPage({ page: router.query.page });
 
+  const [addRepo, setAddRepo] = useState<string>();
+
+  useEffect(() => {
+    if (typeof router.query.add == "string") setAddRepo(router.query.add);
+  }, [router.query.add]);
+
   if (projects.error) {
     return <ErrorPage error={projects.error} />;
   }
@@ -141,24 +147,25 @@ export default function ProjectsPage(): ReactElement {
     <AppLayout
       breadcrumbs={["Projects"]}
       actions={
-        <NextLink
-          passHref={true}
-          href={{ pathname: router.pathname, query: { add: "" } }}
+        <Button
+          size="small"
+          endIcon={<Add />}
+          onClick={() => {
+            setAddRepo("");
+          }}
         >
-          <Button size="small" endIcon={<Add />}>
-            Add
-          </Button>
-        </NextLink>
+          Add
+        </Button>
       }
     >
       <AddProjectDialog
-        initialRepo={router.query.add}
+        initialRepo={addRepo}
         onClose={() => {
-          void router.replace({ query: { ...router.query, add: [] } });
+          setAddRepo(undefined);
         }}
         onSuccess={(project) => {
+          setAddRepo(undefined);
           void projects.refetch();
-          void router.replace({ query: { ...router.query, add: [] } });
           void router.replace(`/projects/${project.id}`);
         }}
       />

@@ -32,9 +32,8 @@ import {
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
 import { Project } from "@prisma/client";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 
 interface DeleteProjectDialogProps {
   project: Project;
@@ -222,6 +221,10 @@ export default function ProjectPage(): ReactElement {
   const project = useProject(projectId);
   const runs = useRunsPage(project.data?.id, { page: router.query.page });
 
+  const [modalState, setModalState] = useState<
+    "remove" | "revoke" | "settings"
+  >();
+
   const pageError = project.error || runs.error;
 
   if (pageError) {
@@ -236,59 +239,42 @@ export default function ProjectPage(): ReactElement {
     <AppLayout
       breadcrumbs={[["Projects", "/projects"], formatProjectName(project.data)]}
       actions={
-        <NextLink
-          passHref={true}
-          href={{
-            pathname: router.pathname,
-            query: { ...router.query, settings: "true" },
+        <Button
+          onClick={() => {
+            setModalState("settings");
           }}
         >
-          <Button>Settings</Button>
-        </NextLink>
+          Settings
+        </Button>
       }
     >
       <ProjectSettingsDialog
         project={project.data}
-        open={router.query.settings === "true"}
+        open={modalState === "settings"}
         onClose={() => {
-          void router.replace({
-            pathname: router.pathname,
-            query: { ...router.query, settings: [] },
-          });
+          setModalState(undefined);
         }}
         onRemoveClick={() => {
-          void router.push({
-            pathname: router.pathname,
-            query: { ...router.query, remove: "true" },
-          });
+          setModalState("remove");
         }}
         onRevokeClick={() => {
-          void router.push({
-            pathname: router.pathname,
-            query: { ...router.query, revoke: "true" },
-          });
+          setModalState("revoke");
         }}
       />
 
       <RevokeSecretsDialog
         project={project.data}
-        open={router.query.revoke === "true"}
+        open={modalState === "revoke"}
         onClose={() => {
-          void router.replace({
-            pathname: router.pathname,
-            query: { ...router.query, revoke: [] },
-          });
+          setModalState(undefined);
         }}
       />
 
       <DeleteProjectDialog
         project={project.data}
-        open={router.query.remove === "true"}
+        open={modalState === "remove"}
         onClose={() => {
-          void router.replace({
-            pathname: router.pathname,
-            query: { ...router.query, remove: [] },
-          });
+          setModalState(undefined);
         }}
         onSubmitSuccess={() => {
           void router.replace({
