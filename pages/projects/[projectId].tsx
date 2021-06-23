@@ -2,8 +2,6 @@ import { Pre } from "@/core/components/Pre";
 import { TablePager } from "@/core/components/TablePager";
 import { AppLayout } from "@/core/layout/AppLayout";
 import { ErrorPage, useErrorHandler } from "@/core/layout/ErrorPage";
-import { Inline } from "@/core/layout/Inline";
-import { Stack } from "@/core/layout/Stack";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { extractErrorCode, formatAppError } from "@/lib/AppError";
 import { formatProjectName } from "@/projects/helpers";
@@ -23,6 +21,7 @@ import {
   DialogContent,
   DialogTitle,
   Skeleton,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -150,7 +149,7 @@ function ProjectSettingsDialog({
 
       <DialogContent>
         <Stack spacing={3}>
-          <Stack>
+          <Stack spacing={1}>
             <Typography>Project ID</Typography>
             <Typography variant="body2" display="block">
               This <code>projectId</code> should be in your{" "}
@@ -163,7 +162,7 @@ function ProjectSettingsDialog({
             />
           </Stack>
 
-          <Stack>
+          <Stack spacing={1}>
             <Typography>Record Key</Typography>
             <Typography variant="body2" display="block">
               Secret key, do not expose it, but if you did you can revoke it
@@ -197,13 +196,13 @@ function ProjectSettingsDialog({
             )}
           </Stack>
 
-          <Stack>
+          <Stack spacing={1}>
             <Typography>Danger Zone</Typography>
 
-            <Inline>
+            <Stack spacing={1} direction="row">
               <Button onClick={onRevokeClick}>Revoke Project Secrets</Button>
               <Button onClick={onRemoveClick}>Delete Project</Button>
-            </Inline>
+            </Stack>
           </Stack>
         </Stack>
       </DialogContent>

@@ -1,6 +1,11 @@
 import { AppLayoutContent } from "@/core/layout/AppLayout";
-import { Inline } from "@/core/layout/Inline";
-import { AppBar, Button, ContainerProps, Toolbar } from "@material-ui/core";
+import {
+  AppBar,
+  Button,
+  ContainerProps,
+  Stack,
+  Toolbar,
+} from "@material-ui/core";
 import Head from "next/head";
 import NextLink from "next/link";
 import React, { ReactElement, ReactNode } from "react";
@@ -28,13 +33,13 @@ export function PublicLayout({
 
       <AppBar position="sticky">
         <Toolbar>
-          <Inline justifyContent="flex-end">
+          <Stack spacing={1} direction="row" justifyContent="flex-end">
             {!!action && action}
 
             <NextLink href="/projects" passHref={true}>
               <Button color="inherit">Dashboard</Button>
             </NextLink>
-          </Inline>
+          </Stack>
         </Toolbar>
       </AppBar>
 

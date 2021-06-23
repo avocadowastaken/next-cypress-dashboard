@@ -1,7 +1,6 @@
 import { DurationChip } from "@/core/components/DurationChip";
 import { DebugStepOver, SyncCircle } from "@/core/components/icons";
-import { Inline } from "@/core/layout/Inline";
-import { Chip, Link, Tooltip } from "@material-ui/core";
+import { Chip, Link, Stack, Tooltip } from "@material-ui/core";
 import { Check, Error } from "@material-ui/icons";
 import { Run, RunInstance } from "@prisma/client";
 import NextLink from "next/link";
@@ -30,7 +29,7 @@ export function RunInstanceAttributes({
   const router = useRouter();
 
   return (
-    <Inline>
+    <Stack spacing={1} direction="row">
       <DurationChip
         start={claimedAt}
         finish={completedAt}
@@ -70,6 +69,6 @@ export function RunInstanceAttributes({
       >
         <Link>{spec}</Link>
       </NextLink>
-    </Inline>
+    </Stack>
   );
 }

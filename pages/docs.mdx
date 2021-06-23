@@ -1,11 +1,10 @@
-import { Button, Divider } from "@material-ui/core";
+import { Button, Divider, Stack } from "@material-ui/core";
 import NextLink from "next/link";
 import { PublicLayout } from "../src/core/layout/PublicLayout";
 import Deployment from "../docs/deployment.md";
 import Secrets from "../docs/secrets.md";
 import Privacy from "../docs/privacy.md";
 import Ci from "../docs/ci.md";
-import { Stack } from "../src/core/layout/Stack";
 
 <PublicLayout title="Docs" maxWidth="md" action={
   <NextLink passHref={true} href="/">
@@ -20,7 +19,7 @@ import { Stack } from "../src/core/layout/Stack";
 - [Continuous integration](#continuous_integration)
 - [Privacy](#privacy)
 
-<Stack>
+<Stack spacing={1}>
 <Divider />
 <Deployment />
 <Divider />

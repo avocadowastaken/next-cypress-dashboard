@@ -12,11 +12,9 @@ import {
   SourcePull,
 } from "@/core/components/icons";
 import { LinkChip } from "@/core/components/LinkChip";
-import { Inline } from "@/core/layout/Inline";
-import { Stack } from "@/core/layout/Stack";
 import { capitalize } from "@/lib/Text";
 import { getRunName } from "@/test-runs/helpers";
-import { Avatar, Chip, Link, Tooltip } from "@material-ui/core";
+import { Avatar, Chip, Link, Stack, Tooltip } from "@material-ui/core";
 import { Apple, Check, Error, LocalOfferOutlined } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
 import NextLink from "next/link";
@@ -84,7 +82,7 @@ export function RunAttributes({
   const router = useRouter();
 
   return (
-    <Stack>
+    <Stack spacing={1}>
       <NextLink
         passHref={true}
         href={{
@@ -92,10 +90,12 @@ export function RunAttributes({
           pathname: `/projects/${project.id}/runs/${run.id}`,
         }}
       >
-        <Link variant="subtitle1">{getRunName(run)}</Link>
+        <Link variant="subtitle1" noWrap={true}>
+          {getRunName(run)}
+        </Link>
       </NextLink>
 
-      <Inline>
+      <Stack spacing={1} direction="row">
         {run.totalFailed > 0 ? (
           <Chip icon={<Error />} label="Failed" />
         ) : run.totalPassed > 0 ? (
@@ -152,7 +152,7 @@ export function RunAttributes({
             }
           />
         </Tooltip>
-      </Inline>
+      </Stack>
     </Stack>
   );
 }

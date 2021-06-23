@@ -1,5 +1,3 @@
-import { Inline } from "@/core/layout/Inline";
-import { Stack } from "@/core/layout/Stack";
 import {
   Alert,
   AppBar,
@@ -8,6 +6,7 @@ import {
   Button,
   Container,
   Link,
+  Stack,
   Toolbar,
   Typography,
 } from "@material-ui/core";
@@ -82,11 +81,16 @@ export function AppLayoutContent({
   return (
     <Container maxWidth={maxWidth}>
       <Box paddingY={2}>
-        <Inline alignItems="center" justifyContent="space-between">
+        <Stack
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <AppBreadcrumb breadcrumbs={breadcrumbs} />
 
           {!!actions && actions}
-        </Inline>
+        </Stack>
       </Box>
 
       <Stack spacing={2}>
@@ -141,7 +145,7 @@ export function AppLayout({ breadcrumbs, ...props }: LayoutProps) {
 
       <AppBar position="sticky">
         <Toolbar>
-          <Inline justifyContent="flex-end">
+          <Stack spacing={1} direction="row" justifyContent="flex-end">
             <NextLink passHref={true} href="/docs">
               <Button color="inherit">Docs</Button>
             </NextLink>
@@ -151,7 +155,7 @@ export function AppLayout({ breadcrumbs, ...props }: LayoutProps) {
                 Sign Out
               </Button>
             </form>
-          </Inline>
+          </Stack>
         </Toolbar>
       </AppBar>
 

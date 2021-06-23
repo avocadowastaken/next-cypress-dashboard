@@ -1,7 +1,6 @@
 import { TablePager } from "@/core/components/TablePager";
 import { AppLayout } from "@/core/layout/AppLayout";
 import { ErrorPage } from "@/core/layout/ErrorPage";
-import { Stack } from "@/core/layout/Stack";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { formatProjectName } from "@/projects/helpers";
 import { useProject } from "@/projects/queries";
@@ -17,6 +16,7 @@ import {
   Divider,
   FormControlLabel,
   Skeleton,
+  Stack,
   Switch,
   Table,
   TableBody,

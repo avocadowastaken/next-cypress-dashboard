@@ -2,8 +2,6 @@ import { DebugStepOver, SyncCircle } from "@/core/components/icons";
 import { Pre } from "@/core/components/Pre";
 import { AppLayout } from "@/core/layout/AppLayout";
 import { ErrorPage } from "@/core/layout/ErrorPage";
-import { Inline } from "@/core/layout/Inline";
-import { Stack } from "@/core/layout/Stack";
 import { useRouterParam } from "@/core/routing/useRouterParam";
 import { TestResult } from "@/lib/Cypress";
 import { formatProjectName } from "@/projects/helpers";
@@ -19,6 +17,7 @@ import {
   FormControlLabel,
   IconButton,
   Skeleton,
+  Stack,
   Switch,
   Table,
   TableBody,
@@ -125,7 +124,11 @@ export default function RunInstancePage(): ReactElement {
                       <Fragment key={testResult.id}>
                         <TableRow sx={{ "& > td": { borderBottom: "none" } }}>
                           <TableCell>
-                            <Inline alignItems="center">
+                            <Stack
+                              spacing={1}
+                              direction="row"
+                              alignItems="center"
+                            >
                               <Box height="20px">
                                 {testResult.state === "passed" ? (
                                   <Check color="primary" fontSize="small" />
@@ -168,7 +171,7 @@ export default function RunInstancePage(): ReactElement {
                                   )}
                                 </IconButton>
                               )}
-                            </Inline>
+                            </Stack>
                           </TableCell>
                         </TableRow>
 
