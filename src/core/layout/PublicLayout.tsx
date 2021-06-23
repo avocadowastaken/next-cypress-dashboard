@@ -33,7 +33,12 @@ export function PublicLayout({
 
       <AppBar position="sticky">
         <Toolbar>
-          <Stack spacing={1} direction="row" justifyContent="flex-end">
+          <Stack
+            spacing={1}
+            width="100%"
+            direction="row"
+            justifyContent="flex-end"
+          >
             {!!action && action}
 
             <NextLink href="/projects" passHref={true}>
