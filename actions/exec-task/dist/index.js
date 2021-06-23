@@ -1793,7 +1793,7 @@ var require_dist_node2 = __commonJS({
       });
     }
     __name(withDefaults, "withDefaults");
-    var VERSION = "6.0.11";
+    var VERSION = "6.0.12";
     var userAgent = `octokit-endpoint.js/${VERSION} ${universalUserAgent.getUserAgent()}`;
     var DEFAULTS = {
       method: "GET",
@@ -2995,7 +2995,8 @@ var require_dist_node4 = __commonJS({
     __name(_interopDefault, "_interopDefault");
     var deprecation = require_dist_node3();
     var once = _interopDefault(require_once());
-    var logOnce = once((deprecation2) => console.warn(deprecation2));
+    var logOnceCode = once((deprecation2) => console.warn(deprecation2));
+    var logOnceHeaders = once((deprecation2) => console.warn(deprecation2));
     var RequestError = class extends Error {
       constructor(message, statusCode, options) {
         super(message);
@@ -3004,13 +3005,14 @@ var require_dist_node4 = __commonJS({
         }
         this.name = "HttpError";
         this.status = statusCode;
-        Object.defineProperty(this, "code", {
-          get() {
-            logOnce(new deprecation.Deprecation("[@octokit/request-error] `error.code` is deprecated, use `error.status`."));
-            return statusCode;
-          }
-        });
-        this.headers = options.headers || {};
+        let headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+          headers = options.headers;
+        }
+        if ("response" in options) {
+          this.response = options.response;
+          headers = options.response.headers;
+        }
         const requestCopy = Object.assign({}, options.request);
         if (options.request.headers.authorization) {
           requestCopy.headers = Object.assign({}, options.request.headers, {
@@ -3019,6 +3021,18 @@ var require_dist_node4 = __commonJS({
         }
         requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
         this.request = requestCopy;
+        Object.defineProperty(this, "code", {
+          get() {
+            logOnceCode(new deprecation.Deprecation("[@octokit/request-error] `error.code` is deprecated, use `error.status`."));
+            return statusCode;
+          }
+        });
+        Object.defineProperty(this, "headers", {
+          get() {
+            logOnceHeaders(new deprecation.Deprecation("[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."));
+            return headers || {};
+          }
+        });
       }
     };
     __name(RequestError, "RequestError");
@@ -3040,7 +3054,7 @@ var require_dist_node5 = __commonJS({
     var isPlainObject = require_is_plain_object();
     var nodeFetch = _interopDefault(require_lib());
     var requestError = require_dist_node4();
-    var VERSION = "5.5.0";
+    var VERSION = "5.6.0";
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
@@ -3059,7 +3073,7 @@ var require_dist_node5 = __commonJS({
         body: requestOptions.body,
         headers: requestOptions.headers,
         redirect: requestOptions.redirect
-      }, requestOptions.request)).then((response) => {
+      }, requestOptions.request)).then(async (response) => {
         url = response.url;
         status = response.status;
         for (const keyAndValue of response.headers) {
@@ -3078,40 +3092,40 @@ var require_dist_node5 = __commonJS({
             return;
           }
           throw new requestError.RequestError(response.statusText, status, {
-            headers,
+            response: {
+              url,
+              status,
+              headers,
+              data: void 0
+            },
             request: requestOptions
           });
         }
         if (status === 304) {
           throw new requestError.RequestError("Not modified", status, {
-            headers,
+            response: {
+              url,
+              status,
+              headers,
+              data: await getResponseData(response)
+            },
             request: requestOptions
           });
         }
         if (status >= 400) {
-          return response.text().then((message) => {
-            const error = new requestError.RequestError(message, status, {
+          const data = await getResponseData(response);
+          const error = new requestError.RequestError(toErrorMessage(data), status, {
+            response: {
+              url,
+              status,
               headers,
-              request: requestOptions
-            });
-            try {
-              let responseBody = JSON.parse(error.message);
-              Object.assign(error, responseBody);
-              let errors = responseBody.errors;
-              error.message = error.message + ": " + errors.map(JSON.stringify).join(", ");
-            } catch (e) {
-            }
-            throw error;
+              data
+            },
+            request: requestOptions
           });
+          throw error;
         }
-        const contentType = response.headers.get("content-type");
-        if (/application\/json/.test(contentType)) {
-          return response.json();
-        }
-        if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
-          return response.text();
-        }
-        return getBufferResponse(response);
+        return getResponseData(response);
       }).then((data) => {
         return {
           status,
@@ -3120,16 +3134,37 @@ var require_dist_node5 = __commonJS({
           data
         };
       }).catch((error) => {
-        if (error instanceof requestError.RequestError) {
+        if (error instanceof requestError.RequestError)
           throw error;
-        }
         throw new requestError.RequestError(error.message, 500, {
-          headers,
           request: requestOptions
         });
       });
     }
     __name(fetchWrapper, "fetchWrapper");
+    async function getResponseData(response) {
+      const contentType = response.headers.get("content-type");
+      if (/application\/json/.test(contentType)) {
+        return response.json();
+      }
+      if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
+        return response.text();
+      }
+      return getBufferResponse(response);
+    }
+    __name(getResponseData, "getResponseData");
+    function toErrorMessage(data) {
+      if (typeof data === "string")
+        return data;
+      if ("message" in data) {
+        if (Array.isArray(data.errors)) {
+          return `${data.message}: ${data.errors.map(JSON.stringify).join(", ")}`;
+        }
+        return data.message;
+      }
+      return `Unknown error: ${JSON.stringify(data)}`;
+    }
+    __name(toErrorMessage, "toErrorMessage");
     function withDefaults(oldEndpoint, newDefaults) {
       const endpoint2 = oldEndpoint.defaults(newDefaults);
       const newApi = /* @__PURE__ */ __name(function(route, parameters) {
@@ -3168,7 +3203,7 @@ var require_dist_node6 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     var request = require_dist_node5();
     var universalUserAgent = require_dist_node();
-    var VERSION = "4.6.2";
+    var VERSION = "4.6.4";
     var GraphqlError = class extends Error {
       constructor(request2, response) {
         const message = response.data.errors[0].message;
@@ -3349,7 +3384,8 @@ var require_dist_node8 = __commonJS({
       return target;
     }
     __name(_objectWithoutProperties, "_objectWithoutProperties");
-    var VERSION = "3.4.0";
+    var VERSION = "3.5.1";
+    var _excluded = ["authStrategy"];
     var Octokit = class {
       constructor(options = {}) {
         const hook = new beforeAfterHook.Collection();
@@ -3398,7 +3434,7 @@ var require_dist_node8 = __commonJS({
         } else {
           const {
             authStrategy
-          } = options, otherOptions = _objectWithoutProperties(options, ["authStrategy"]);
+          } = options, otherOptions = _objectWithoutProperties(options, _excluded);
           const auth = authStrategy(Object.assign({
             request: this.request,
             log: this.log,
@@ -4680,8 +4716,59 @@ var require_dist_node10 = __commonJS({
   "../../node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var VERSION = "2.13.3";
+    var VERSION = "2.13.5";
+    function ownKeys(object, enumerableOnly) {
+      var keys = Object.keys(object);
+      if (Object.getOwnPropertySymbols) {
+        var symbols = Object.getOwnPropertySymbols(object);
+        if (enumerableOnly) {
+          symbols = symbols.filter(function(sym) {
+            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+          });
+        }
+        keys.push.apply(keys, symbols);
+      }
+      return keys;
+    }
+    __name(ownKeys, "ownKeys");
+    function _objectSpread2(target) {
+      for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i] != null ? arguments[i] : {};
+        if (i % 2) {
+          ownKeys(Object(source), true).forEach(function(key) {
+            _defineProperty(target, key, source[key]);
+          });
+        } else if (Object.getOwnPropertyDescriptors) {
+          Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+        } else {
+          ownKeys(Object(source)).forEach(function(key) {
+            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+          });
+        }
+      }
+      return target;
+    }
+    __name(_objectSpread2, "_objectSpread2");
+    function _defineProperty(obj, key, value) {
+      if (key in obj) {
+        Object.defineProperty(obj, key, {
+          value,
+          enumerable: true,
+          configurable: true,
+          writable: true
+        });
+      } else {
+        obj[key] = value;
+      }
+      return obj;
+    }
+    __name(_defineProperty, "_defineProperty");
     function normalizePaginatedListResponse(response) {
+      if (!response.data) {
+        return _objectSpread2(_objectSpread2({}, response), {}, {
+          data: []
+        });
+      }
       const responseNeedsNormalization = "total_count" in response.data && !("url" in response.data);
       if (!responseNeedsNormalization)
         return response;
@@ -4717,16 +4804,29 @@ var require_dist_node10 = __commonJS({
               return {
                 done: true
               };
-            const response = await requestMethod({
-              method,
-              url,
-              headers
-            });
-            const normalizedResponse = normalizePaginatedListResponse(response);
-            url = ((normalizedResponse.headers.link || "").match(/<([^>]+)>;\s*rel="next"/) || [])[1];
-            return {
-              value: normalizedResponse
-            };
+            try {
+              const response = await requestMethod({
+                method,
+                url,
+                headers
+              });
+              const normalizedResponse = normalizePaginatedListResponse(response);
+              url = ((normalizedResponse.headers.link || "").match(/<([^>]+)>;\s*rel="next"/) || [])[1];
+              return {
+                value: normalizedResponse
+              };
+            } catch (error) {
+              if (error.status !== 409)
+                throw error;
+              url = "";
+              return {
+                value: {
+                  status: 200,
+                  headers: {},
+                  data: []
+                }
+              };
+            }
           }
         })
       };

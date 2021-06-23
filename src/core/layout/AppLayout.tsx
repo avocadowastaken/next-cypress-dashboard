@@ -145,7 +145,12 @@ export function AppLayout({ breadcrumbs, ...props }: LayoutProps) {
 
       <AppBar position="sticky">
         <Toolbar>
-          <Stack spacing={1} direction="row" justifyContent="flex-end">
+          <Stack
+            spacing={1}
+            width="100%"
+            direction="row"
+            justifyContent="flex-end"
+          >
             <NextLink passHref={true} href="/docs">
               <Button color="inherit">Docs</Button>
             </NextLink>
