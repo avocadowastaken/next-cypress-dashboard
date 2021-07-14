@@ -1359,6 +1359,13 @@ babel-plugin-apply-mdx-type-prop@1.6.22:
     "@babel/helper-plugin-utils" "7.10.4"
     "@mdx-js/util" "1.6.22"
 
+babel-plugin-direct-import@0.8.1:
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/babel-plugin-direct-import/-/babel-plugin-direct-import-0.8.1.tgz#e43cb8eb9b63bcca278f857c26fb328da475e1a8"
+  integrity sha512-9RelOQHG69t8cdN34LTOfbyH0/eRflC0aekaBBI2LoW40MfN/7TklcFZQzlECfSTUrbcEXjsgRxccbfGaeJs8A==
+  dependencies:
+    resolve "^1.20.0"
+
 babel-plugin-extract-import-names@1.6.22:
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/babel-plugin-extract-import-names/-/babel-plugin-extract-import-names-1.6.22.tgz#de5f9a28eb12f3eb2578bf74472204e66d1a13dc"
