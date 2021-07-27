@@ -1,7 +1,0 @@
-POST http://localhost:3000/api/tasks/cleanup-runs
-Content-Type: application/json
-Authorization: Token 123
-
-{}
-
-###

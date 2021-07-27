@@ -1,5 +1,6 @@
-import { DateChip } from "@/core/components/DateChip";
-import { DurationChip } from "@/core/components/DurationChip";
+import { capitalize } from "@/lib/Text";
+import { DateChip } from "@/ui/DateChip";
+import { DurationChip } from "@/ui/DurationChip";
 import {
   ElectronFramework,
   Firefox,
@@ -10,16 +11,15 @@ import {
   SourceBranch,
   SourceCommit,
   SourcePull,
-} from "@/core/components/icons";
-import { LinkChip } from "@/core/components/LinkChip";
-import { capitalize } from "@/lib/Text";
-import { getRunName } from "@/test-runs/helpers";
+} from "@/ui/icons";
+import { LinkChip } from "@/ui/LinkChip";
 import { Avatar, Chip, Link, Stack, Tooltip } from "@material-ui/core";
 import { Apple, Check, Error, LocalOfferOutlined } from "@material-ui/icons";
 import { Project, Run } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
+import { getRunName } from "./runHelpers";
 
 const TAG_PATTERN = /^refs\/tags\/(.+)$/;
 const PR_BRANCH_PATTERN = /^refs\/pull\/(\d+)\/merge$/;

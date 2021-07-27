@@ -1,4 +1,3 @@
-import { NCD_SECRET } from "@/core/secrets";
 import { createApiHandler } from "@/lib/Api";
 import { AppError } from "@/lib/AppError";
 import {
@@ -15,6 +14,7 @@ import {
   UpdateInstanceInput,
 } from "@/lib/Cypress";
 import { prisma } from "@/lib/db";
+import { NCD_SECRET } from "@/lib/secrets";
 import { trim } from "@/lib/Text";
 import { Prisma, Run } from "@prisma/client";
 

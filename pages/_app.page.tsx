@@ -1,8 +1,8 @@
 import {
   AppRouterProgressIndicator,
   AppRouterStateProvider,
-} from "@/core/routing/AppRouterState";
-import { AppThemeProvider } from "@/core/theme/AppThemeProvider";
+} from "@/ui/AppRouterState";
+import { AppThemeProvider } from "@/ui/AppThemeProvider";
 import { AppProps } from "next/app";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -28,7 +28,6 @@ export default function App({ Component, pageProps }: AppProps) {
           )}
 
           <AppRouterProgressIndicator />
-
           <Component {...pageProps} />
         </QueryClientProvider>
       </AppRouterStateProvider>

@@ -1,5 +1,3 @@
-import { SESSION_SECRET } from "@/core/secrets";
-import { AppError } from "@/lib/AppError";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import {
   applySession,
@@ -7,6 +5,8 @@ import {
   Session,
   SessionOptions,
 } from "next-iron-session";
+import { AppError } from "./AppError";
+import { SESSION_SECRET } from "./secrets";
 
 declare module "next" {
   export interface NextApiRequest {
@@ -40,10 +40,6 @@ export async function getSSPSession({
 
 export function getRequestSession(req: NextApiRequest): RequestSession {
   const userId = req.session.get("userId");
-
-  if (!userId) {
-    throw new AppError("UNAUTHORIZED");
-  }
-
+  if (!userId) throw new AppError("UNAUTHORIZED");
   return { userId };
 }

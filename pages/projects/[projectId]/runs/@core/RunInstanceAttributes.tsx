@@ -1,5 +1,5 @@
-import { DurationChip } from "@/core/components/DurationChip";
-import { DebugStepOver, SyncCircle } from "@/core/components/icons";
+import { DurationChip } from "@/ui/DurationChip";
+import { DebugStepOver, SyncCircle } from "@/ui/icons";
 import { Chip, Link, Stack, Tooltip } from "@material-ui/core";
 import { Check, Error } from "@material-ui/icons";
 import { Run, RunInstance } from "@prisma/client";

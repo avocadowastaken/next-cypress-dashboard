@@ -1,15 +1,9 @@
-import { DebugStepOver, SyncCircle } from "@/core/components/icons";
-import { Pre } from "@/core/components/Pre";
-import { AppLayout } from "@/core/layout/AppLayout";
-import { ErrorPage } from "@/core/layout/ErrorPage";
-import { useRouterParam } from "@/core/routing/useRouterParam";
 import { TestResult } from "@/lib/Cypress";
-import { formatProjectName } from "@/projects/helpers";
-import { useProject } from "@/projects/queries";
-import { RunInstanceAttributes } from "@/test-run-instances/components/RunInstanceAttributes";
-import { useRunInstance } from "@/test-run-instances/queries";
-import { RunAttributes } from "@/test-runs/components/RunAttributes";
-import { useRun } from "@/test-runs/queries";
+import { AppLayout } from "@/ui/AppLayout";
+import { ErrorPage } from "@/ui/ErrorPage";
+import { DebugStepOver, SyncCircle } from "@/ui/icons";
+import { Pre } from "@/ui/Pre";
+import { useRouterParam } from "@/ui/useRouterParam";
 import {
   Box,
   Collapse,
@@ -34,6 +28,12 @@ import {
 } from "@material-ui/icons";
 import { useRouter } from "next/router";
 import React, { Fragment, ReactElement, useState } from "react";
+import { formatProjectName } from "../../../../@core/projectHelpers";
+import { useProject } from "../../../../@core/projectQueries";
+import { RunAttributes } from "../../../../@core/RunAttributes";
+import { useRun } from "../../../../@core/runQueries";
+import { RunInstanceAttributes } from "../../@core/RunInstanceAttributes";
+import { useRunInstance } from "../../@core/runQueries";
 
 export default function RunInstancePage(): ReactElement {
   const router = useRouter();

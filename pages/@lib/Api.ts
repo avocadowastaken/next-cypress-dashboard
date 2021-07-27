@@ -1,9 +1,9 @@
-import { AppError, getAppErrorStatusCode } from "@/lib/AppError";
-import { sessionMiddleware } from "@/lib/Session";
 import { randomBytes } from "crypto";
 import morgan from "morgan";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import nc, { NextConnect } from "next-connect";
+import { AppError, getAppErrorStatusCode } from "./AppError";
+import { sessionMiddleware } from "./Session";
 
 export function createApiHandler(
   setup: (app: NextConnect<NextApiRequest, NextApiResponse>) => void

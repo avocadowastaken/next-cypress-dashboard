@@ -29,8 +29,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/lib/*": ["lib/*"],
-      "@/*": ["src/*"]
+      "@/ui/*": ["./pages/@ui/*"],
+      "@/lib/*": ["./pages/@lib/*"]
     }
   }
 }

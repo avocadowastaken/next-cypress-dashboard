@@ -1,10 +1,10 @@
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "@/core/secrets";
-import { AppError } from "@/lib/AppError";
-import { prisma } from "@/lib/db";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Octokit } from "@octokit/core";
 import { components } from "@octokit/openapi-types";
 import { RequestError } from "@octokit/request-error";
+import { AppError } from "./AppError";
+import { prisma } from "./db";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "./secrets";
 
 export async function obtainAccessToken(
   code: string,

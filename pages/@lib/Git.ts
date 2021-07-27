@@ -1,5 +1,5 @@
-import { AppError } from "@/lib/AppError";
 import gitUrlParse from "git-url-parse";
+import { AppError } from "./AppError";
 
 const resourceProviderMap = new Map<string, string>().set(
   "github.com",

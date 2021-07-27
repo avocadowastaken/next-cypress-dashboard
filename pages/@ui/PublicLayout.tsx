@@ -1,4 +1,3 @@
-import { AppLayoutContent } from "@/core/layout/AppLayout";
 import {
   AppBar,
   Button,
@@ -9,6 +8,7 @@ import {
 import Head from "next/head";
 import NextLink from "next/link";
 import React, { ReactElement, ReactNode } from "react";
+import { AppLayoutContent } from "./AppLayout";
 
 export interface PublicLayoutProps {
   title?: string;

@@ -1,18 +1,9 @@
-import { Pre } from "@/core/components/Pre";
-import { TablePager } from "@/core/components/TablePager";
-import { AppLayout } from "@/core/layout/AppLayout";
-import { ErrorPage, useErrorHandler } from "@/core/layout/ErrorPage";
-import { useRouterParam } from "@/core/routing/useRouterParam";
 import { extractErrorCode, formatAppError } from "@/lib/AppError";
-import { formatProjectName } from "@/projects/helpers";
-import {
-  useDeleteProject,
-  useProject,
-  useProjectSecrets,
-  useRevokeProjectSecrets,
-} from "@/projects/queries";
-import { RunAttributes } from "@/test-runs/components/RunAttributes";
-import { useRunsPage } from "@/test-runs/queries";
+import { AppLayout } from "@/ui/AppLayout";
+import { ErrorPage, useErrorHandler } from "@/ui/ErrorPage";
+import { Pre } from "@/ui/Pre";
+import { TablePager } from "@/ui/TablePager";
+import { useRouterParam } from "@/ui/useRouterParam";
 import {
   Alert,
   Button,
@@ -33,6 +24,15 @@ import { LoadingButton } from "@material-ui/lab";
 import { Project } from "@prisma/client";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";
+import { formatProjectName } from "./@core/projectHelpers";
+import {
+  useDeleteProject,
+  useProject,
+  useProjectSecrets,
+  useRevokeProjectSecrets,
+} from "./@core/projectQueries";
+import { RunAttributes } from "./@core/RunAttributes";
+import { useRunsPage } from "./@core/runQueries";
 
 interface DeleteProjectDialogProps {
   project: Project;

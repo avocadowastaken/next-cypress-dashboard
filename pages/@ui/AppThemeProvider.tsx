@@ -186,12 +186,24 @@ function MDXHeading({
 
 const mdxComponents: Components = {
   a: MDXAnchor,
-  h1: (props) => <MDXHeading {...props} as="h1" />,
-  h2: (props) => <MDXHeading {...props} as="h2" />,
-  h3: (props) => <MDXHeading {...props} as="h3" />,
-  h4: (props) => <MDXHeading {...props} as="h4" />,
-  h5: (props) => <MDXHeading {...props} as="h5" />,
-  h6: (props) => <MDXHeading {...props} as="h6" />,
+  h1(props) {
+    return <MDXHeading {...props} as="h1" />;
+  },
+  h2(props) {
+    return <MDXHeading {...props} as="h2" />;
+  },
+  h3(props) {
+    return <MDXHeading {...props} as="h3" />;
+  },
+  h4(props) {
+    return <MDXHeading {...props} as="h4" />;
+  },
+  h5(props) {
+    return <MDXHeading {...props} as="h5" />;
+  },
+  h6(props) {
+    return <MDXHeading {...props} as="h6" />;
+  },
 };
 
 export interface ThemeConfigProps {

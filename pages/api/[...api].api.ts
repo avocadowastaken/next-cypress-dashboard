@@ -1,4 +1,3 @@
-import { GITHUB_CLIENT_ID, NCD_SECRET } from "@/core/secrets";
 import { createApiHandler } from "@/lib/Api";
 import { AppError } from "@/lib/AppError";
 import { prisma } from "@/lib/db";
@@ -9,6 +8,7 @@ import {
   verifyGitHubRepoAccess,
 } from "@/lib/GitHub";
 import { createPageResponse } from "@/lib/PageResponse";
+import { GITHUB_CLIENT_ID, NCD_SECRET } from "@/lib/secrets";
 import { getRequestSession } from "@/lib/Session";
 import { Prisma } from "@prisma/client";
 import { createHash } from "crypto";

@@ -1,6 +1,6 @@
-import { trim } from "@/lib/Text";
 import { Browser, OS } from "@prisma/client";
 import { JsonObject } from "type-fest";
+import { trim } from "./Text";
 
 export function toOS(input: unknown): OS {
   const os = trim(input).toLocaleLowerCase() as OS;

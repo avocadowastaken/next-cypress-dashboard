@@ -1,5 +1,6 @@
 import { getSSPSession } from "@/lib/Session";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+import { ReactElement } from "react";
 
 export async function getServerSideProps(
   ctx: GetServerSidePropsContext
@@ -13,6 +14,6 @@ export async function getServerSideProps(
   }
 }
 
-export default function IndexPage(): null {
-  return null;
+export default function IndexPage(): ReactElement {
+  return <div>Redirecting…</div>;
 }

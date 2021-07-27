@@ -4,9 +4,9 @@ import {
   PageInput,
   PageResponse,
 } from "@/lib/PageResponse";
-import { useRun } from "@/test-runs/queries";
 import { Run, RunInstance } from "@prisma/client";
 import { useQuery, useQueryClient, UseQueryResult } from "react-query";
+import { useRun } from "../../../@core/runQueries";
 
 export function useRunInstancesPage(
   projectId: string | undefined,

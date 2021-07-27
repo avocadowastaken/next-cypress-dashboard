@@ -25,5 +25,5 @@ export async function getServerSideProps({
 }
 
 export default function RunShortURL() {
-  return null;
+  return <div>Redirecting…</div>;
 }
