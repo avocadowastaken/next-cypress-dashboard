@@ -2,9 +2,9 @@
 
 ## Usage
 
-1. Sign In (only GitHub is supported now)
-2. Import a Git repo (again, only GitHub for now)
-3. Patch Cypress agent config (check [Sorry Cypress documentation](https://sorry-cypress.dev/quickstart#reconfigure-cypress-agent))
+1. Sign In using GitHub
+2. Import a GitHub repo
+3. Patch Cypress agent config (check [patch-cypress-config](https://github.com/umidbekk/next-cypress-dashboard/tree/main/actions/patch-cypress-config) action)
 4. Run Cypress
 
 Fur further information check the [docs](/docs).
