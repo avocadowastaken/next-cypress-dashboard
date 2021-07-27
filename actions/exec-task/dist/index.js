@@ -3727,16 +3727,8 @@ var require_dist_node9 = __commonJS({
         uploadSarif: ["POST /repos/{owner}/{repo}/code-scanning/sarifs"]
       },
       codesOfConduct: {
-        getAllCodesOfConduct: ["GET /codes_of_conduct", {
-          mediaType: {
-            previews: ["scarlet-witch"]
-          }
-        }],
-        getConductCode: ["GET /codes_of_conduct/{key}", {
-          mediaType: {
-            previews: ["scarlet-witch"]
-          }
-        }],
+        getAllCodesOfConduct: ["GET /codes_of_conduct"],
+        getConductCode: ["GET /codes_of_conduct/{key}"],
         getForRepo: ["GET /repos/{owner}/{repo}/community/code_of_conduct", {
           mediaType: {
             previews: ["scarlet-witch"]
@@ -4637,7 +4629,7 @@ var require_dist_node9 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "5.4.1";
+    var VERSION = "5.5.1";
     function endpointsToMethods(octokit2, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
