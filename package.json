@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "analyze": "ANALYZE=true yarn build:next",
-    "postinstall": "husky install",
     "dev": "run-p dev:*",
     "dev:next": "next dev",
     "dev:prisma": "prisma generate --watch",
