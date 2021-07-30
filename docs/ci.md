@@ -16,7 +16,7 @@ steps:
 
   - run: npm ci
 
-  - uses: umidbekkarimov/next-cypress-dashboard/actions/patch-cypress-config@main
+  - uses: umidbekk/next-cypress-dashboard/actions/patch-cypress-config@main
     with:
       api_url: ${{ secrets.NEXT_CYPRESS_DASHBOARD_URL }}
 
