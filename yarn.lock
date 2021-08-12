@@ -770,10 +770,10 @@
   resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-11.0.1.tgz#5dd3264a40fadcf28eba00d914d69103422bb7e6"
   integrity sha512-UzdX3y6XSrj9YuASUb/p4sRvfjP2klj2YgIOfMwrWoLTTPJQMh00hREB9Ftr7m7RIxjVSAaaLXIRLdxvq948GA==
 
-"@next/mdx@11.0.1":
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/@next/mdx/-/mdx-11.0.1.tgz#951a42e348089daa3ad8c76a0f303bf3a8421d77"
-  integrity sha512-tp1zeoSaX/tMQaJat4oTXm9bzrJN3XugSAzamP8/5uajJdkvIrQVV3PIVoOtTbbHJSNQeoeom+HQEmJqc5FQ6A==
+"@next/mdx@11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@next/mdx/-/mdx-11.1.0.tgz#79d6d20e0906e81c07aed0f8286d58530d051be6"
+  integrity sha512-X+NwSByGr9HuPkGs1nrzhmJ5qqQbv6CpEA3dJKEYHaDe7YzEUCM00Y7abxOzowXhUXeDdAHJ7IeIV4GZMhdcpg==
 
 "@next/polyfill-module@11.0.1":
   version "11.0.1"
@@ -4827,10 +4827,10 @@ react-is@^16.7.0, react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-query@3.19.4:
-  version "3.19.4"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.19.4.tgz#67b97470446bd0315d02066debec7775cac83f29"
-  integrity sha512-/jQXoYv2IqWnYx665M1da/M6EFaaSDtP8jVqcCFk3vhpJsNYYwFG9vPjqIUv/GRpKp4qzk+qwTkJfF/bHeBuZQ==
+react-query@3.19.5:
+  version "3.19.5"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.19.5.tgz#eeb8b122c075abe69775ef3b5a4307f5cadfd320"
+  integrity sha512-RMYc8ybtYRSagvOISL2Yz+GG0dcCajDYUzBv/N8jABmudzq5bqDO9yOSqOgXQRGzngIPI8321fzQ85SG+kq+0w==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
