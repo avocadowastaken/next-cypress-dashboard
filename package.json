@@ -57,7 +57,7 @@
     "@types/morgan": "1.9.3",
     "@types/node": "16.6.1",
     "@types/node-fetch": "2.5.12",
-    "@types/react": "17.0.17",
+    "@types/react": "17.0.18",
     "babel-plugin-direct-import": "0.8.4",
     "cypress": "8.2.0",
     "dotenv": "10.0.0",
