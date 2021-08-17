@@ -1,3 +1,5 @@
 {
-  "extends": ["config:base", "group:all", ":automergeMinor"]
+  "extends": ["config:base", "group:all"],
+  "automerge": true,
+  "lockFileMaintenance": { "enabled": true }
 }
