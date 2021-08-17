@@ -4617,10 +4617,10 @@ prettier-plugin-organize-imports@2.3.3:
   resolved "https://registry.yarnpkg.com/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-2.3.3.tgz#6877bcf8ca02569198d8f419c954a0d90a95de15"
   integrity sha512-PBOwQ8vEIB2b7B3gCuBG7D+dqsr1fsTR4TSAjNacRVdHJrD0yzgz9grOLPSyfwJm+NUTZLyWeHoZ+1mHaUrk+g==
 
-prettier-plugin-prisma@2.29.0:
-  version "2.29.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-prisma/-/prettier-plugin-prisma-2.29.0.tgz#e15f50fc70145ab38a8834c26dc95336f207e041"
-  integrity sha512-ct+ER3R+WB/l5/lwB6k28v9enmwxKBCUkPTWYkCUc8x4+KT6pbZTNnD+mogqioJjq3PTFNgZebpbrCj5314KHA==
+prettier-plugin-prisma@2.29.1:
+  version "2.29.1"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-prisma/-/prettier-plugin-prisma-2.29.1.tgz#b9faf4f8dc22b1851f8f8e619a0f6571bae9d7d0"
+  integrity sha512-Vurtz/NhqSD7Sodulcihs5Dxeg6QUn2mPb6d4c+DmQfm6rH8++kBd/D1Z897MWp4gr1/iymu35KVqQhCvozTzQ==
 
 prettier@2.3.2:
   version "2.3.2"
