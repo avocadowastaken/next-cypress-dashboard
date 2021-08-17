@@ -59,7 +59,7 @@
     "@types/node-fetch": "2.5.12",
     "@types/react": "17.0.18",
     "babel-plugin-direct-import": "0.8.4",
-    "cypress": "8.2.0",
+    "cypress": "8.3.0",
     "dotenv": "10.0.0",
     "esbuild": "0.12.20",
     "eslint": "7.32.0",
