@@ -3,7 +3,7 @@
   "dependencyDashboard": true,
   "postUpdateOptions": ["yarnDedupeHighest"],
   "postUpgradeTasks": {
-    "executionMode": "update",
+    "executionMode": "branch",
     "commands": ["yarn build:actions"],
     "fileFilters": ["actions/**/dist/**/*.js"]
   },
