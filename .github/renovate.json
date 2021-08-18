@@ -5,7 +5,7 @@
   "postUpgradeTasks": {
     "executionMode": "update",
     "commands": ["yarn build:actions"],
-    "fileFilters": ["yarn.lock", "actions/**/*.ts", "actions/**/*.yml"]
+    "fileFilters": ["actions/**/dist/**/*.js"]
   },
   "lockFileMaintenance": { "enabled": true, "automerge": true },
   "packageRules": [
