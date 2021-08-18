@@ -2,11 +2,6 @@
   "extends": ["config:base", "group:all"],
   "dependencyDashboard": true,
   "postUpdateOptions": ["yarnDedupeHighest"],
-  "postUpgradeTasks": {
-    "executionMode": "update",
-    "commands": ["yarn build:actions"],
-    "fileFilters": ["actions/**/dist/**/*.js"]
-  },
   "lockFileMaintenance": { "enabled": true, "automerge": true },
   "packageRules": [
     {
