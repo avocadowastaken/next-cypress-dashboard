@@ -1,11 +1,15 @@
-name: main
+name: checks
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
@@ -13,6 +17,6 @@ jobs:
       - uses: umidbekk/actions/npm/install@v1
       - run: yarn checks
       - run: yarn build:actions
-      - run: |
-          git add .
-          git diff --quiet || exit 1
+
+      - uses: EndBug/add-and-commit@v7
+        if: ${{ failure() && github.event_name == 'pull_request' }}
