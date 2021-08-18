@@ -8,8 +8,10 @@ const ACTIONS_DIR = path.join(__dirname, "..", "actions");
 
 for (const action of fs.readdirSync(ACTIONS_DIR)) {
   console.log("Building: %s", action);
-  execa.sync("npx", ["rapidbundle"], {
+  const result = execa.sync("npx", ["rapidbundle"], {
+    reject: false,
     stdio: "inherit",
     cwd: path.join(ACTIONS_DIR, action),
   });
+  if (result.exitCode) process.exitCode = 1;
 }
