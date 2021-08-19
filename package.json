@@ -17,7 +17,8 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*": "prettier --write --ignore-unknown"
+    "*": "prettier --write --ignore-unknown",
+    "package-lock.json": "npm ddp"
   },
   "dependencies": {
     "@emotion/react": "11.4.1",
@@ -47,6 +48,7 @@
     "@actions/exec": "1.1.0",
     "@actions/github": "5.0.0",
     "@actions/glob": "0.2.0",
+    "@babel/core": "7.15.0",
     "@mapbox/rehype-prism": "0.7.0",
     "@mdx-js/loader": "1.6.22",
     "@next/mdx": "11.1.0",
