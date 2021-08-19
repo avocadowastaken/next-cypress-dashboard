@@ -92,15 +92,11 @@ export default createApiHandler((app) => {
 
     const oneDayAgo = startOfYesterday();
 
-    const { count: runInstances } = await prisma.runInstance.deleteMany({
-      where: { createdAt: { lte: oneDayAgo } },
-    });
-
     const { count: runs } = await prisma.run.deleteMany({
       where: { createdAt: { lte: oneDayAgo } },
     });
 
-    res.send(JSON.stringify({ runs, runInstances }));
+    res.send(JSON.stringify({ runs }));
   });
 
   app.get<{ params: { email: string } }>(
@@ -311,15 +307,11 @@ export default createApiHandler((app) => {
       const run = await prisma.run.findFirst({
         rejectOnNotFound: true,
         select: { project: true },
-        where: {
-          id: runId,
-          project: { users: { some: { id: userId } } },
-        },
+        where: { id: runId, project: { users: { some: { id: userId } } } },
       });
 
       await verifyGitHubRepoAccess(userId, run.project.org, run.project.repo);
 
-      await prisma.runInstance.deleteMany({ where: { runId } });
       await prisma.run.deleteMany({ where: { id: runId } });
 
       res.json(run);
