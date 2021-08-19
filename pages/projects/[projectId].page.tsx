@@ -1,6 +1,6 @@
 import { extractErrorCode, formatAppError } from "@/lib/AppError";
 import { AppLayout } from "@/ui/AppLayout";
-import { ErrorPage, useErrorHandler } from "@/ui/ErrorPage";
+import { useErrorHandler } from "@/ui/ErrorPage";
 import { Pre } from "@/ui/Pre";
 import { TablePager } from "@/ui/TablePager";
 import { useRouterParam } from "@/ui/useRouterParam";
@@ -33,6 +33,47 @@ import {
 } from "./@core/projectQueries";
 import { RunAttributes } from "./@core/RunAttributes";
 import { useRunsPage } from "./@core/runQueries";
+
+interface ProjectErrorDialogProps {
+  error: unknown;
+  projectId: string;
+  onRetry: () => void;
+  onDeleteSuccess: () => void;
+}
+
+function ProjectErrorDialog({
+  error,
+  projectId,
+  onRetry,
+  onDeleteSuccess,
+}: ProjectErrorDialogProps) {
+  const code = extractErrorCode(error);
+  const { mutate, isLoading } = useDeleteProject({
+    onSuccess: onDeleteSuccess,
+  });
+
+  useErrorHandler(error);
+
+  return (
+    <Dialog open={true}>
+      <DialogContent>{formatAppError(code)}</DialogContent>
+
+      <DialogActions>
+        <Button onClick={onRetry} disabled={isLoading}>
+          Retry
+        </Button>
+        <LoadingButton
+          loading={isLoading}
+          onClick={() => {
+            mutate(projectId);
+          }}
+        >
+          Delete
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 interface DeleteProjectDialogProps {
   project: Project;
@@ -227,7 +268,21 @@ export default function ProjectPage(): ReactElement {
   const pageError = project.error || runs.error;
 
   if (pageError) {
-    return <ErrorPage error={pageError} />;
+    return (
+      <ProjectErrorDialog
+        error={pageError}
+        projectId={projectId}
+        onRetry={() => {
+          router.reload();
+        }}
+        onDeleteSuccess={() => {
+          void router.replace({
+            pathname: "/projects",
+            query: { success: "Project removed" },
+          });
+        }}
+      />
+    );
   }
 
   if (!project.data) {

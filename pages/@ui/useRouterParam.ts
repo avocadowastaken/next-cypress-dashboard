@@ -1,17 +1,11 @@
 import { useRouter } from "next/router";
 
-export function useRouterParam(
-  key: string,
-  returnType?: "string"
-): string | undefined;
-export function useRouterParam(
-  key: string,
-  returnType: "number"
-): number | undefined;
-export function useRouterParam<T extends "string" | "number" | undefined>(
+export function useRouterParam(key: string, returnType?: "string"): string;
+export function useRouterParam(key: string, returnType: "number"): number;
+export function useRouterParam<T extends "string" | "number">(
   key: string,
   returnType?: "string" | "number"
-): undefined | number | string {
+): number | string {
   let {
     query: { [key]: value },
   } = useRouter();
