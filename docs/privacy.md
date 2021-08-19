@@ -12,4 +12,4 @@
    - Test run instances (Older than 24h)
    - Test run results (Older than 24h)
 
-> Please check [pages/api/[[...tasks]].ts](https://github.com/umidbekk/next-cypress-dashboard/blob/main/pages/api/[[...tasks]].ts) file for more detail.
+> Please check [pages/api/[...api].api.ts](https://github.com/umidbekk/next-cypress-dashboard/blob/main/pages/api/[...api].api.ts) file for more detail.
