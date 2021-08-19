@@ -1,12 +1,10 @@
 {
-  "extends": ["config:base", "group:all"],
-  "dependencyDashboard": true,
-  "postUpdateOptions": ["yarnDedupeHighest"],
-  "lockFileMaintenance": { "enabled": true, "automerge": true },
-  "packageRules": [
-    {
-      "automerge": true,
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
-    }
-  ]
+  "extends": [
+    "config:base",
+    "group:all",
+    "schedule:earlyMondays",
+    ":automergeAll",
+    ":maintainLockFilesWeekly"
+  ],
+  "postUpdateOptions": ["yarnDedupeHighest"]
 }
