@@ -12,7 +12,7 @@ jobs:
         container: [A, B]
     steps:
       - uses: actions/checkout@v2
-      - run: yarn --force
+      - run: npm ci
       - uses: ./actions/patch-cypress-config
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
@@ -31,8 +31,8 @@ jobs:
         container: [A, B]
     steps:
       - uses: actions/checkout@v2
-      - run: yarn add cypress@6.6
-      - run: yarn --force
+      - run: npm -D i cypress@6.6
+      - run: npm i
       - uses: ./actions/patch-cypress-config
         with:
           api_url: ${{ github.event.deployment_status.target_url }}

@@ -13,8 +13,6 @@ NCD_SECRET='E2OAhG1AdQP4Rq1II0h0eRNiygdbfMQj7DNIOM3VoUc='
 SESSION_SECRET='nBoPA6LvhkK4ZuWIlko04Id5yZQux+UvGw2H+5RNYsY='
 ```
 
-So you can append directly to your env file (do not forget to add `--silent` after `yarn`).
-
 ```bash
 node scripts/generate-secrets >> .env
 ```

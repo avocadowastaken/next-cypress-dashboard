@@ -17,8 +17,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*": "prettier --write --ignore-unknown",
-    "yarn.lock": "npx yarn-deduplicate"
+    "*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "@emotion/react": "11.4.1",
