@@ -7,5 +7,6 @@
     ":dependencyDashboard",
     ":maintainLockFilesWeekly"
   ],
-  "postUpdateOptions": ["npmDedupe"]
+  "postUpdateOptions": ["npmDedupe"],
+  "ignoreDeps": ["@types/node-fetch"]
 }
