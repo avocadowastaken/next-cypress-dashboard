@@ -12,6 +12,10 @@ jobs:
         container: [A, B]
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          cache: "npm"
+          node-version: "14"
       - run: npm ci
       - uses: ./actions/patch-cypress-config
         with:
@@ -31,6 +35,10 @@ jobs:
         container: [A, B]
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          cache: "npm"
+          node-version: "14"
       - run: npm -D i cypress@6.6
       - run: npm i
       - uses: ./actions/patch-cypress-config

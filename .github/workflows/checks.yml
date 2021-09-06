@@ -14,7 +14,11 @@ jobs:
     steps:
       - uses: styfle/cancel-workflow-action@0.9.1
       - uses: actions/checkout@v2
-      - uses: umidbekk/actions/npm/install@v1
+      - uses: actions/setup-node@v2
+        with:
+          cache: "npm"
+          node-version: "14"
+      - run: npm ci
       - run: npm run checks
       - run: npm run build:actions
       - uses: EndBug/add-and-commit@v7

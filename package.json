@@ -17,8 +17,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*": "prettier --write --ignore-unknown",
-    "package-lock.json": "npm ddp"
+    "*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "@emotion/react": "11.4.1",
@@ -79,5 +78,8 @@
     "rapidbundle": "0.12.0",
     "typescript": "4.4.2",
     "yaml": "1.10.2"
+  },
+  "engines": {
+    "npm": ">=7"
   }
 }
