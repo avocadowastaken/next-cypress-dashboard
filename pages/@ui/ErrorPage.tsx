@@ -3,13 +3,8 @@ import {
   formatAppError,
   getAppErrorStatusCode,
 } from "@/lib/AppError";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from "@material-ui/core";
-import { LoadingButton } from "@material-ui/lab";
+import { LoadingButton } from "@mui/lab";
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import Error from "next/error";
 import NextLink from "next/link";
 import React, { ReactElement, useEffect, useState } from "react";

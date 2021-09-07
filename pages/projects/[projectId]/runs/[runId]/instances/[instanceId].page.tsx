@@ -5,6 +5,12 @@ import { DebugStepOver, SyncCircle } from "@/ui/icons";
 import { Pre } from "@/ui/Pre";
 import { useRouterParam } from "@/ui/useRouterParam";
 import {
+  Check,
+  Error,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+} from "@mui/icons-material";
+import {
   Box,
   Collapse,
   Divider,
@@ -19,13 +25,7 @@ import {
   TableContainer,
   TableRow,
   Tooltip,
-} from "@material-ui/core";
-import {
-  Check,
-  Error,
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-} from "@material-ui/icons";
+} from "@mui/material";
 import { useRouter } from "next/router";
 import React, { Fragment, ReactElement, useState } from "react";
 import { formatProjectName } from "../../../../@core/projectHelpers";

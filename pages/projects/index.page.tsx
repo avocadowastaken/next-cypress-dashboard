@@ -2,6 +2,8 @@ import { extractErrorCode, formatAppError } from "@/lib/AppError";
 import { AppLayout } from "@/ui/AppLayout";
 import { ErrorPage, useErrorHandler } from "@/ui/ErrorPage";
 import { TablePager } from "@/ui/TablePager";
+import { Add } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import {
   Alert,
   Button,
@@ -16,9 +18,7 @@ import {
   TableContainer,
   TableRow,
   TextField,
-} from "@material-ui/core";
-import { Add } from "@material-ui/icons";
-import { LoadingButton } from "@material-ui/lab";
+} from "@mui/material";
 import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";

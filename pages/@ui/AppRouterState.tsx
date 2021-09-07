@@ -1,4 +1,4 @@
-import { Collapse, LinearProgress } from "@material-ui/core";
+import { Collapse, LinearProgress } from "@mui/material";
 import { Router } from "next/router";
 import React, {
   createContext,

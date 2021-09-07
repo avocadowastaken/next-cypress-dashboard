@@ -4,7 +4,7 @@ import {
   TableCell,
   TableFooter,
   TableRow,
-} from "@material-ui/core";
+} from "@mui/material";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";

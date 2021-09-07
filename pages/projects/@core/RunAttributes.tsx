@@ -13,8 +13,8 @@ import {
   SourcePull,
 } from "@/ui/icons";
 import { LinkChip } from "@/ui/LinkChip";
-import { Avatar, Chip, Link, Stack, Tooltip } from "@material-ui/core";
-import { Apple, Check, Error, LocalOfferOutlined } from "@material-ui/icons";
+import { Apple, Check, Error, LocalOfferOutlined } from "@mui/icons-material";
+import { Avatar, Chip, Link, Stack, Tooltip } from "@mui/material";
 import { Project, Run } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";

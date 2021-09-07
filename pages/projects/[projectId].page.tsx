@@ -4,6 +4,7 @@ import { useErrorHandler } from "@/ui/ErrorPage";
 import { Pre } from "@/ui/Pre";
 import { TablePager } from "@/ui/TablePager";
 import { useRouterParam } from "@/ui/useRouterParam";
+import { LoadingButton } from "@mui/lab";
 import {
   Alert,
   Button,
@@ -19,8 +20,7 @@ import {
   TableContainer,
   TableRow,
   Typography,
-} from "@material-ui/core";
-import { LoadingButton } from "@material-ui/lab";
+} from "@mui/material";
 import { Project } from "@prisma/client";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";

@@ -1,7 +1,7 @@
 import { formatDateTime, formatDuration } from "@/lib/Date";
 import { ONE_SECOND, scheduleCron } from "@/lib/MicroCron";
-import { Chip, Skeleton, Tooltip } from "@material-ui/core";
-import { Timer } from "@material-ui/icons";
+import { Timer } from "@mui/icons-material";
+import { Chip, Skeleton, Tooltip } from "@mui/material";
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
 
 export interface DurationChipProps {

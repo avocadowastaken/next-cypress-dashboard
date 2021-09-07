@@ -1,7 +1,7 @@
 import { DurationChip } from "@/ui/DurationChip";
 import { DebugStepOver, SyncCircle } from "@/ui/icons";
-import { Chip, Link, Stack, Tooltip } from "@material-ui/core";
-import { Check, Error } from "@material-ui/icons";
+import { Check, Error } from "@mui/icons-material";
+import { Chip, Link, Stack, Tooltip } from "@mui/material";
 import { Run, RunInstance } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";

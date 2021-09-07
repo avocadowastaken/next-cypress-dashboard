@@ -1,4 +1,3 @@
-import { SvgIcon, SvgIconProps } from "@material-ui/core";
 import {
   mdiDebugStepOver,
   mdiElectronFramework,
@@ -12,6 +11,7 @@ import {
   mdiSourcePull,
   mdiSyncCircle,
 } from "@mdi/js";
+import { SvgIcon, SvgIconProps } from "@mui/material";
 import { forwardRef, memo, NamedExoticComponent } from "react";
 
 function toSvgIcon(

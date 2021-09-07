@@ -11,13 +11,7 @@ module.exports = (api) => {
   if (target === "web") {
     plugins.push([
       "babel-plugin-direct-import",
-      {
-        modules: [
-          "@material-ui/lab",
-          "@material-ui/core",
-          "@material-ui/icons",
-        ],
-      },
+      { modules: ["@mui/lab", "@mui/material", "@mui/icons-material"] },
     ]);
   }
 

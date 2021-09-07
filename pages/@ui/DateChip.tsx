@@ -5,8 +5,8 @@ import {
   ONE_SECOND,
   scheduleCron,
 } from "@/lib/MicroCron";
-import { Chip, Tooltip } from "@material-ui/core";
-import { AccessTime } from "@material-ui/icons";
+import { AccessTime } from "@mui/icons-material";
+import { Chip, Tooltip } from "@mui/material";
 import React, {
   ReactElement,
   useCallback,

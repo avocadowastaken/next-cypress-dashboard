@@ -1,12 +1,13 @@
+import { Components, MDXProvider } from "@mdx-js/react";
 import {
   createTheme,
   CssBaseline,
   Link,
   ScopedCssBaseline,
+  StyledEngineProvider,
   ThemeProvider,
-} from "@material-ui/core";
-import { blue, blueGrey, grey, red } from "@material-ui/core/colors";
-import { Components, MDXProvider } from "@mdx-js/react";
+} from "@mui/material";
+import { blue, blueGrey, grey, red } from "@mui/material/colors";
 import Head from "next/head";
 import NextLink from "next/link";
 import React, {
@@ -229,11 +230,13 @@ export function AppThemeProvider({ children }: ThemeConfigProps): ReactElement {
       </Head>
 
       <MDXProvider components={mdxComponents}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
 
-          <ScopedCssBaseline>{children}</ScopedCssBaseline>
-        </ThemeProvider>
+            <ScopedCssBaseline>{children}</ScopedCssBaseline>
+          </ThemeProvider>
+        </StyledEngineProvider>
       </MDXProvider>
     </>
   );
