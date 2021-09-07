@@ -63,9 +63,9 @@ async function fulfillRunStats(
   });
 
   if (incompleteRunInstanceCount === 0) {
-    const { sum } = await prisma.runInstance.aggregate({
+    const { _sum: sum } = await prisma.runInstance.aggregate({
       where: { runId },
-      sum: {
+      _sum: {
         totalFailed: true,
         totalPassed: true,
         totalPending: true,
@@ -300,9 +300,11 @@ export default createApiHandler((app) => {
         select: { runId: true, testResults: true },
       });
 
-      const testResults = runInstance.testResults as null | TestResult[];
+      const testResults = !Array.isArray(runInstance.testResults)
+        ? []
+        : (runInstance.testResults as unknown as TestResult[]);
 
-      if (tests && testResults) {
+      if (tests && testResults.length) {
         const testsMap = new Map<string, InstanceTestResultInput>(
           tests.map((test) => [test.clientId, test])
         );
@@ -327,7 +329,7 @@ export default createApiHandler((app) => {
           totalPending: stats.pending,
           totalSkipped: stats.skipped,
           completedAt: stats.wallClockEndedAt,
-          testResults: testResults as null | Prisma.JsonObject[],
+          testResults: testResults as unknown as Prisma.JsonArray,
         },
       });
 
