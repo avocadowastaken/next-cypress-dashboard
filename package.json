@@ -48,7 +48,6 @@
     "@actions/github": "5.0.0",
     "@actions/glob": "0.2.0",
     "@mapbox/rehype-prism": "0.7.0",
-    "@mdx-js/loader": "1.6.22",
     "@next/mdx": "11.1.2",
     "@types/cookie": "0.4.1",
     "@types/git-url-parse": "9.0.1",
