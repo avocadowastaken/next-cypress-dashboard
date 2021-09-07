@@ -19,6 +19,9 @@
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "dependencies": {
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",

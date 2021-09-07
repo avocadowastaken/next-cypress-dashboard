@@ -1,4 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+"use strict";
+
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient({ log: ["info", "query", "warn", "error"] });
 
 async function main() {
