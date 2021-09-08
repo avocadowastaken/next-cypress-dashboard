@@ -20,7 +20,6 @@ jobs:
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
       - run: npx cypress run --record --parallel --ci-build-id=cypress-${{ github.event.deployment_status.id }}
-        continue-on-error: true
         env:
           DEBUG: "cypress:server:record,cypress:server:api"
           CYPRESS_RECORD_KEY: ${{ secrets.NCD_SECRET }}
@@ -43,7 +42,6 @@ jobs:
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
       - run: npx cypress run --record --parallel --ci-build-id=cypress@6.6-${{ github.event.deployment_status.id }}
-        continue-on-error: true
         env:
           DEBUG: "cypress:server:record,cypress:server:api"
           CYPRESS_RECORD_KEY: ${{ secrets.NCD_SECRET }}
