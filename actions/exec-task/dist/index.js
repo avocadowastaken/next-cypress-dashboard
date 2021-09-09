@@ -4663,7 +4663,7 @@ var require_dist_node9 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "5.10.0";
+    var VERSION = "5.10.1";
     function endpointsToMethods(octokit2, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
