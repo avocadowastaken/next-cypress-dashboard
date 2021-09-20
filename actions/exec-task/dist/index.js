@@ -3326,8 +3326,14 @@ var require_dist_node7 = __commonJS({
   "../../node_modules/@octokit/auth-token/dist-node/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
+    var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
+    var REGEX_IS_INSTALLATION = /^ghs_/;
+    var REGEX_IS_USER_TO_SERVER = /^ghu_/;
     async function auth(token2) {
-      const tokenType = token2.split(/\./).length === 3 ? "app" : /^v\d+\./.test(token2) ? "installation" : "oauth";
+      const isApp = token2.split(/\./).length === 3;
+      const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token2) || REGEX_IS_INSTALLATION.test(token2);
+      const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token2);
+      const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
       return {
         type: "token",
         token: token2,
@@ -4666,7 +4672,7 @@ var require_dist_node9 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "5.10.2";
+    var VERSION = "5.10.4";
     function endpointsToMethods(octokit2, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
@@ -4754,7 +4760,7 @@ var require_dist_node10 = __commonJS({
   "../../node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var VERSION = "2.16.1";
+    var VERSION = "2.16.3";
     function ownKeys(object, enumerableOnly) {
       var keys = Object.keys(object);
       if (Object.getOwnPropertySymbols) {
