@@ -1,12 +1,3 @@
 {
-  "extends": [
-    "config:base",
-    "group:all",
-    "schedule:earlyMondays",
-    ":automergeAll",
-    ":dependencyDashboard",
-    ":maintainLockFilesWeekly"
-  ],
-  "postUpdateOptions": ["npmDedupe"],
-  "ignoreDeps": ["@types/node-fetch"]
+  "extends": ["github>umidbekk/configs:renovate"]
 }
