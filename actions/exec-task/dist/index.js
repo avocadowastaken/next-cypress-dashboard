@@ -3242,7 +3242,7 @@ var require_dist_node5 = __commonJS({
     var isPlainObject = require_is_plain_object();
     var nodeFetch = _interopDefault(require_lib());
     var requestError = require_dist_node4();
-    var VERSION = "5.6.1";
+    var VERSION = "5.6.2";
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
@@ -3924,12 +3924,7 @@ var require_dist_node9 = __commonJS({
       },
       codesOfConduct: {
         getAllCodesOfConduct: ["GET /codes_of_conduct"],
-        getConductCode: ["GET /codes_of_conduct/{key}"],
-        getForRepo: ["GET /repos/{owner}/{repo}/community/code_of_conduct", {
-          mediaType: {
-            previews: ["scarlet-witch"]
-          }
-        }]
+        getConductCode: ["GET /codes_of_conduct/{key}"]
       },
       emojis: {
         get: ["GET /emojis"]
@@ -4225,108 +4220,25 @@ var require_dist_node9 = __commonJS({
         get: ["GET /rate_limit"]
       },
       reactions: {
-        createForCommitComment: ["POST /repos/{owner}/{repo}/comments/{comment_id}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        createForIssue: ["POST /repos/{owner}/{repo}/issues/{issue_number}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        createForIssueComment: ["POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        createForPullRequestReviewComment: ["POST /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        createForRelease: ["POST /repos/{owner}/{repo}/releases/{release_id}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        createForTeamDiscussionCommentInOrg: ["POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        createForTeamDiscussionInOrg: ["POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        deleteForCommitComment: ["DELETE /repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        deleteForIssue: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        deleteForIssueComment: ["DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        deleteForPullRequestComment: ["DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        deleteForTeamDiscussion: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        deleteForTeamDiscussionComment: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        deleteLegacy: ["DELETE /reactions/{reaction_id}", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }, {
-          deprecated: "octokit.rest.reactions.deleteLegacy() is deprecated, see https://docs.github.com/rest/reference/reactions/#delete-a-reaction-legacy"
-        }],
-        listForCommitComment: ["GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        listForIssue: ["GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        listForIssueComment: ["GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        listForPullRequestReviewComment: ["GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        listForTeamDiscussionCommentInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }],
-        listForTeamDiscussionInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", {
-          mediaType: {
-            previews: ["squirrel-girl"]
-          }
-        }]
+        createForCommitComment: ["POST /repos/{owner}/{repo}/comments/{comment_id}/reactions"],
+        createForIssue: ["POST /repos/{owner}/{repo}/issues/{issue_number}/reactions"],
+        createForIssueComment: ["POST /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions"],
+        createForPullRequestReviewComment: ["POST /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions"],
+        createForRelease: ["POST /repos/{owner}/{repo}/releases/{release_id}/reactions"],
+        createForTeamDiscussionCommentInOrg: ["POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions"],
+        createForTeamDiscussionInOrg: ["POST /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions"],
+        deleteForCommitComment: ["DELETE /repos/{owner}/{repo}/comments/{comment_id}/reactions/{reaction_id}"],
+        deleteForIssue: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}"],
+        deleteForIssueComment: ["DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}"],
+        deleteForPullRequestComment: ["DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}"],
+        deleteForTeamDiscussion: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}"],
+        deleteForTeamDiscussionComment: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}"],
+        listForCommitComment: ["GET /repos/{owner}/{repo}/comments/{comment_id}/reactions"],
+        listForIssue: ["GET /repos/{owner}/{repo}/issues/{issue_number}/reactions"],
+        listForIssueComment: ["GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions"],
+        listForPullRequestReviewComment: ["GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions"],
+        listForTeamDiscussionCommentInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions"],
+        listForTeamDiscussionInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions"]
       },
       repos: {
         acceptInvitation: ["PATCH /user/repository_invitations/{invitation_id}"],
@@ -4644,7 +4556,7 @@ var require_dist_node9 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "5.11.2";
+    var VERSION = "5.11.4";
     function endpointsToMethods(octokit2, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
@@ -4732,7 +4644,7 @@ var require_dist_node10 = __commonJS({
   "../../node_modules/@octokit/plugin-paginate-rest/dist-node/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var VERSION = "2.16.5";
+    var VERSION = "2.16.7";
     function ownKeys(object, enumerableOnly) {
       var keys = Object.keys(object);
       if (Object.getOwnPropertySymbols) {
