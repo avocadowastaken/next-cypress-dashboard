@@ -11,11 +11,8 @@ jobs:
       matrix:
         container: [A, B]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14"
-      - run: npm ci
+      - uses: umidbekk/actions/prepare-node-repo@v2
+
       - uses: ./actions/patch-cypress-config
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
@@ -32,12 +29,9 @@ jobs:
       matrix:
         container: [A, B]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14"
+      - uses: umidbekk/actions/prepare-node-repo@v2
+
       - run: npm -D i cypress@6.6
-      - run: npm i
       - uses: ./actions/patch-cypress-config
         with:
           api_url: ${{ github.event.deployment_status.target_url }}
