@@ -12,14 +12,10 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: styfle/cancel-workflow-action@0.9.1
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          cache: "npm"
-          node-version: "14"
-      - run: npm ci
+      - uses: umidbekk/actions/prepare-node-repo@v2
+
       - run: npm run checks
       - run: npm run build:actions
-      - uses: EndBug/add-and-commit@v7
-        if: ${{ failure() && github.event_name == 'pull_request' }}
+
+      - if: ${{ failure() && github.event_name == 'pull_request' }}
+        uses: EndBug/add-and-commit@v7
