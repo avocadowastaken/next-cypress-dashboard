@@ -1,8 +1,8 @@
 import {
   AppRouterProgressIndicator,
   AppRouterStateProvider,
-} from "@/ui/AppRouterState";
-import { AppThemeProvider } from "@/ui/AppThemeProvider";
+} from "@/ui/core/AppRouterState";
+import { AppThemeProvider } from "@/ui/core/AppThemeProvider";
 import { AppProps } from "next/app";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";

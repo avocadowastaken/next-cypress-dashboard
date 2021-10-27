@@ -1,9 +1,18 @@
 import { extractErrorCode, formatAppError } from "@/lib/AppError";
-import { AppLayout } from "@/ui/AppLayout";
-import { useErrorHandler } from "@/ui/ErrorPage";
-import { Pre } from "@/ui/Pre";
-import { TablePager } from "@/ui/TablePager";
-import { useRouterParam } from "@/ui/useRouterParam";
+import { AppLayout } from "@/ui/core/AppLayout";
+import { useErrorHandler } from "@/ui/core/ErrorPage";
+import { Pre } from "@/ui/core/Pre";
+import { TablePager } from "@/ui/core/TablePager";
+import { useRouterParam } from "@/ui/core/useRouterParam";
+import { formatProjectName } from "@/ui/projects/projectHelpers";
+import {
+  useDeleteProject,
+  useProject,
+  useProjectSecrets,
+  useRevokeProjectSecrets,
+} from "@/ui/projects/projectQueries";
+import { RunAttributes } from "@/ui/projects/RunAttributes";
+import { useRunsPage } from "@/ui/projects/runQueries";
 import { LoadingButton } from "@mui/lab";
 import {
   Alert,
@@ -24,15 +33,6 @@ import {
 import { Project } from "@prisma/client";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";
-import { formatProjectName } from "./@core/projectHelpers";
-import {
-  useDeleteProject,
-  useProject,
-  useProjectSecrets,
-  useRevokeProjectSecrets,
-} from "./@core/projectQueries";
-import { RunAttributes } from "./@core/RunAttributes";
-import { useRunsPage } from "./@core/runQueries";
 
 interface ProjectErrorDialogProps {
   error: unknown;

@@ -10,7 +10,7 @@ const withMDX = makeWithMDX({
 });
 
 module.exports = withPlugins([withMDX], {
-  pageExtensions: ["md", "mdx", "api.ts", "page.tsx"],
+  pageExtensions: ["md", "mdx", "ts", "tsx"],
   async rewrites() {
     return [
       {

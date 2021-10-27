@@ -1,7 +1,9 @@
 import { extractErrorCode, formatAppError } from "@/lib/AppError";
-import { AppLayout } from "@/ui/AppLayout";
-import { ErrorPage, useErrorHandler } from "@/ui/ErrorPage";
-import { TablePager } from "@/ui/TablePager";
+import { AppLayout } from "@/ui/core/AppLayout";
+import { ErrorPage, useErrorHandler } from "@/ui/core/ErrorPage";
+import { TablePager } from "@/ui/core/TablePager";
+import { formatProjectName } from "@/ui/projects/projectHelpers";
+import { useAddProject, useProjectsPage } from "@/ui/projects/projectQueries";
 import { Add } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -23,8 +25,6 @@ import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useState } from "react";
-import { formatProjectName } from "./@core/projectHelpers";
-import { useAddProject, useProjectsPage } from "./@core/projectQueries";
 
 const GITHUB_APP =
   process.env.NEXT_PUBLIC_GITHUB_APP || "next-cypress-dashboard";

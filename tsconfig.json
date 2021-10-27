@@ -30,8 +30,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/ui/*": ["./pages/@ui/*"],
-      "@/lib/*": ["./pages/@lib/*"]
+      "@/ui/*": ["./ui/*"],
+      "@/lib/*": ["./lib/*"]
     },
     "incremental": true
   }
