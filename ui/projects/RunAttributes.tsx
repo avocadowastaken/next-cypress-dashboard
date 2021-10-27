@@ -1,6 +1,6 @@
 import { capitalize } from "@/lib/Text";
-import { DateChip } from "@/ui/DateChip";
-import { DurationChip } from "@/ui/DurationChip";
+import { DateChip } from "@/ui/core/DateChip";
+import { DurationChip } from "@/ui/core/DurationChip";
 import {
   ElectronFramework,
   Firefox,
@@ -11,8 +11,8 @@ import {
   SourceBranch,
   SourceCommit,
   SourcePull,
-} from "@/ui/icons";
-import { LinkChip } from "@/ui/LinkChip";
+} from "@/ui/core/icons";
+import { LinkChip } from "@/ui/core/LinkChip";
 import { Apple, Check, Error, LocalOfferOutlined } from "@mui/icons-material";
 import { Avatar, Chip, Link, Stack, Tooltip } from "@mui/material";
 import { Project, Run } from "@prisma/client";

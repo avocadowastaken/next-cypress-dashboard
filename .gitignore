@@ -16,6 +16,7 @@
 
 # production
 /build
+tsconfig.tsbuildinfo
 
 # misc
 .DS_Store

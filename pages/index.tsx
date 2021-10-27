@@ -14,6 +14,6 @@ export async function getServerSideProps(
   }
 }
 
-export default function IndexPage(): ReactElement {
+export default function Index(): ReactElement {
   return <div>Redirecting…</div>;
 }

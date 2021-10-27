@@ -1,7 +1,13 @@
-import { AppLayout } from "@/ui/AppLayout";
-import { ErrorPage } from "@/ui/ErrorPage";
-import { TablePager } from "@/ui/TablePager";
-import { useRouterParam } from "@/ui/useRouterParam";
+import { AppLayout } from "@/ui/core/AppLayout";
+import { ErrorPage } from "@/ui/core/ErrorPage";
+import { TablePager } from "@/ui/core/TablePager";
+import { useRouterParam } from "@/ui/core/useRouterParam";
+import { formatProjectName } from "@/ui/projects/projectHelpers";
+import { useProject } from "@/ui/projects/projectQueries";
+import { RunAttributes } from "@/ui/projects/RunAttributes";
+import { useDeleteRun, useRun } from "@/ui/projects/runQueries";
+import { RunInstanceAttributes } from "@/ui/runs/RunInstanceAttributes";
+import { useRunInstancesPage } from "@/ui/runs/runQueries";
 import { LoadingButton } from "@mui/lab";
 import {
   Button,
@@ -22,12 +28,6 @@ import {
 import { Run } from "@prisma/client";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";
-import { formatProjectName } from "../../@core/projectHelpers";
-import { useProject } from "../../@core/projectQueries";
-import { RunAttributes } from "../../@core/RunAttributes";
-import { useDeleteRun, useRun } from "../../@core/runQueries";
-import { RunInstanceAttributes } from "./@core/RunInstanceAttributes";
-import { useRunInstancesPage } from "./@core/runQueries";
 
 export interface DeleteRunDialogProps {
   run: Run;
