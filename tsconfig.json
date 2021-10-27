@@ -7,6 +7,7 @@
     "node_modules/.prisma/client/index.d.ts"
   ],
   "exclude": ["node_modules"],
+  "incremental": true,
   "compilerOptions": {
     "target": "ES2020",
     "module": "esnext",
@@ -31,6 +32,7 @@
     "paths": {
       "@/ui/*": ["./pages/@ui/*"],
       "@/lib/*": ["./pages/@lib/*"]
-    }
+    },
+    "incremental": true
   }
 }
