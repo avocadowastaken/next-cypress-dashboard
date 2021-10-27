@@ -20,22 +20,3 @@ jobs:
         env:
           DEBUG: "cypress:server:record,cypress:server:api"
           CYPRESS_RECORD_KEY: ${{ secrets.NCD_SECRET }}
-
-  cypress_6-6:
-    if: github.event.deployment_status.state == 'success'
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        container: [A, B]
-    steps:
-      - uses: umidbekk/actions/prepare-node-repo@v2
-
-      - run: npm -D i cypress@6.6
-      - uses: ./actions/patch-cypress-config
-        with:
-          api_url: ${{ github.event.deployment_status.target_url }}
-      - run: npx cypress run --record --parallel --ci-build-id=cypress@6.6-${{ github.event.deployment_status.id }}
-        env:
-          DEBUG: "cypress:server:record,cypress:server:api"
-          CYPRESS_RECORD_KEY: ${{ secrets.NCD_SECRET }}
