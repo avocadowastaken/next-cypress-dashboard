@@ -20,7 +20,10 @@ export default createApiHandler((app) => {
     const state = req.session.get<string>("csrf-token");
 
     if (!state) {
-      res.redirect(302, `/?error=${encodeURIComponent("Invalid CSRF token")}`);
+      res.redirect(
+        302,
+        `/error/?message=${encodeURIComponent("Invalid CSRF token")}`
+      );
       return;
     }
 
@@ -44,14 +47,20 @@ export default createApiHandler((app) => {
     const { code } = req.query;
 
     if (typeof code !== "string") {
-      res.redirect(302, `/?error=${encodeURIComponent("Invalid oAuth code")}`);
+      res.redirect(
+        302,
+        `/error?message=${encodeURIComponent("Invalid oAuth code")}`
+      );
       return;
     }
 
     const state = req.session.get<string>("csrf-token");
 
     if (!state) {
-      res.redirect(302, `/?error=${encodeURIComponent("Invalid CSRF token")}`);
+      res.redirect(
+        302,
+        `/error?message=${encodeURIComponent("Invalid CSRF token")}`
+      );
       return;
     }
 
@@ -79,7 +88,7 @@ export default createApiHandler((app) => {
             : `${error.name}: ${error.message}`
           : "Unknown Error";
 
-      res.redirect(302, `/?error=${encodeURIComponent(message)}`);
+      res.redirect(302, `/error?message=${encodeURIComponent(message)}`);
     }
   });
 
