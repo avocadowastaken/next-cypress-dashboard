@@ -94,7 +94,7 @@ export function AppLayoutContent({
       </Box>
 
       <Stack spacing={2}>
-        {!!router.query.error && (
+        {!!router.query["error"] && (
           <Alert
             severity="error"
             action={
@@ -108,11 +108,11 @@ export function AppLayoutContent({
               </NextLink>
             }
           >
-            {router.query.error}
+            {router.query["error"]}
           </Alert>
         )}
 
-        {!!router.query.success && (
+        {!!router.query["success"] && (
           <Alert
             severity="success"
             action={
@@ -126,7 +126,7 @@ export function AppLayoutContent({
               </NextLink>
             }
           >
-            {router.query.success}
+            {router.query["success"]}
           </Alert>
         )}
 

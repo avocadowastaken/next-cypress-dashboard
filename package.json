@@ -25,10 +25,10 @@
   "dependencies": {
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",
-    "@mui/material": "5.0.2",
+    "@mdi/js": "6.2.95",
     "@mui/icons-material": "5.0.1",
     "@mui/lab": "5.0.0-alpha.49",
-    "@mdi/js": "6.2.95",
+    "@mui/material": "5.0.2",
     "@octokit/auth-oauth-app": "4.3.0",
     "@octokit/core": "3.5.1",
     "@prisma/client": "3.3.0",
@@ -40,11 +40,11 @@
     "next-connect": "0.11.0",
     "next-iron-session": "4.2.0",
     "prism-react-renderer": "1.2.1",
+    "prisma": "3.3.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "3.25.0",
-    "superjson": "1.7.5",
-    "prisma": "3.3.0"
+    "superjson": "1.7.5"
   },
   "devDependencies": {
     "@actions/core": "1.6.0",
@@ -60,6 +60,7 @@
     "@types/node": "16.11.6",
     "@types/node-fetch": "2.5.12",
     "@types/react": "17.0.33",
+    "@umidbekk/configs": "0.1.0",
     "cypress": "8.7.0",
     "dotenv": "10.0.0",
     "esbuild": "0.13.9",

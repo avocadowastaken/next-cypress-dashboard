@@ -79,7 +79,7 @@ export default function RunInstancePage(): ReactElement {
           label="Hide successful tests"
           control={
             <Switch
-              checked={router.query.exclude === "passed"}
+              checked={router.query["exclude"] === "passed"}
               onChange={(event) => {
                 void router.replace({
                   pathname: router.pathname,
@@ -113,7 +113,7 @@ export default function RunInstancePage(): ReactElement {
                   {testResults.map((testResult) => {
                     if (
                       testResult.state === "passed" &&
-                      router.query.exclude === "passed"
+                      router.query["exclude"] === "passed"
                     ) {
                       return null;
                     }

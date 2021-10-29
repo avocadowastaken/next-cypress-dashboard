@@ -77,9 +77,8 @@ export async function findGitHubUserAvatar(
       .request("GET /search/users", { q: `${email} in:email`, per_page: 1 })
       .catch(() => null);
 
-    if (users?.data.items.length) {
-      return users.data.items[0].avatar_url;
-    }
+    const userAvatar = users?.data.items[0]?.avatar_url;
+    if (userAvatar) return userAvatar;
 
     const commits = await octokit
       .request("GET /search/commits", {
@@ -90,13 +89,8 @@ export async function findGitHubUserAvatar(
       })
       .catch(() => null);
 
-    if (commits?.data.items.length) {
-      const { author } = commits.data.items[0];
-
-      if (author) {
-        return author.avatar_url;
-      }
-    }
+    const authorAvatar = commits?.data.items[0]?.author?.avatar_url;
+    if (authorAvatar) return authorAvatar;
   }
 
   return null;

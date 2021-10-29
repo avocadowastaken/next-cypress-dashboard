@@ -259,7 +259,7 @@ export default function ProjectPage(): ReactElement {
   const router = useRouter();
   const projectId = useRouterParam("projectId");
   const project = useProject(projectId);
-  const runs = useRunsPage(project.data?.id, { page: router.query.page });
+  const runs = useRunsPage(project.data?.id, { page: router.query["page"] });
 
   const [modalState, setModalState] = useState<
     "remove" | "revoke" | "settings"

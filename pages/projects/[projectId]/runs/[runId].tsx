@@ -77,8 +77,8 @@ export default function RunPage(): ReactElement {
   const run = useRun(projectId, runId);
   const project = useProject(projectId);
   const runInstances = useRunInstancesPage(projectId, runId, {
-    page: router.query.page,
-    exclude: router.query.exclude,
+    page: router.query["page"],
+    exclude: router.query["exclude"],
   });
 
   const [modalState, setModalState] = useState<"delete">();
@@ -132,7 +132,7 @@ export default function RunPage(): ReactElement {
           label="Hide successful tests"
           control={
             <Switch
-              checked={router.query.exclude === "passed"}
+              checked={router.query["exclude"] === "passed"}
               onChange={(event) => {
                 void router.replace({
                   pathname: router.pathname,

@@ -63,7 +63,7 @@ export function RunInstanceAttributes({
       <NextLink
         passHref={true}
         href={{
-          query: { exclude: router.query.exclude || [] },
+          query: { exclude: router.query["exclude"] || [] },
           pathname: `/projects/${projectId}/runs/${runId}/instances/${id}`,
         }}
       >

@@ -27,7 +27,7 @@ import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useState } from "react";
 
 const GITHUB_APP =
-  process.env.NEXT_PUBLIC_GITHUB_APP || "next-cypress-dashboard";
+  process.env["NEXT_PUBLIC_GITHUB_APP"] || "next-cypress-dashboard";
 
 interface AddProjectDialogProps {
   initialRepo: unknown;
@@ -131,13 +131,13 @@ export function AddProjectDialog({
 
 export default function ProjectsPage(): ReactElement {
   const router = useRouter();
-  const projects = useProjectsPage({ page: router.query.page });
+  const projects = useProjectsPage({ page: router.query["page"] });
 
   const [addRepo, setAddRepo] = useState<string>();
 
   useEffect(() => {
-    if (typeof router.query.add == "string") setAddRepo(router.query.add);
-  }, [router.query.add]);
+    if (typeof router.query["add"] == "string") setAddRepo(router.query["add"]);
+  }, [router.query["add"]]);
 
   if (projects.error) {
     return <ErrorPage error={projects.error} />;

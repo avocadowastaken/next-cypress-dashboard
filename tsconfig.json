@@ -1,4 +1,5 @@
 {
+  "extends": "@umidbekk/configs/tsconfig.json",
   "include": [
     "scripts",
     "next-env.d.ts",
@@ -7,32 +8,16 @@
     "node_modules/.prisma/client/index.d.ts"
   ],
   "exclude": ["node_modules"],
-  "incremental": true,
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "noEmit": true,
-    "strict": true,
-    "allowJs": true,
-    "checkJs": true,
-    "skipLibCheck": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
+    "incremental": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+
     "baseUrl": ".",
     "paths": {
       "@/ui/*": ["./ui/*"],
       "@/lib/*": ["./lib/*"]
-    },
-    "incremental": true
+    }
   }
 }
