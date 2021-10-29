@@ -4964,7 +4964,7 @@ async function main() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Token ${process.env.NCD_SECRET}`
+        Authorization: `Token ${process.env["NCD_SECRET"]}`
       }
     });
     (0, import_core.info)(`Parsing response: ${response.status} (${response.statusText})`);
