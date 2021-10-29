@@ -133,11 +133,13 @@ export default function ProjectsPage(): ReactElement {
   const router = useRouter();
   const projects = useProjectsPage({ page: router.query["page"] });
 
-  const [addRepo, setAddRepo] = useState<string>();
+  const addParam =
+    typeof router.query["add"] == "string" ? router.query["add"] : undefined;
+  const [addRepo, setAddRepo] = useState(addParam);
 
   useEffect(() => {
-    if (typeof router.query["add"] == "string") setAddRepo(router.query["add"]);
-  }, [router.query["add"]]);
+    setAddRepo(addParam);
+  }, [addParam]);
 
   if (projects.error) {
     return <ErrorPage error={projects.error} />;
