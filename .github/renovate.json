@@ -1,3 +1,4 @@
 {
-  "extends": ["github>umidbekk/configs:renovate"]
+  "extends": ["github>umidbekk/configs:renovate"],
+  "ignoreDeps": ["@types/node-fetch"]
 }
