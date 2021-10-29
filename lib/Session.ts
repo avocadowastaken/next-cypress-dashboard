@@ -6,7 +6,7 @@ import {
   SessionOptions,
 } from "next-iron-session";
 import { AppError } from "./AppError";
-import { SESSION_SECRET } from "./secrets";
+import { SESSION_COOKIE_NAME, SESSION_SECRET } from "./env";
 
 declare module "next" {
   export interface NextApiRequest {
@@ -15,8 +15,8 @@ declare module "next" {
 }
 
 const sessionOptions: SessionOptions = {
-  cookieName: "__nis",
   password: SESSION_SECRET,
+  cookieName: SESSION_COOKIE_NAME,
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",
   },

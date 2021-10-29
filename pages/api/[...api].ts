@@ -1,6 +1,7 @@
 import { createApiHandler } from "@/lib/Api";
 import { AppError } from "@/lib/AppError";
 import { prisma } from "@/lib/db";
+import { GITHUB_CLIENT_ID, NCD_SECRET } from "@/lib/env";
 import { parseGitUrl } from "@/lib/Git";
 import {
   findGitHubUserAvatar,
@@ -8,7 +9,6 @@ import {
   verifyGitHubRepoAccess,
 } from "@/lib/GitHub";
 import { createPageResponse } from "@/lib/PageResponse";
-import { GITHUB_CLIENT_ID, NCD_SECRET } from "@/lib/secrets";
 import { getRequestSession } from "@/lib/Session";
 import { Prisma } from "@prisma/client";
 import { createHash } from "crypto";

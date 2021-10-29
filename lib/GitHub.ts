@@ -4,7 +4,7 @@ import { components } from "@octokit/openapi-types";
 import { RequestError } from "@octokit/request-error";
 import { AppError } from "./AppError";
 import { prisma } from "./db";
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "./secrets";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "./env";
 
 export async function obtainAccessToken(
   code: string,
