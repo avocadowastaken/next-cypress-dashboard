@@ -47,11 +47,7 @@ context("Files", () => {
     );
 
     // or use "cy.wrap" and "should('deep.equal', ...)" assertion
-    // @ts-ignore
-    cy.wrap(this.example, "fixture vs require").should(
-      "deep.equal",
-      requiredExample
-    );
+    cy.wrap(this.example).should("deep.equal", requiredExample);
   });
 
   it("cy.readFile() - read file contents", () => {
