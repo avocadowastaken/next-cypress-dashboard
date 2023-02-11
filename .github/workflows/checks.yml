@@ -22,4 +22,4 @@ jobs:
       - run: npm run build:actions
 
       - if: ${{ failure() && github.event_name == 'pull_request' }}
-        uses: EndBug/add-and-commit@v7
+        uses: EndBug/add-and-commit@v9
