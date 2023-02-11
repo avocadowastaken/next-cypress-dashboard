@@ -151,7 +151,7 @@ export const TEST_RESULT_STATES = [
   "failed",
   "skipped",
 ] as const;
-export type TestResultState = typeof TEST_RESULT_STATES[number];
+export type TestResultState = (typeof TEST_RESULT_STATES)[number];
 export function toTestResultState(input: unknown): TestResultState {
   const state = trim(input).toLocaleLowerCase() as TestResultState;
   return TEST_RESULT_STATES.includes(state) ? state : "pending";

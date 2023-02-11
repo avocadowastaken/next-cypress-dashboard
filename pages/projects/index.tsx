@@ -24,7 +24,7 @@ import {
 import { Project } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 const GITHUB_APP =
   process.env["NEXT_PUBLIC_GITHUB_APP"] || "next-cypress-dashboard";

@@ -1,7 +1,7 @@
 import { AppBar, Button, ContainerProps, Stack, Toolbar } from "@mui/material";
 import Head from "next/head";
 import NextLink from "next/link";
-import React, { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 import { AppLayoutContent } from "./AppLayout";
 
 export interface PublicLayoutProps {

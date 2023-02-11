@@ -10,7 +10,7 @@ import {
 import { blue, blueGrey, grey, red } from "@mui/material/colors";
 import Head from "next/head";
 import NextLink from "next/link";
-import React, {
+import {
   AnchorHTMLAttributes,
   HTMLAttributes,
   ReactElement,

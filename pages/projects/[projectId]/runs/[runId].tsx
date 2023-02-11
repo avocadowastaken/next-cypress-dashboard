@@ -27,7 +27,7 @@ import {
 } from "@mui/material";
 import { Run } from "@prisma/client";
 import { useRouter } from "next/router";
-import React, { ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 
 export interface DeleteRunDialogProps {
   run: Run;

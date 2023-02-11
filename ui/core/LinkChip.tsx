@@ -1,5 +1,5 @@
 import { Chip } from "@mui/material";
-import React, { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export interface LinkChipProps {
   href: string;
