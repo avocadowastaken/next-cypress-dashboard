@@ -5,7 +5,7 @@ import { Chip, Link, Stack, Tooltip } from "@mui/material";
 import { Run, RunInstance } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 
 export interface RunInstanceAttributesProps {
   run: Run;

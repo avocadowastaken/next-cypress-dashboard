@@ -18,7 +18,7 @@ import { Avatar, Chip, Link, Stack, Tooltip } from "@mui/material";
 import { Project, Run } from "@prisma/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { getRunName } from "./runHelpers";
 
 const TAG_PATTERN = /^refs\/tags\/(.+)$/;

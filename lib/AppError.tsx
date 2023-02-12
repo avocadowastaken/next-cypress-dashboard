@@ -1,4 +1,4 @@
-export type AppErrorCode = typeof APP_ERROR_CODES[number];
+export type AppErrorCode = (typeof APP_ERROR_CODES)[number];
 export const APP_ERROR_CODES = [
   "UNKNOWN_ERROR",
 

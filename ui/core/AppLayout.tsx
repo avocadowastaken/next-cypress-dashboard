@@ -13,7 +13,7 @@ import {
 import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactElement, ReactNode, useMemo } from "react";
+import { ReactElement, ReactNode, useMemo } from "react";
 
 export interface AppTitleProps {
   breadcrumbs?: Array<string | [label: string, href: string]>;

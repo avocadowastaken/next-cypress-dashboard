@@ -32,7 +32,7 @@ import {
 } from "@mui/material";
 import { Project } from "@prisma/client";
 import { useRouter } from "next/router";
-import React, { ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 
 interface ProjectErrorDialogProps {
   error: unknown;

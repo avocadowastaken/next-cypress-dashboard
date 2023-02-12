@@ -33,7 +33,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { Fragment, ReactElement, useState } from "react";
+import { Fragment, ReactElement, useState } from "react";
 
 export default function RunInstancePage(): ReactElement {
   const router = useRouter();

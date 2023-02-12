@@ -7,7 +7,7 @@ import { LoadingButton } from "@mui/lab";
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import Error from "next/error";
 import NextLink from "next/link";
-import React, { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 function SignInDialog() {
   const [isLoading, setIsLoading] = useState(false);

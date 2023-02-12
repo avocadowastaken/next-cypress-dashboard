@@ -1,6 +1,6 @@
 import { Collapse, LinearProgress } from "@mui/material";
 import { Router } from "next/router";
-import React, {
+import {
   createContext,
   ReactElement,
   ReactNode,
