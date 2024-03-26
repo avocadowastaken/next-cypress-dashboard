@@ -59,7 +59,7 @@
     "@types/morgan": "1.9.4",
     "@types/node": "16.18.12",
     "@types/node-fetch": "2.6.2",
-    "@types/react": "17.0.37",
+    "@types/react": "17.0.80",
     "@umidbekk/configs": "0.1.0",
     "cypress": "8.7.0",
     "dotenv": "16.0.3",
